@@ -3,6 +3,6 @@ package qwirkle;
 public class Qwirkle {
 
 	public static void main(String[] args) {
-		System.out.println("Hallo Qwirkle!");
+		System.out.println("Hello Cara!!");
 	}
 }
