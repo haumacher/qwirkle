@@ -2,21 +2,33 @@ package qwirkle;
 
 public class Qwirkle {
 
+	enum Farbe {
+		yellow, orange, red, blue, green, magenta
+	}
+
+	enum Form {
+		circle, square, star, pounce, cross, diamond
+	}
+
+	static class Stein {
+		Farbe farbe;
+		Form form;
+
+		public Stein(Farbe farbe, Form form) {
+			this.farbe = farbe;
+			this.form = form;
+		}
+	}
+
 	public static void main(String[] args) {
 		System.out.println("Quirkle trial!!!");
-		//class stein [string farbe, string form];
-		var steine= array of {string farbe, string form};
-		var farben = ["yellow", "orange", "red", "blue", "green", "magenta"];
-		var formen = ["circle", "square", "star", "pounce", "cross", "diamond"];
-		for var i=0-3{
-				for var j=0-5{
-					for var k=0-5{
-						steine[j+6*k+36*i]=[farben[j], formen[k]];
-					}
+		Stein[] steine = new Stein[4 * 6 * 6];
+		for (int i = 0; i <= 3; i++) {
+			for (int j = 0; j <= 5; j++) {
+				for (int k = 0; k <= 5; k++) {
+					steine[j + 6 * k + 36 * i] = new Stein(Farbe.values()[j], Form.values()[k]);
 				}
-		}		
-				
-		num i;
-		
+			}
+		}
 	}
 }
