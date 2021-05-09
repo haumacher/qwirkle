@@ -1,5 +1,9 @@
 package qwirkle;
 
+import java.util.EnumSet;
+
+import qwirkle.Qwirkle.Farbe;
+import qwirkle.Qwirkle.Form;
 import qwirkle.Qwirkle.Stein;
 
 /**
@@ -101,5 +105,112 @@ public class Spielfeld {
 		}
 
 		_data[yOffset * _width + xOffset] = stein;
+	}
+	
+	/**
+	 * Prüft, ob der gegebene Stein an Position (x,y) angelegt werden kann.
+	 */
+	boolean zugErlaubt(int x, int y, Stein stein) {
+		if (istBesetzt(x, y)) {
+			return false;
+		}
+		
+		if (!hatNachbarn(x, y)) {
+			// Ohne Nachbarn darf nur auf die Startposition gelegt werden.
+			return x == 0 && y == 0;
+		}
+		
+		if (!passtInReihe(x, y, stein)) {
+			return false;
+		}
+		
+		if (!passtInSpalte(x, y, stein)) {
+			return false;
+		}
+		
+		return true;
+	}
+
+	private boolean passtInReihe(int x, int y, Stein stein) {
+		return 
+			passtAnNachbarn(x, y, stein, 1, 0) && 
+			passtAnNachbarn(x, y, stein, -1, 0) &&
+			keineDoppeltenSteine(x, y, 1, 0);
+	}
+	
+	private boolean passtInSpalte(int x, int y, Stein stein) {
+		return 
+			passtAnNachbarn(x, y, stein, 0, 1) && 
+			passtAnNachbarn(x, y, stein, 0, -1) && 
+			keineDoppeltenSteine(x, y, 0, 1);
+	}
+
+	private boolean passtAnNachbarn(int x, int y, Stein stein, int dx, int dy) {
+		int xPos = x;
+		int yPos = y;
+		while (true) {
+			xPos += dx;
+			yPos += dy;
+			Stein feld = get(xPos, yPos);
+			if (feld == null) {
+				// Kein weiterer Nachbar mehr, anlegen ist OK.
+				return true;
+			}
+			boolean gleicheFarbe = feld.farbe == stein.farbe;
+			boolean gleicheForm = feld.form == stein.form;
+			if (gleicheFarbe == gleicheForm) {
+				// Ein Stein muss entweder in Farbe oder Form übereinstimmen, aber nicht in beidem.
+				return false;
+			}
+		}
+	}
+	
+	private boolean keineDoppeltenSteine(int x, int y, int dx, int dy) {
+		EnumSet<Farbe> farben = EnumSet.noneOf(Farbe.class);
+		EnumSet<Form> formen= EnumSet.noneOf(Form.class);
+		
+		int anzahl = 
+			prüfeSteine(farben, formen, x, y, dx, dy) + 
+			prüfeSteine(farben, formen, x, y, -dx, -dy);
+		
+		if (anzahl == 0) {
+			return true;
+		}
+		
+		if (farben.size() == anzahl && formen.size() == 1) {
+			return true;
+		}
+
+		if (farben.size() == 1 && formen.size() == anzahl) {
+			return true;
+		}
+		
+		return false;
+	}
+
+	private int prüfeSteine(EnumSet<Farbe> farben, EnumSet<Form> formen, int x, int y, int dx, int dy) {
+		int steine = 0;
+		int xPos = x;
+		int yPos = y;
+		while (true) {
+			xPos += dx;
+			yPos += dy;
+			Stein feld = get(xPos, yPos);
+			if (feld == null) {
+				return steine;
+			}
+			
+			steine++;
+			farben.add(feld.farbe);
+			formen.add(feld.form);
+		}
+	}
+
+	private boolean istBesetzt(int x, int y) {
+		return get(x, y) != null;
+	}
+
+	private boolean hatNachbarn(int x, int y) {
+		return istBesetzt(x - 1, y) || istBesetzt(x + 1, y) || istBesetzt(x, y - 1) || istBesetzt(x, y + 1);
 	}
 }
