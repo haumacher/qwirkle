@@ -3,7 +3,7 @@ var __gwtModuleFunction = $wnd.qwirkle;
 var $sendStats = __gwtModuleFunction.__sendStats;
 $sendStats('moduleStartup', 'moduleEvalStart');
 var $gwt_version = "2.9.0";
-var $strongName = '965DC54FC58F6B1B947DD0F61AE8DCD3';
+var $strongName = 'D18C1EE4D16C76AB69AFDF7CDF165237';
 var $gwt = {};
 var $doc = $wnd.document;
 var $moduleName, $moduleBase;
@@ -22,7 +22,7 @@ var $stats = $wnd.__gwtStatsEvent ? function(a) {
 return $wnd.__gwtStatsEvent && $wnd.__gwtStatsEvent(a);
 } : null;
 var $sessionId = $wnd.__gwtStatsSessionId ? $wnd.__gwtStatsSessionId : null;
-var $intern_0 = {3:1}, $intern_1 = {3:1, 5:1, 4:1}, $intern_2 = {3:1, 7:1, 4:1};
+var $intern_0 = {3:1}, $intern_1 = {3:1, 5:1, 4:1}, $intern_2 = {3:1, 10:1, 4:1};
 var _, prototypesByTypeId_0, initFnList_0, permutationId = -1;
 function setGwtProperty(propertyName, propertyValue){
   typeof window === 'object' && typeof window['$gwt'] === 'object' && (window['$gwt'][propertyName] = propertyValue);
@@ -168,6 +168,11 @@ function castTo(src_0, dstId){
   return src_0;
 }
 
+function castToNative(src_0, jsType){
+  checkCriticalType(src_0 == null || src_0 && jsType && src_0 instanceof jsType);
+  return src_0;
+}
+
 function hasJavaObjectVirtualDispatch(src_0){
   return !Array.isArray(src_0) && src_0.typeMarker === typeMarkerFn;
 }
@@ -247,6 +252,14 @@ function createForEnum(packageName, compoundClassName, typeId, enumConstantsFunc
   return clazz;
 }
 
+function createForPrimitive(className, primitiveTypeId){
+  var clazz;
+  clazz = createClassObject('', className);
+  clazz.typeId = primitiveTypeId;
+  clazz.modifiers = 1;
+  return clazz;
+}
+
 function getClassLiteralForArray_0(leafClass, dimensions){
   var arrayLiterals = leafClass.arrayLiterals = leafClass.arrayLiterals || [];
   return arrayLiterals[dimensions] || (arrayLiterals[dimensions] = leafClass.createClassLiteralForArray(dimensions));
@@ -305,7 +318,7 @@ function maybeSetClassLiteral(typeId, clazz){
   prototype_0.___clazz = clazz;
 }
 
-defineClass(19, 1, {}, Class);
+defineClass(27, 1, {}, Class);
 _.createClassLiteralForArray = function createClassLiteralForArray(dimensions){
   var clazz;
   clazz = new Class;
@@ -339,7 +352,7 @@ _.isPrimitive = function isPrimitive(){
 _.modifiers = 0;
 var nextSequentialId = 1;
 var Ljava_lang_Object_2_classLit = createForClass('java.lang', 'Object', 1);
-var Ljava_lang_Class_2_classLit = createForClass('java.lang', 'Class', 19);
+var Ljava_lang_Class_2_classLit = createForClass('java.lang', 'Class', 27);
 function $fillInStackTrace(this$static){
   this$static.writableStackTrace && this$static.backingJsObject !== '__noinit__' && this$static.initializeBackingError();
   return this$static;
@@ -400,7 +413,7 @@ _.getBackingJsObject = function getBackingJsObject(){
 ;
 _.getBackingSuppressed = function getBackingSuppressed(){
   var collected, lastArg, lastArg0;
-  return collected = castTo($reduce((lastArg0 = $map(stream((this.suppressedExceptions == null && (this.suppressedExceptions = initUnidimensionalArray(Ljava_lang_Throwable_2_classLit, $intern_0, 4, 0, 0, 1)) , this.suppressedExceptions)), new Throwable$lambda$0$Type) , of(new Collectors$21methodref$ctor$Type, new Collectors$20methodref$add$Type, new Collectors$lambda$42$Type, stampJavaTypeInfo(getClassLiteralForArray(Ljava_util_stream_Collector$Characteristics_2_classLit, 1), $intern_0, 8, 0, [($clinit_Collector$Characteristics() , IDENTITY_FINISH)])) , lastArg0), (lastArg = new ArrayList , lastArg)), 18) , $toArray(collected, initUnidimensionalArray(Ljava_lang_Object_2_classLit, $intern_0, 1, collected.array.length, 5, 1));
+  return collected = castTo($reduce((lastArg0 = $map(stream((this.suppressedExceptions == null && (this.suppressedExceptions = initUnidimensionalArray(Ljava_lang_Throwable_2_classLit, $intern_0, 4, 0, 0, 1)) , this.suppressedExceptions)), new Throwable$lambda$0$Type) , of(new Collectors$21methodref$ctor$Type, new Collectors$20methodref$add$Type, new Collectors$lambda$42$Type, stampJavaTypeInfo(getClassLiteralForArray(Ljava_util_stream_Collector$Characteristics_2_classLit, 1), $intern_0, 12, 0, [($clinit_Collector$Characteristics() , IDENTITY_FINISH)])) , lastArg0), (lastArg = new ArrayList , lastArg)), 26) , $toArray(collected, initUnidimensionalArray(Ljava_lang_Object_2_classLit, $intern_0, 1, collected.array.length, 5, 1));
 }
 ;
 _.getCause = function getCause(){
@@ -415,8 +428,8 @@ _.initializeBackingError = function initializeBackingError(){
 _.backingJsObject = '__noinit__';
 _.writableStackTrace = true;
 var Ljava_lang_Throwable_2_classLit = createForClass('java.lang', 'Throwable', 4);
-defineClass(16, 4, {3:1, 4:1});
-var Ljava_lang_Exception_2_classLit = createForClass('java.lang', 'Exception', 16);
+defineClass(22, 4, {3:1, 4:1});
+var Ljava_lang_Exception_2_classLit = createForClass('java.lang', 'Exception', 22);
 function RuntimeException(){
   $fillInStackTrace(this);
   this.initializeBackingError();
@@ -428,12 +441,12 @@ function RuntimeException_0(message){
   this.initializeBackingError();
 }
 
-defineClass(5, 16, $intern_1);
+defineClass(5, 22, $intern_1);
 var Ljava_lang_RuntimeException_2_classLit = createForClass('java.lang', 'RuntimeException', 5);
-defineClass(17, 5, $intern_1);
-var Ljava_lang_JsException_2_classLit = createForClass('java.lang', 'JsException', 17);
-defineClass(32, 17, $intern_1);
-var Lcom_google_gwt_core_client_impl_JavaScriptExceptionBase_2_classLit = createForClass('com.google.gwt.core.client.impl', 'JavaScriptExceptionBase', 32);
+defineClass(23, 5, $intern_1);
+var Ljava_lang_JsException_2_classLit = createForClass('java.lang', 'JsException', 23);
+defineClass(41, 23, $intern_1);
+var Lcom_google_gwt_core_client_impl_JavaScriptExceptionBase_2_classLit = createForClass('com.google.gwt.core.client.impl', 'JavaScriptExceptionBase', 41);
 function $clinit_JavaScriptException(){
   $clinit_JavaScriptException = emptyMethod;
   NOT_SET = new Object_0;
@@ -448,13 +461,13 @@ function JavaScriptException(e){
   this.e = e;
 }
 
-defineClass(10, 32, {10:1, 3:1, 5:1, 4:1}, JavaScriptException);
+defineClass(15, 41, {15:1, 3:1, 5:1, 4:1}, JavaScriptException);
 _.getThrown = function getThrown(){
   return maskUndefined(this.e) === maskUndefined(NOT_SET)?null:this.e;
 }
 ;
 var NOT_SET;
-var Lcom_google_gwt_core_client_JavaScriptException_2_classLit = createForClass('com.google.gwt.core.client', 'JavaScriptException', 10);
+var Lcom_google_gwt_core_client_JavaScriptException_2_classLit = createForClass('com.google.gwt.core.client', 'JavaScriptException', 15);
 var Lcom_google_gwt_core_client_JavaScriptObject_2_classLit = createForClass('com.google.gwt.core.client', 'JavaScriptObject$', 0);
 function now_1(){
   if (Date.now) {
@@ -463,8 +476,8 @@ function now_1(){
   return (new Date).getTime();
 }
 
-defineClass(56, 1, {});
-var Lcom_google_gwt_core_client_Scheduler_2_classLit = createForClass('com.google.gwt.core.client', 'Scheduler', 56);
+defineClass(66, 1, {});
+var Lcom_google_gwt_core_client_Scheduler_2_classLit = createForClass('com.google.gwt.core.client', 'Scheduler', 66);
 function $clinit_Impl(){
   $clinit_Impl = emptyMethod;
   !!($clinit_StackTraceCreator() , collector);
@@ -594,7 +607,7 @@ function runScheduledTasks(tasks, rescheduled){
       if (instanceOf($e0, 4)) {
         e = $e0;
         $clinit_Impl();
-        reportToBrowser(instanceOf(e, 10)?castTo(e, 10).getThrown():e);
+        reportToBrowser(instanceOf(e, 15)?castTo(e, 15).getThrown():e);
       }
        else 
         throw toJs($e0);
@@ -603,9 +616,9 @@ function runScheduledTasks(tasks, rescheduled){
   return rescheduled;
 }
 
-defineClass(41, 56, {}, SchedulerImpl);
+defineClass(51, 66, {}, SchedulerImpl);
 var INSTANCE;
-var Lcom_google_gwt_core_client_impl_SchedulerImpl_2_classLit = createForClass('com.google.gwt.core.client.impl', 'SchedulerImpl', 41);
+var Lcom_google_gwt_core_client_impl_SchedulerImpl_2_classLit = createForClass('com.google.gwt.core.client.impl', 'SchedulerImpl', 51);
 function $clinit_StackTraceCreator(){
   $clinit_StackTraceCreator = emptyMethod;
   var c, enforceLegacy;
@@ -634,12 +647,12 @@ function supportsErrorStack(){
 }
 
 var collector;
-defineClass(69, 1, {});
-var Lcom_google_gwt_core_client_impl_StackTraceCreator$Collector_2_classLit = createForClass('com.google.gwt.core.client.impl', 'StackTraceCreator/Collector', 69);
+defineClass(79, 1, {});
+var Lcom_google_gwt_core_client_impl_StackTraceCreator$Collector_2_classLit = createForClass('com.google.gwt.core.client.impl', 'StackTraceCreator/Collector', 79);
 function StackTraceCreator$CollectorLegacy(){
 }
 
-defineClass(33, 69, {}, StackTraceCreator$CollectorLegacy);
+defineClass(42, 79, {}, StackTraceCreator$CollectorLegacy);
 _.collect = function collect(error){
   var seen = {}, name_1;
   var fnStack = [];
@@ -663,17 +676,17 @@ _.collect = function collect(error){
   }
 }
 ;
-var Lcom_google_gwt_core_client_impl_StackTraceCreator$CollectorLegacy_2_classLit = createForClass('com.google.gwt.core.client.impl', 'StackTraceCreator/CollectorLegacy', 33);
-defineClass(70, 69, {});
+var Lcom_google_gwt_core_client_impl_StackTraceCreator$CollectorLegacy_2_classLit = createForClass('com.google.gwt.core.client.impl', 'StackTraceCreator/CollectorLegacy', 42);
+defineClass(80, 79, {});
 _.collect = function collect_0(error){
 }
 ;
-var Lcom_google_gwt_core_client_impl_StackTraceCreator$CollectorModern_2_classLit = createForClass('com.google.gwt.core.client.impl', 'StackTraceCreator/CollectorModern', 70);
+var Lcom_google_gwt_core_client_impl_StackTraceCreator$CollectorModern_2_classLit = createForClass('com.google.gwt.core.client.impl', 'StackTraceCreator/CollectorModern', 80);
 function StackTraceCreator$CollectorModernNoSourceMap(){
 }
 
-defineClass(34, 70, {}, StackTraceCreator$CollectorModernNoSourceMap);
-var Lcom_google_gwt_core_client_impl_StackTraceCreator$CollectorModernNoSourceMap_2_classLit = createForClass('com.google.gwt.core.client.impl', 'StackTraceCreator/CollectorModernNoSourceMap', 34);
+defineClass(43, 80, {}, StackTraceCreator$CollectorModernNoSourceMap);
+var Lcom_google_gwt_core_client_impl_StackTraceCreator$CollectorModernNoSourceMap_2_classLit = createForClass('com.google.gwt.core.client.impl', 'StackTraceCreator/CollectorModernNoSourceMap', 43);
 function canSet(array, value_0){
   var elementTypeCategory;
   switch (getElementTypeCategory(array)) {
@@ -771,6 +784,7 @@ function toJs(t){
 function init(){
   $wnd.setTimeout($entry(assertCompileTimeUserAgent));
   $onModuleLoad();
+  $onModuleLoad_0();
 }
 
 function $onModuleLoad(){
@@ -788,7 +802,7 @@ function $onModuleLoad(){
 function assertCompileTimeUserAgent(){
   var runtimeValue;
   runtimeValue = $getRuntimeValue();
-  if (!$equals('ie9', runtimeValue)) {
+  if (!$equals('safari', runtimeValue)) {
     throw toJs(new UserAgentAsserter$UserAgentAssertionError(runtimeValue));
   }
 }
@@ -800,16 +814,16 @@ function Error_0(message, cause){
   this.initializeBackingError();
 }
 
-defineClass(7, 4, $intern_2);
-var Ljava_lang_Error_2_classLit = createForClass('java.lang', 'Error', 7);
-defineClass(6, 7, $intern_2);
-var Ljava_lang_AssertionError_2_classLit = createForClass('java.lang', 'AssertionError', 6);
+defineClass(10, 4, $intern_2);
+var Ljava_lang_Error_2_classLit = createForClass('java.lang', 'Error', 10);
+defineClass(7, 10, $intern_2);
+var Ljava_lang_AssertionError_2_classLit = createForClass('java.lang', 'AssertionError', 7);
 function UserAgentAsserter$UserAgentAssertionError(runtimeValue){
-  Error_0.call(this, 'Possible problem with your *.gwt.xml module file.\nThe compile time user.agent value (ie9) does not match the runtime user.agent value (' + runtimeValue + ').\n' + 'Expect more errors.' == null?'null':toString_0('Possible problem with your *.gwt.xml module file.\nThe compile time user.agent value (ie9) does not match the runtime user.agent value (' + runtimeValue + ').\n' + 'Expect more errors.'), instanceOf('Possible problem with your *.gwt.xml module file.\nThe compile time user.agent value (ie9) does not match the runtime user.agent value (' + runtimeValue + ').\n' + 'Expect more errors.', 4)?castTo('Possible problem with your *.gwt.xml module file.\nThe compile time user.agent value (ie9) does not match the runtime user.agent value (' + runtimeValue + ').\n' + 'Expect more errors.', 4):null);
+  Error_0.call(this, 'Possible problem with your *.gwt.xml module file.\nThe compile time user.agent value (safari) does not match the runtime user.agent value (' + runtimeValue + ').\n' + 'Expect more errors.' == null?'null':toString_0('Possible problem with your *.gwt.xml module file.\nThe compile time user.agent value (safari) does not match the runtime user.agent value (' + runtimeValue + ').\n' + 'Expect more errors.'), instanceOf('Possible problem with your *.gwt.xml module file.\nThe compile time user.agent value (safari) does not match the runtime user.agent value (' + runtimeValue + ').\n' + 'Expect more errors.', 4)?castTo('Possible problem with your *.gwt.xml module file.\nThe compile time user.agent value (safari) does not match the runtime user.agent value (' + runtimeValue + ').\n' + 'Expect more errors.', 4):null);
 }
 
-defineClass(22, 6, $intern_2, UserAgentAsserter$UserAgentAssertionError);
-var Lcom_google_gwt_useragent_client_UserAgentAsserter$UserAgentAssertionError_2_classLit = createForClass('com.google.gwt.useragent.client', 'UserAgentAsserter/UserAgentAssertionError', 22);
+defineClass(30, 7, $intern_2, UserAgentAsserter$UserAgentAssertionError);
+var Lcom_google_gwt_useragent_client_UserAgentAsserter$UserAgentAssertionError_2_classLit = createForClass('com.google.gwt.useragent.client', 'UserAgentAsserter/UserAgentAssertionError', 30);
 function $getRuntimeValue(){
   var ua = navigator.userAgent.toLowerCase();
   var docMode = $doc.documentMode;
@@ -841,63 +855,75 @@ function $getRuntimeValue(){
   return 'unknown';
 }
 
+function $clinit_DomGlobal(){
+  $clinit_DomGlobal = emptyMethod;
+  document_0 = $wnd.goog.global.document;
+}
+
+var document_0;
 function IndexOutOfBoundsException(message){
   RuntimeException_0.call(this, message);
 }
 
-defineClass(11, 5, $intern_1, IndexOutOfBoundsException);
-var Ljava_lang_IndexOutOfBoundsException_2_classLit = createForClass('java.lang', 'IndexOutOfBoundsException', 11);
+defineClass(19, 5, $intern_1, IndexOutOfBoundsException);
+var Ljava_lang_IndexOutOfBoundsException_2_classLit = createForClass('java.lang', 'IndexOutOfBoundsException', 19);
 function ArrayIndexOutOfBoundsException(msg){
   IndexOutOfBoundsException.call(this, msg);
 }
 
-defineClass(53, 11, $intern_1, ArrayIndexOutOfBoundsException);
-var Ljava_lang_ArrayIndexOutOfBoundsException_2_classLit = createForClass('java.lang', 'ArrayIndexOutOfBoundsException', 53);
+defineClass(63, 19, $intern_1, ArrayIndexOutOfBoundsException);
+var Ljava_lang_ArrayIndexOutOfBoundsException_2_classLit = createForClass('java.lang', 'ArrayIndexOutOfBoundsException', 63);
 function ArrayStoreException(){
   RuntimeException.call(this);
 }
 
-defineClass(39, 5, $intern_1, ArrayStoreException);
-var Ljava_lang_ArrayStoreException_2_classLit = createForClass('java.lang', 'ArrayStoreException', 39);
+defineClass(48, 5, $intern_1, ArrayStoreException);
+var Ljava_lang_ArrayStoreException_2_classLit = createForClass('java.lang', 'ArrayStoreException', 48);
 function $clinit_Boolean(){
   $clinit_Boolean = emptyMethod;
 }
 
-booleanCastMap = {3:1, 14:1};
-var Ljava_lang_Boolean_2_classLit = createForClass('java.lang', 'Boolean', 66);
+booleanCastMap = {3:1, 18:1};
+var Ljava_lang_Boolean_2_classLit = createForClass('java.lang', 'Boolean', 76);
 function ClassCastException(){
   RuntimeException_0.call(this, null);
 }
 
-defineClass(28, 5, $intern_1, ClassCastException);
-var Ljava_lang_ClassCastException_2_classLit = createForClass('java.lang', 'ClassCastException', 28);
-defineClass(67, 1, $intern_0);
-var Ljava_lang_Number_2_classLit = createForClass('java.lang', 'Number', 67);
-doubleCastMap = {3:1, 14:1};
-var Ljava_lang_Double_2_classLit = createForClass('java.lang', 'Double', 68);
-defineClass(15, 1, {3:1, 14:1, 15:1});
+defineClass(37, 5, $intern_1, ClassCastException);
+var Ljava_lang_ClassCastException_2_classLit = createForClass('java.lang', 'ClassCastException', 37);
+defineClass(77, 1, $intern_0);
+var Ljava_lang_Number_2_classLit = createForClass('java.lang', 'Number', 77);
+doubleCastMap = {3:1, 18:1};
+var Ljava_lang_Double_2_classLit = createForClass('java.lang', 'Double', 78);
+function Enum(name_0, ordinal){
+  this.name_0 = name_0;
+  this.ordinal = ordinal;
+}
+
+defineClass(14, 1, {3:1, 18:1, 14:1});
 _.hashCode_0 = function hashCode_1(){
   return getHashCode(this);
 }
 ;
-var Ljava_lang_Enum_2_classLit = createForClass('java.lang', 'Enum', 15);
+_.ordinal = 0;
+var Ljava_lang_Enum_2_classLit = createForClass('java.lang', 'Enum', 14);
 function IllegalStateException(){
   RuntimeException_0.call(this, "Stream already terminated, can't be modified or used");
 }
 
-defineClass(36, 5, $intern_1, IllegalStateException);
-var Ljava_lang_IllegalStateException_2_classLit = createForClass('java.lang', 'IllegalStateException', 36);
-defineClass(94, 1, {});
+defineClass(45, 5, $intern_1, IllegalStateException);
+var Ljava_lang_IllegalStateException_2_classLit = createForClass('java.lang', 'IllegalStateException', 45);
+defineClass(117, 1, {});
 function NullPointerException(){
   RuntimeException.call(this);
 }
 
-defineClass(20, 17, $intern_1, NullPointerException);
+defineClass(28, 23, $intern_1, NullPointerException);
 _.createError = function createError_0(msg){
   return new TypeError(msg);
 }
 ;
-var Ljava_lang_NullPointerException_2_classLit = createForClass('java.lang', 'NullPointerException', 20);
+var Ljava_lang_NullPointerException_2_classLit = createForClass('java.lang', 'NullPointerException', 28);
 function $charAt(this$static, index_0){
   checkCriticalStringElementIndex(index_0, this$static.length);
   return this$static.charCodeAt(index_0);
@@ -907,33 +933,33 @@ function $equals(this$static, other){
   return checkCriticalNotNull(this$static) , maskUndefined(this$static) === maskUndefined(other);
 }
 
-stringCastMap = {3:1, 27:1, 14:1, 2:1};
+stringCastMap = {3:1, 35:1, 18:1, 2:1};
 var Ljava_lang_String_2_classLit = createForClass('java.lang', 'String', 2);
 function StringIndexOutOfBoundsException(message){
   IndexOutOfBoundsException.call(this, message);
 }
 
-defineClass(37, 11, $intern_1, StringIndexOutOfBoundsException);
-var Ljava_lang_StringIndexOutOfBoundsException_2_classLit = createForClass('java.lang', 'StringIndexOutOfBoundsException', 37);
-defineClass(98, 1, {});
+defineClass(46, 19, $intern_1, StringIndexOutOfBoundsException);
+var Ljava_lang_StringIndexOutOfBoundsException_2_classLit = createForClass('java.lang', 'StringIndexOutOfBoundsException', 46);
+defineClass(121, 1, {});
 function Throwable$lambda$0$Type(){
 }
 
-defineClass(23, 1, {}, Throwable$lambda$0$Type);
-var Ljava_lang_Throwable$lambda$0$Type_2_classLit = createForClass('java.lang', 'Throwable/lambda$0$Type', 23);
+defineClass(31, 1, {}, Throwable$lambda$0$Type);
+var Ljava_lang_Throwable$lambda$0$Type_2_classLit = createForClass('java.lang', 'Throwable/lambda$0$Type', 31);
 function UnsupportedOperationException(){
   RuntimeException_0.call(this, 'Add not supported on this collection');
 }
 
-defineClass(38, 5, $intern_1, UnsupportedOperationException);
-var Ljava_lang_UnsupportedOperationException_2_classLit = createForClass('java.lang', 'UnsupportedOperationException', 38);
-defineClass(71, 1, {21:1});
+defineClass(47, 5, $intern_1, UnsupportedOperationException);
+var Ljava_lang_UnsupportedOperationException_2_classLit = createForClass('java.lang', 'UnsupportedOperationException', 47);
+defineClass(81, 1, {29:1});
 _.add_0 = function add_0(o){
   throw toJs(new UnsupportedOperationException);
 }
 ;
-var Ljava_util_AbstractCollection_2_classLit = createForClass('java.util', 'AbstractCollection', 71);
-defineClass(72, 71, {21:1, 18:1});
+var Ljava_util_AbstractCollection_2_classLit = createForClass('java.util', 'AbstractCollection', 81);
+defineClass(82, 81, {29:1, 26:1});
 _.add_0 = function add_1(obj){
   $add(this, this.array.length, obj);
   return true;
@@ -943,7 +969,7 @@ _.hashCode_0 = function hashCode_2(){
   return hashCode_3(this);
 }
 ;
-var Ljava_util_AbstractList_2_classLit = createForClass('java.util', 'AbstractList', 72);
+var Ljava_util_AbstractList_2_classLit = createForClass('java.util', 'AbstractList', 82);
 function $add(this$static, index_0, o){
   checkCriticalPositionIndex(index_0, this$static.array.length);
   insertTo(this$static.array, index_0, o);
@@ -964,20 +990,20 @@ function ArrayList(){
   this.array = initUnidimensionalArray(Ljava_lang_Object_2_classLit, $intern_0, 1, 0, 5, 1);
 }
 
-defineClass(9, 72, {3:1, 9:1, 21:1, 18:1}, ArrayList);
+defineClass(13, 82, {3:1, 13:1, 29:1, 26:1}, ArrayList);
 _.add_0 = function add_2(o){
   return this.array[this.array.length] = o , true;
 }
 ;
-var Ljava_util_ArrayList_2_classLit = createForClass('java.util', 'ArrayList', 9);
+var Ljava_util_ArrayList_2_classLit = createForClass('java.util', 'ArrayList', 13);
 function ArrayList$1(this$0){
   this.this$01 = this$0;
 }
 
-defineClass(13, 1, {}, ArrayList$1);
+defineClass(21, 1, {}, ArrayList$1);
 _.i = 0;
 _.last = -1;
-var Ljava_util_ArrayList$1_2_classLit = createForClass('java.util', 'ArrayList/1', 13);
+var Ljava_util_ArrayList$1_2_classLit = createForClass('java.util', 'ArrayList/1', 21);
 function spliterator_0(array, endExclusive){
   return checkCriticalArrayBounds(endExclusive, array.length) , new Spliterators$ArraySpliterator(array, endExclusive);
 }
@@ -1014,7 +1040,7 @@ function checkCriticalArrayBounds(end, length_0){
   }
 }
 
-defineClass(46, 1, {});
+defineClass(56, 1, {});
 _.forEachRemaining = function forEachRemaining(consumer){
   $forEachRemaining(this, consumer);
 }
@@ -1029,14 +1055,14 @@ _.estimateSize = function estimateSize(){
 ;
 _.characteristics = 0;
 _.sizeEstimate = 0;
-var Ljava_util_Spliterators$BaseSpliterator_2_classLit = createForClass('java.util', 'Spliterators/BaseSpliterator', 46);
+var Ljava_util_Spliterators$BaseSpliterator_2_classLit = createForClass('java.util', 'Spliterators/BaseSpliterator', 56);
 function Spliterators$AbstractSpliterator(size_0, characteristics){
   this.sizeEstimate = size_0;
   this.characteristics = (characteristics & 64) != 0?characteristics | 16384:characteristics;
 }
 
-defineClass(47, 46, {});
-var Ljava_util_Spliterators$AbstractSpliterator_2_classLit = createForClass('java.util', 'Spliterators/AbstractSpliterator', 47);
+defineClass(57, 56, {});
+var Ljava_util_Spliterators$AbstractSpliterator_2_classLit = createForClass('java.util', 'Spliterators/AbstractSpliterator', 57);
 function $forEachRemaining_0(this$static, consumer){
   checkCriticalNotNull(consumer);
   while (this$static.index_0 < this$static.limit) {
@@ -1053,7 +1079,7 @@ function $tryAdvance(this$static, consumer){
   return false;
 }
 
-defineClass(42, 1, {});
+defineClass(52, 1, {});
 _.forEachRemaining = function forEachRemaining_0(consumer){
   $forEachRemaining(this, consumer);
 }
@@ -1069,7 +1095,7 @@ _.estimateSize = function estimateSize_0(){
 _.characteristics = 0;
 _.index_0 = 0;
 _.limit = 0;
-var Ljava_util_Spliterators$BaseArraySpliterator_2_classLit = createForClass('java.util', 'Spliterators/BaseArraySpliterator', 42);
+var Ljava_util_Spliterators$BaseArraySpliterator_2_classLit = createForClass('java.util', 'Spliterators/BaseArraySpliterator', 52);
 function $consume(this$static, consumer, index_0){
   consumer.accept(this$static.array[index_0]);
 }
@@ -1081,7 +1107,7 @@ function Spliterators$ArraySpliterator(array, limit){
   this.array = array;
 }
 
-defineClass(43, 42, {}, Spliterators$ArraySpliterator);
+defineClass(53, 52, {}, Spliterators$ArraySpliterator);
 _.forEachRemaining = function forEachRemaining_1(consumer){
   $forEachRemaining_0(this, consumer);
 }
@@ -1090,7 +1116,7 @@ _.tryAdvance = function tryAdvance(consumer){
   return $tryAdvance(this, consumer);
 }
 ;
-var Ljava_util_Spliterators$ArraySpliterator_2_classLit = createForClass('java.util', 'Spliterators/ArraySpliterator', 43);
+var Ljava_util_Spliterators$ArraySpliterator_2_classLit = createForClass('java.util', 'Spliterators/ArraySpliterator', 53);
 function of(supplier, accumulator, combiner, characteristics){
   checkCriticalNotNull(supplier);
   checkCriticalNotNull(accumulator);
@@ -1107,49 +1133,50 @@ function $clinit_Collector$Characteristics(){
 }
 
 function Collector$Characteristics(enum$name, enum$ordinal){
+  Enum.call(this, enum$name, enum$ordinal);
 }
 
 function values(){
   $clinit_Collector$Characteristics();
-  return stampJavaTypeInfo(getClassLiteralForArray(Ljava_util_stream_Collector$Characteristics_2_classLit, 1), $intern_0, 8, 0, [CONCURRENT, IDENTITY_FINISH, UNORDERED]);
+  return stampJavaTypeInfo(getClassLiteralForArray(Ljava_util_stream_Collector$Characteristics_2_classLit, 1), $intern_0, 12, 0, [CONCURRENT, IDENTITY_FINISH, UNORDERED]);
 }
 
-defineClass(8, 15, {3:1, 14:1, 15:1, 8:1}, Collector$Characteristics);
+defineClass(12, 14, {3:1, 18:1, 14:1, 12:1}, Collector$Characteristics);
 var CONCURRENT, IDENTITY_FINISH, UNORDERED;
-var Ljava_util_stream_Collector$Characteristics_2_classLit = createForEnum('java.util.stream', 'Collector/Characteristics', 8, values);
+var Ljava_util_stream_Collector$Characteristics_2_classLit = createForEnum('java.util.stream', 'Collector/Characteristics', 12, values);
 function CollectorImpl(){
 }
 
-defineClass(55, 1, {}, CollectorImpl);
-var Ljava_util_stream_CollectorImpl_2_classLit = createForClass('java.util.stream', 'CollectorImpl', 55);
+defineClass(64, 1, {}, CollectorImpl);
+var Ljava_util_stream_CollectorImpl_2_classLit = createForClass('java.util.stream', 'CollectorImpl', 64);
 function Collectors$20methodref$add$Type(){
 }
 
-defineClass(25, 1, {}, Collectors$20methodref$add$Type);
-var Ljava_util_stream_Collectors$20methodref$add$Type_2_classLit = createForClass('java.util.stream', 'Collectors/20methodref$add$Type', 25);
+defineClass(33, 1, {}, Collectors$20methodref$add$Type);
+var Ljava_util_stream_Collectors$20methodref$add$Type_2_classLit = createForClass('java.util.stream', 'Collectors/20methodref$add$Type', 33);
 function Collectors$21methodref$ctor$Type(){
 }
 
-defineClass(24, 1, {}, Collectors$21methodref$ctor$Type);
-var Ljava_util_stream_Collectors$21methodref$ctor$Type_2_classLit = createForClass('java.util.stream', 'Collectors/21methodref$ctor$Type', 24);
+defineClass(32, 1, {}, Collectors$21methodref$ctor$Type);
+var Ljava_util_stream_Collectors$21methodref$ctor$Type_2_classLit = createForClass('java.util.stream', 'Collectors/21methodref$ctor$Type', 32);
 function Collectors$lambda$42$Type(){
 }
 
-defineClass(26, 1, {}, Collectors$lambda$42$Type);
-var Ljava_util_stream_Collectors$lambda$42$Type_2_classLit = createForClass('java.util.stream', 'Collectors/lambda$42$Type', 26);
+defineClass(34, 1, {}, Collectors$lambda$42$Type);
+var Ljava_util_stream_Collectors$lambda$42$Type_2_classLit = createForClass('java.util.stream', 'Collectors/lambda$42$Type', 34);
 function $terminate(this$static){
-  if (!this$static.root) {
+  if (!this$static.root_0) {
     $throwIfTerminated(this$static);
     this$static.terminated = true;
   }
    else {
-    $terminate(this$static.root);
+    $terminate(this$static.root_0);
   }
 }
 
 function $throwIfTerminated(this$static){
-  if (this$static.root) {
-    $throwIfTerminated(this$static.root);
+  if (this$static.root_0) {
+    $throwIfTerminated(this$static.root_0);
   }
    else if (this$static.terminated) {
     throw toJs(new IllegalStateException);
@@ -1158,17 +1185,17 @@ function $throwIfTerminated(this$static){
 
 function TerminatableStream(previous){
   if (!previous) {
-    this.root = null;
+    this.root_0 = null;
     new ArrayList;
   }
    else {
-    this.root = previous;
+    this.root_0 = previous;
   }
 }
 
-defineClass(45, 1, {});
+defineClass(55, 1, {});
 _.terminated = false;
-var Ljava_util_stream_TerminatableStream_2_classLit = createForClass('java.util.stream', 'TerminatableStream', 45);
+var Ljava_util_stream_TerminatableStream_2_classLit = createForClass('java.util.stream', 'TerminatableStream', 55);
 function $map(this$static, mapper){
   $throwIfTerminated(this$static);
   return new StreamImpl(this$static, new StreamImpl$MapToObjSpliterator(mapper, this$static.spliterator));
@@ -1189,7 +1216,7 @@ function StreamImpl(prev, spliterator){
 }
 
 function lambda$4(a_1, t_2){
-  castTo(a_1, 21).add_0(t_2);
+  castTo(a_1, 29).add_0(t_2);
   return a_1;
 }
 
@@ -1197,30 +1224,30 @@ function lambda$5(consumer_0, item_2){
   $accept(consumer_0, lambda$4(consumer_0.value_0, item_2));
 }
 
-defineClass(12, 45, {12:1}, StreamImpl);
-var Ljava_util_stream_StreamImpl_2_classLit = createForClass('java.util.stream', 'StreamImpl', 12);
+defineClass(20, 55, {20:1}, StreamImpl);
+var Ljava_util_stream_StreamImpl_2_classLit = createForClass('java.util.stream', 'StreamImpl', 20);
 function StreamImpl$MapToObjSpliterator(map_0, original){
   Spliterators$AbstractSpliterator.call(this, original.estimateSize(), original.characteristics_0() & -6);
   checkCriticalNotNull(map_0);
   this.original = original;
 }
 
-defineClass(48, 47, {}, StreamImpl$MapToObjSpliterator);
+defineClass(58, 57, {}, StreamImpl$MapToObjSpliterator);
 _.tryAdvance = function tryAdvance_0(action){
   return this.original.tryAdvance(new StreamImpl$MapToObjSpliterator$lambda$0$Type(action));
 }
 ;
-var Ljava_util_stream_StreamImpl$MapToObjSpliterator_2_classLit = createForClass('java.util.stream', 'StreamImpl/MapToObjSpliterator', 48);
+var Ljava_util_stream_StreamImpl$MapToObjSpliterator_2_classLit = createForClass('java.util.stream', 'StreamImpl/MapToObjSpliterator', 58);
 function StreamImpl$MapToObjSpliterator$lambda$0$Type(action_1){
   this.action_1 = action_1;
 }
 
-defineClass(50, 1, {}, StreamImpl$MapToObjSpliterator$lambda$0$Type);
+defineClass(60, 1, {}, StreamImpl$MapToObjSpliterator$lambda$0$Type);
 _.accept = function accept(arg0){
   this.action_1.accept(castTo(arg0, 4).backingJsObject);
 }
 ;
-var Ljava_util_stream_StreamImpl$MapToObjSpliterator$lambda$0$Type_2_classLit = createForClass('java.util.stream', 'StreamImpl/MapToObjSpliterator/lambda$0$Type', 50);
+var Ljava_util_stream_StreamImpl$MapToObjSpliterator$lambda$0$Type_2_classLit = createForClass('java.util.stream', 'StreamImpl/MapToObjSpliterator/lambda$0$Type', 60);
 function $accept(this$static, value_0){
   this$static.value_0 = value_0;
 }
@@ -1228,27 +1255,27 @@ function $accept(this$static, value_0){
 function StreamImpl$ValueConsumer(){
 }
 
-defineClass(49, 1, {}, StreamImpl$ValueConsumer);
+defineClass(59, 1, {}, StreamImpl$ValueConsumer);
 _.accept = function accept_0(value_0){
   $accept(this, value_0);
 }
 ;
-var Ljava_util_stream_StreamImpl$ValueConsumer_2_classLit = createForClass('java.util.stream', 'StreamImpl/ValueConsumer', 49);
+var Ljava_util_stream_StreamImpl$ValueConsumer_2_classLit = createForClass('java.util.stream', 'StreamImpl/ValueConsumer', 59);
 function StreamImpl$lambda$5$Type(consumer_0){
   this.consumer_0 = consumer_0;
 }
 
-defineClass(51, 1, {}, StreamImpl$lambda$5$Type);
+defineClass(61, 1, {}, StreamImpl$lambda$5$Type);
 _.accept = function accept_1(arg0){
   lambda$5(this.consumer_0, arg0);
 }
 ;
-var Ljava_util_stream_StreamImpl$lambda$5$Type_2_classLit = createForClass('java.util.stream', 'StreamImpl/lambda$5$Type', 51);
+var Ljava_util_stream_StreamImpl$lambda$5$Type_2_classLit = createForClass('java.util.stream', 'StreamImpl/lambda$5$Type', 61);
 function insertTo(array, index_0, value_0){
   array.splice(index_0, 0, value_0);
 }
 
-defineClass(96, 1, {});
+defineClass(119, 1, {});
 function stampJavaTypeInfo_0(array, referenceType){
   return getElementTypeCategory(referenceType) != 10 && stampJavaTypeInfo(getClass__Ljava_lang_Class___devirtual$(referenceType), referenceType.castableTypeMap, referenceType.__elementTypeId$, getElementTypeCategory(referenceType), array) , array;
 }
@@ -1290,7 +1317,7 @@ function checkCriticalType(expression){
   }
 }
 
-defineClass(93, 1, {});
+defineClass(116, 1, {});
 function getHashCode(o){
   return o.$H || (o.$H = ++nextHashId);
 }
@@ -1345,10 +1372,76 @@ function increment(){
 }
 
 var back_0, count = 0, front;
+defineClass(745, 1, {});
+function $createTile(svg, form_0, farbe, x_0){
+  var g, tx;
+  g = castToNative(($clinit_DomGlobal() , document_0).createElementNS('http://www.w3.org/2000/svg', 'g'), $wnd.SVGGElement);
+  switch (form_0) {
+    case 0:
+      g.innerHTML = '<rect class="tile" width="96" height="96" x="2" y="2" ry="3.6773801" rx="3.6773801" />\n<circle class="circle icon" cx="50" cy="50" r="33" />\n';
+      break;
+    case 4:
+      g.innerHTML = '<rect class="tile" width="96" height="96" x="2" y="2" ry="3.6773801" rx="3.6773801" />\n<path class="cross icon" d="M 21.963695,78.155899 C 39.526153,95.724298 49.979405,58.1379 49.979405,58.1379 c 0,0 9.948885,38.090944 28.01571,20.017999 C 96.061942,60.082953 57.983894,50.1307 57.983894,50.1307 c 0,0 38.500723,-9.315711 20.011221,-28.02519 -18.489501,-18.7094883 -28.01571,20.017999 -28.01571,20.017999 0,0 -9.631968,-38.4079622 -28.01571,-20.017999 -18.3837416,18.389962 20.011222,28.02519 20.011222,28.02519 0,0 -37.57368,10.456799 -20.011222,28.025199 z"/>\n';
+      break;
+    case 5:
+      g.innerHTML = '<rect class="tile" width="96" height="96" x="2" y="2" ry="3.6773801" rx="3.6773801" />\n<path class="diamond icon" d="m 49.989114,11.998163 c -0.996267,0 -37.19392,37.579363 -37.19392,37.579363 l 37.19392,37.579362 37.193919,-37.579362 z" />\n';
+      break;
+    case 3:
+      g.innerHTML = '<rect class="tile" width="96" height="96" x="2" y="2" ry="3.6773801" rx="3.6773801" />\n<path class="spike icon" d="M 113.43171,-13.559393 100.75936,5.8642659 113.55939,25.928944 94.135735,13.256602 74.071056,26.056632 86.743399,6.6329732 73.943368,-13.431705 93.367027,-0.75936255 Z" transform="matrix(1.8230645,0,0,1.8176604,-120.91481,38.639104)" />\n';
+      break;
+    case 1:
+      g.innerHTML = '<rect class="tile" width="96" height="96" x="2" y="2" ry="3.6773801" rx="3.6773801" />\n<rect class="square icon" width="56" height="56" x="22" y="22" />\n';
+      break;
+    case 2:
+      g.innerHTML = '<rect class="tile" width="96" height="96" x="2" y="2" ry="3.6773801" rx="3.6773801" />\n<path class="star icon" d="m 47.489846,237.05051 -7.335371,10.98093 11.545767,6.40966 -13.158765,1.11147 2.187395,13.0232 -9.073341,-9.59494 -8.81813,9.83001 1.844494,-13.07618 -13.183424,-0.76538 11.373387,-6.71078 -7.621329,-10.78442 12.337887,4.70797 3.679781,-12.68257 4.011708,12.58152 z" transform="matrix(1.6758019,0,0,1.5098984,-2.8532488,-327.23319)" />\n';
+  }
+  g.className.baseVal = farbe.name_0 != null?farbe.name_0:'' + farbe.ordinal;
+  tx = svg.createSVGTransform();
+  tx.setTranslate(x_0, 0);
+  g.transform.baseVal.initialize(tx);
+  return g;
+}
+
+function $onModuleLoad_0(){
+  var n, stock;
+  stock = castToNative(($clinit_DomGlobal() , document_0).getElementById('stock'), $wnd.SVGSVGElement);
+  for (n = 0; n < 6; n++) {
+    stock.appendChild($createTile(stock, stampJavaTypeInfo(getClassLiteralForArray(Lqwirkle_shared_Qwirkle$Form_2_classLit, 1), $intern_0, 36, 15, [0, 1, 2, 3, 4, 5])[n], ($clinit_Qwirkle$Farbe() , stampJavaTypeInfo(getClassLiteralForArray(Lqwirkle_shared_Qwirkle$Farbe_2_classLit, 1), $intern_0, 9, 0, [yellow, orange, red, blue, green, magenta]))[n], 50 + n * 100));
+  }
+}
+
+function $clinit_Qwirkle$Farbe(){
+  $clinit_Qwirkle$Farbe = emptyMethod;
+  yellow = new Qwirkle$Farbe('yellow', 0);
+  orange = new Qwirkle$Farbe('orange', 1);
+  red = new Qwirkle$Farbe('red', 2);
+  blue = new Qwirkle$Farbe('blue', 3);
+  green = new Qwirkle$Farbe('green', 4);
+  magenta = new Qwirkle$Farbe('magenta', 5);
+}
+
+function Qwirkle$Farbe(enum$name, enum$ordinal){
+  Enum.call(this, enum$name, enum$ordinal);
+}
+
+function values_0(){
+  $clinit_Qwirkle$Farbe();
+  return stampJavaTypeInfo(getClassLiteralForArray(Lqwirkle_shared_Qwirkle$Farbe_2_classLit, 1), $intern_0, 9, 0, [yellow, orange, red, blue, green, magenta]);
+}
+
+defineClass(9, 14, {3:1, 18:1, 14:1, 9:1}, Qwirkle$Farbe);
+var blue, green, magenta, orange, red, yellow;
+var Lqwirkle_shared_Qwirkle$Farbe_2_classLit = createForEnum('qwirkle.shared', 'Qwirkle/Farbe', 9, values_0);
+function values_1(){
+  return stampJavaTypeInfo(getClassLiteralForArray(Lqwirkle_shared_Qwirkle$Form_2_classLit, 1), $intern_0, 36, 15, [0, 1, 2, 3, 4, 5]);
+}
+
+var Lqwirkle_shared_Qwirkle$Form_2_classLit = createForEnum('qwirkle.shared', 'Qwirkle/Form', null, values_1);
+var D_classLit = createForPrimitive('double', 'D');
 var $entry = ($clinit_Impl() , entry);
 var gwtOnLoad = gwtOnLoad = gwtOnLoad_0;
 addInitFunctions(init);
-setGwtProperty('permProps', [[['locale', 'default'], ['user.agent', 'ie9']]]);
+setGwtProperty('permProps', [[['locale', 'default'], ['user.agent', 'safari']]]);
 $sendStats('moduleStartup', 'moduleEvalEnd');
 gwtOnLoad(__gwtModuleFunction.__errFn, __gwtModuleFunction.__moduleName, __gwtModuleFunction.__moduleBase, __gwtModuleFunction.__softPermutationId,__gwtModuleFunction.__computePropValue);
 $sendStats('moduleStartup', 'end');

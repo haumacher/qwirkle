@@ -1,16 +1,16 @@
-package qwirkle;
+package qwirkle.shared;
 
 public class Qwirkle {
 
-	enum Farbe {
+	public enum Farbe {
 		yellow, orange, red, blue, green, magenta
 	}
 
-	enum Form {
+	public enum Form {
 		circle, square, star, pounce, cross, diamond
 	}
 
-	static class Stein {
+	public static class Stein {
 		Farbe farbe;
 		Form form;
 

@@ -1,10 +1,10 @@
-package qwirkle;
+package qwirkle.shared;
 
 import java.util.EnumSet;
 
-import qwirkle.Qwirkle.Farbe;
-import qwirkle.Qwirkle.Form;
-import qwirkle.Qwirkle.Stein;
+import qwirkle.shared.Qwirkle.Farbe;
+import qwirkle.shared.Qwirkle.Form;
+import qwirkle.shared.Qwirkle.Stein;
 
 /**
  * Das Qwirkle-Spielfeld speichert, an welcher Position sich {@link Stein}e
@@ -110,7 +110,7 @@ public class Spielfeld {
 	/**
 	 * Prüft, ob der gegebene Stein an Position (x,y) angelegt werden kann.
 	 */
-	boolean zugErlaubt(int x, int y, Stein stein) {
+	public boolean zugErlaubt(int x, int y, Stein stein) {
 		if (istBesetzt(x, y)) {
 			return false;
 		}
