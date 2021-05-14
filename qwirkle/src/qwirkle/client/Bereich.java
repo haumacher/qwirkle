@@ -49,13 +49,23 @@ public class Bereich implements Iterable<Position> {
 	 * Fügt die {@link Position} der gegebenen X/Y-Koordinate hinzu.
 	 */
 	public void add(int x, int y) {
+		add(new Position(x, y));
+	}
+
+	/**
+	 * Fügt die {@link Position} der gegebenen X/Y-Koordinate hinzu.
+	 */
+	public void add(Position position) {
+		int x = position.x();
+		int y = position.y();
+		
 		_x1 = Math.min(_x1, x);
 		_y1 = Math.min(_y1, y);
 
 		_x2 = Math.max(_x2, x);
 		_y2 = Math.max(_y2, y);
 
-		_positionen.add(new Position(x, y));
+		_positionen.add(position);
 	}
 	
 	/**
