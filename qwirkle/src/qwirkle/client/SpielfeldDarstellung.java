@@ -63,11 +63,12 @@ public class SpielfeldDarstellung {
 		}
 	}
 
-	private void zeigeStein(int x, int y, Stein stein) {
+	private SteinDarstellung zeigeStein(int x, int y, Stein stein) {
 		SteinDarstellung darstellung = new SteinDarstellung(_svg, stein);
 		darstellung.positioniere(_xOffset + x * SteinDarstellung.WIDTH,
 				_yOffset + y * SteinDarstellung.HEIGHT);
 		darstellung.zeigeAn();
+		return darstellung;
 	}
 
 	/**
@@ -106,10 +107,12 @@ public class SpielfeldDarstellung {
 	/**
 	 * Setzte den Stein auf das {@link Spielfeld} an der gegebenen Position und
 	 * stellt ihn dar.
+	 * 
+	 * @return Die Darstellung des neu eingefügten {@link Stein}s.
 	 */
-	public void fügeEin(int x, int y, Stein stein) {
+	public SteinDarstellung fügeEin(int x, int y, Stein stein) {
 		_spielfeld.set(x, y, stein);
-		zeigeStein(x, y, stein);
+		return zeigeStein(x, y, stein);
 	}
 
 }

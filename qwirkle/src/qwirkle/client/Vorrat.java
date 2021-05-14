@@ -4,11 +4,14 @@
 package qwirkle.client;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import elemental2.svg.SVGSVGElement;
 import qwirkle.shared.Nachzugstapel;
 import qwirkle.shared.Qwirkle.Stein;
+import qwirkle.shared.Spielfeld;
 
 /**
  * Der {@link Stein}-Vorrat eines Spielers.
@@ -90,39 +93,121 @@ public class Vorrat {
 		_steine.remove(stein);
 	}
 
+	
 	class Zug implements Aktion {
-
-		private SpielfeldDarstellung _spielfeldDarstellung;
+		
+		final SpielfeldDarstellung _anzeige;
+		
+		private Map<SteinDarstellung, AnlegeOperation> _teilZüge = new HashMap<>();
 
 		/** 
 		 * Creates a {@link Zug}.
 		 */
-		public Zug(SpielfeldDarstellung spielfeldDarstellung) {
-			_spielfeldDarstellung = spielfeldDarstellung;
+		public Zug(SpielfeldDarstellung anzeige) {
+			_anzeige = anzeige;
 		}
 		
 		@Override
 		public void beiKnopfLosLassen(double left, double top, SteinDarstellung steinDarstellung) {
-			Position position = _spielfeldDarstellung.berechneSpielfeldPosition((int)left, (int)top);
+			Position position = _anzeige.berechneSpielfeldPosition((int)left, (int)top);
+			int x = position.x();
+			int y = position.y();
+			
+			AnlegeOperation teilZug = _teilZüge.remove(steinDarstellung);
+			if (teilZug != null) {
+				steinDarstellung = teilZug.macheRückgängig();
+			}
+			
 			Stein stein = steinDarstellung.getStein();
-			int x = position.getX();
-			int y = position.getY();
-			if (_spielfeldDarstellung.getSpielfeld().zugErlaubt(x, y, stein)) {
-				_spielfeldDarstellung.fügeEin(x, y, stein);
-				steinDarstellung.fixiere();
+			Spielfeld spielfeld = _anzeige.getSpielfeld();
+			boolean zugErlaubt = spielfeld.zugErlaubt(x, y, stein);
+			
+			testeZug:
+			if (zugErlaubt) {
+				// Prüfe, ob alle bisherigen Teilzüge in dieselbe Reihe anlegen.
+				Bereich bereich = new Bereich(x, y);
+				for (AnlegeOperation operation : _teilZüge.values()) {
+					bereich.add(operation.x(), operation.y());
+				}
+				if (!bereich.istReihe()) {
+					zugErlaubt = false;
+					break testeZug;
+				}
 				
-				entferneStein(steinDarstellung);
-				
-				int anzahSteineVorher = anzahlSteine();
-				fülleAuf();
-				int anzahSteineNachher = anzahlSteine();
-				if (anzahSteineNachher > anzahSteineVorher) {
-					for (int n = anzahSteineVorher; n < anzahSteineNachher; n++) {
-						gibStein(n).macheVerschiebbar(this);
+				// Prüfe, ob die Reihe keine Lücken enthält.
+				for (int testX = bereich.x1(); testX <= bereich.x2(); testX++) {
+					for (int testY = bereich.y1(); testY <= bereich.y2(); testY++) {
+						if (spielfeld.get(testX, testY) == null) {
+							if (testX != x || testY != y) {
+								zugErlaubt = false;
+								break testeZug;
+							}
+						}
 					}
 				}
+				
+				// Prüfe, ob die Reihe (noch) an einen Stein anstößt, der nicht
+				// aus dem aktuellen Zug stammt. Durch forgesetztes verschieben
+				// der Steine auf dem Spielfeld kann man sonst die ursprüngliche
+				// Gültigkeitsregel für einen Zug umgehen.
+				if (!bereich.nachbarBesetztIn(spielfeld)) {
+					zugErlaubt = false;
+					break testeZug;
+				}
+			}
+			
+			if (zugErlaubt) {
+				SteinDarstellung gesetzterStein = _anzeige.fügeEin(x, y, stein);
+				gesetzterStein.setzeVorschau(true);
+				gesetzterStein.macheVerschiebbar(this);
+				
+				steinDarstellung.fixiere();
+				entferneStein(steinDarstellung);
+				
+				_teilZüge.put(gesetzterStein, new AnlegeOperation(steinDarstellung, x, y, gesetzterStein));
 			} else {
-				steinDarstellung.zeigeAn();
+				if (teilZug != null) {
+					teilZug.wiederhole();
+					_teilZüge.put(teilZug.gesetzterStein(), teilZug);
+				} else {
+					steinDarstellung.zeigeAn();
+				}
+			}
+		}
+		
+		class AnlegeOperation {
+			private SteinDarstellung _vorratsStein;
+			private int _x;
+			private int _y;
+			private SteinDarstellung _gesetzterStein;
+
+			public AnlegeOperation(SteinDarstellung vorratsStein, int x, int y, SteinDarstellung gesetzterStein) {
+				_vorratsStein = vorratsStein;
+				_x = x;
+				_y = y;
+				_gesetzterStein = gesetzterStein;
+			}
+
+			public SteinDarstellung macheRückgängig() {
+				_anzeige.getSpielfeld().set(x(), y(), null);
+				return _vorratsStein;
+			}
+
+			public void wiederhole() {
+				_anzeige.getSpielfeld().set(x(), y(), _vorratsStein.getStein());
+				gesetzterStein().zeigeAn();
+			}
+
+			public SteinDarstellung gesetzterStein() {
+				return _gesetzterStein;
+			}
+
+			public int x() {
+				return _x;
+			}
+
+			public int y() {
+				return _y;
 			}
 		}
 		

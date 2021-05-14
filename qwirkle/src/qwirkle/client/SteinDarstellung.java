@@ -124,6 +124,17 @@ class SteinDarstellung {
 		SVGUtil.positioniereBild(_svg, _bild, x, y);
 	}
 	
+	/** 
+	 * Markiert diese {@link SteinDarstellung} als Vorschau für den aktuell angefangenen Zug.
+	 */
+	public void setzeVorschau(boolean vorschau) {
+		if (vorschau) {
+			_bild.classList.add("vorschau");
+		} else {
+			_bild.classList.remove("vorschau");
+		}
+	}
+
 	/**
 	 * Die aktuelle X-Position.
 	 * 
