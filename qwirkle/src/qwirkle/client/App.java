@@ -57,10 +57,10 @@ public class App implements EntryPoint {
 		public void beiKnopfLosLassen(double left, double top, SteinDarstellung steinDarstellung) {
 			Position position = _spielfeldDarstellung.berechneSpielfeldPosition((int)left, (int)top);
 			Stein stein = steinDarstellung.getStein();
-			int column = position.getX();
-			int row = position.getY();
-			if (_spielfeldDarstellung.getSpielfeld().zugErlaubt(column, row, stein)) {
-				_spielfeldDarstellung.fügeEin(column, row, stein);
+			int x = position.getX();
+			int y = position.getY();
+			if (_spielfeldDarstellung.getSpielfeld().zugErlaubt(x, y, stein)) {
+				_spielfeldDarstellung.fügeEin(x, y, stein);
 				steinDarstellung.fixiere();
 			} else {
 				steinDarstellung.zeigeAn();
