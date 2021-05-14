@@ -11,8 +11,8 @@ public class Qwirkle {
 	}
 
 	public static class Stein {
-		Farbe farbe;
-		Form form;
+		public final Farbe farbe;
+		public final Form form;
 
 		public Stein(Farbe farbe, Form form) {
 			this.farbe = farbe;

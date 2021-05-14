@@ -50,3 +50,8 @@
 	stroke:#edd400;
 }
 
+#main {
+	width: 100%;
+	height: calc(100% - 250);
+	overflow: auto;
+}

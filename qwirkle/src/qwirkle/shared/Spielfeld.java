@@ -2,6 +2,7 @@ package qwirkle.shared;
 
 import java.util.EnumSet;
 
+import qwirkle.client.Position;
 import qwirkle.shared.Qwirkle.Farbe;
 import qwirkle.shared.Qwirkle.Form;
 import qwirkle.shared.Qwirkle.Stein;
@@ -20,6 +21,38 @@ public class Spielfeld {
 	private int _height = 1;
 
 	private Stein[] _data = new Stein[1];
+	
+	/**
+	 * Die kleinste X-Koordinate, an der ein {@link Stein} auf dem Spielfeld liegt. 0 für ein leeres Spielfeld.
+	 * 
+	 * @see #get(int, int)
+	 */
+	public int getXMin() {
+		return _xMin;
+	}
+	
+	/**
+	 * Die kleinste Y-Koordinate, an der ein {@link Stein} auf dem Spielfeld liegt. 0 für ein leeres Spielfeld.
+	 * 
+	 * @see #get(int, int)
+	 */
+	public int getYMin() {
+		return _yMin;
+	}
+	
+	/**
+	 * Die Breite des bisher belegten Spielfeldes. 
+	 */
+	public int getWidth() {
+		return _width;
+	}
+	
+	/**
+	 * Die Höhe des bisher belegten Spielfeldes. 
+	 */
+	public int getHeight() {
+		return _height;
+	}
 
 	/**
 	 * Liefert den Stein an der gegebenen Position.
@@ -106,7 +139,7 @@ public class Spielfeld {
 
 		_data[yOffset * _width + xOffset] = stein;
 	}
-	
+
 	/**
 	 * Prüft, ob der gegebene Stein an Position (x,y) angelegt werden kann.
 	 */
