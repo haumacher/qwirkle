@@ -8,6 +8,14 @@
 	stroke-opacity:1
 }
 
+.vorschau .tile {
+	opacity: 0.75;
+}
+
+.vorschau .icon {
+	opacity: 0.75;
+}
+
 .icon {
 	fill-opacity:1;
 	stroke-width:4;
