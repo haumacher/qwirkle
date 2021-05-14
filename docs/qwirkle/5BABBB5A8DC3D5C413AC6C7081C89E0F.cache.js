@@ -3,7 +3,7 @@ var __gwtModuleFunction = $wnd.qwirkle;
 var $sendStats = __gwtModuleFunction.__sendStats;
 $sendStats('moduleStartup', 'moduleEvalStart');
 var $gwt_version = "2.9.0";
-var $strongName = 'B937BE0C1BA3289E16225ACF91EA2A23';
+var $strongName = '5BABBB5A8DC3D5C413AC6C7081C89E0F';
 var $gwt = {};
 var $doc = $wnd.document;
 var $moduleName, $moduleBase;
@@ -835,7 +835,7 @@ function $onModuleLoad(){
 function assertCompileTimeUserAgent(){
   var runtimeValue;
   runtimeValue = $getRuntimeValue();
-  if (!$equals_0('gecko1_8', runtimeValue)) {
+  if (!$equals_0('safari', runtimeValue)) {
     throw toJs(new UserAgentAsserter$UserAgentAssertionError(runtimeValue));
   }
 }
@@ -852,7 +852,7 @@ var Ljava_lang_Error_2_classLit = createForClass('java.lang', 'Error', 18);
 defineClass(8, 18, $intern_3);
 var Ljava_lang_AssertionError_2_classLit = createForClass('java.lang', 'AssertionError', 8);
 function UserAgentAsserter$UserAgentAssertionError(runtimeValue){
-  Error_0.call(this, 'Possible problem with your *.gwt.xml module file.\nThe compile time user.agent value (gecko1_8) does not match the runtime user.agent value (' + runtimeValue + ').\n' + 'Expect more errors.' == null?'null':toString_0('Possible problem with your *.gwt.xml module file.\nThe compile time user.agent value (gecko1_8) does not match the runtime user.agent value (' + runtimeValue + ').\n' + 'Expect more errors.'), instanceOf('Possible problem with your *.gwt.xml module file.\nThe compile time user.agent value (gecko1_8) does not match the runtime user.agent value (' + runtimeValue + ').\n' + 'Expect more errors.', 4)?castTo('Possible problem with your *.gwt.xml module file.\nThe compile time user.agent value (gecko1_8) does not match the runtime user.agent value (' + runtimeValue + ').\n' + 'Expect more errors.', 4):null);
+  Error_0.call(this, 'Possible problem with your *.gwt.xml module file.\nThe compile time user.agent value (safari) does not match the runtime user.agent value (' + runtimeValue + ').\n' + 'Expect more errors.' == null?'null':toString_0('Possible problem with your *.gwt.xml module file.\nThe compile time user.agent value (safari) does not match the runtime user.agent value (' + runtimeValue + ').\n' + 'Expect more errors.'), instanceOf('Possible problem with your *.gwt.xml module file.\nThe compile time user.agent value (safari) does not match the runtime user.agent value (' + runtimeValue + ').\n' + 'Expect more errors.', 4)?castTo('Possible problem with your *.gwt.xml module file.\nThe compile time user.agent value (safari) does not match the runtime user.agent value (' + runtimeValue + ').\n' + 'Expect more errors.', 4):null);
 }
 
 defineClass(61, 8, $intern_3, UserAgentAsserter$UserAgentAssertionError);
@@ -3149,14 +3149,14 @@ function $beiKnopfLosLassen(this$static, left, top_0, steinDarstellung){
       }
       reihe = new Bereich(x_0, y_0);
       istZeile = linie._y1 == linie._y2;
-      for (zugPosition$iterator0 = (outerIter1 = new AbstractHashMap$EntrySetIterator((new AbstractHashMap$EntrySet((new AbstractMap$1(linie._positionen.map_0)).this$01)).this$01) , new AbstractMap$1$1(outerIter1)); zugPosition$iterator0.val$outerIter2.hasNext;) {
+      baueReihe: for (zugPosition$iterator0 = (outerIter1 = new AbstractHashMap$EntrySetIterator((new AbstractHashMap$EntrySet((new AbstractMap$1(linie._positionen.map_0)).this$01)).this$01) , new AbstractMap$1$1(outerIter1)); zugPosition$iterator0.val$outerIter2.hasNext;) {
         zugPosition = (entry = $next(zugPosition$iterator0.val$outerIter2) , castTo(entry.getKey(), 6));
         if (istZeile) {
           dx = zugPosition._x > x_0?-1:1;
           for (testX = zugPosition._x; testX != x_0; testX += dx) {
             testPosition = new Position_0(testX, y_0);
             if (!$contains_0(linie._positionen, testPosition) && !$get_1(spielfeld, testPosition._x, testPosition._y)) {
-              continue;
+              continue baueReihe;
             }
           }
         }
@@ -3165,7 +3165,7 @@ function $beiKnopfLosLassen(this$static, left, top_0, steinDarstellung){
           for (testY = zugPosition._y; testY != y_0; testY += dy) {
             testPosition = new Position_0(x_0, testY);
             if (!$contains_0(linie._positionen, testPosition) && !$get_1(spielfeld, testPosition._x, testPosition._y)) {
-              continue;
+              continue baueReihe;
             }
           }
         }
@@ -3187,7 +3187,7 @@ function $beiKnopfLosLassen(this$static, left, top_0, steinDarstellung){
       if (zugErlaubt) {
         for (operationen = (outerIter = new AbstractHashMap$EntrySetIterator((new AbstractHashMap$EntrySet((new AbstractMap$2(this$static._teilZüge)).this$01)).this$01) , new AbstractMap$2$1(outerIter)); operationen.val$outerIter2.hasNext;) {
           operation = (entry = $next(operationen.val$outerIter2) , castTo(entry.getValue(), 24));
-          if (!$enthält(linie, operation._position)) {
+          if (!$enthält(reihe, operation._position)) {
             vorratsStein = ($set_0(operation.this$11._anzeige._spielfeld, operation._position._x, operation._position._y, null) , operation._vorratsStein);
             gesetzterStein = operation._gesetzterStein;
             !!gesetzterStein._beiKnopfdruck && gesetzterStein._bild.removeEventListener('mousedown', gesetzterStein._beiKnopfdruck);
@@ -3496,7 +3496,7 @@ var D_classLit = createForPrimitive('double', 'D');
 var $entry = ($clinit_Impl() , entry_0);
 var gwtOnLoad = gwtOnLoad = gwtOnLoad_0;
 addInitFunctions(init);
-setGwtProperty('permProps', [[['locale', 'default'], ['user.agent', 'gecko1_8']]]);
+setGwtProperty('permProps', [[['locale', 'default'], ['user.agent', 'safari']]]);
 $sendStats('moduleStartup', 'moduleEvalEnd');
 gwtOnLoad(__gwtModuleFunction.__errFn, __gwtModuleFunction.__moduleName, __gwtModuleFunction.__moduleBase, __gwtModuleFunction.__softPermutationId,__gwtModuleFunction.__computePropValue);
 $sendStats('moduleStartup', 'end');
