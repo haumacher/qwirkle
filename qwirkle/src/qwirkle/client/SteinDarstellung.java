@@ -44,6 +44,10 @@ class SteinDarstellung {
 	 */
 	private EventListener _beiKnopfdruck;
 
+	private double _x;
+
+	private double _y;
+
 	/**
 	 * Erzeugt die Darstellung eines {@link Stein}s.
 	 * 
@@ -115,7 +119,27 @@ class SteinDarstellung {
 	 * @param y Die Y-Koordinate, an der die Darstellung angezeigt werden soll.
 	 */
 	public void positioniere(double x, double y) {
+		_x = x;
+		_y = y;
 		SVGUtil.positioniereBild(_svg, _bild, x, y);
+	}
+	
+	/**
+	 * Die aktuelle X-Position.
+	 * 
+	 * @see #positioniere(double, double)
+	 */
+	public double getX() {
+		return _x;
+	}
+	
+	/**
+	 * Die aktuelle Y-Position.
+	 * 
+	 * @see #positioniere(double, double)
+	 */
+	public double getY() {
+		return _y;
 	}
 
 	SVGGElement erzeugeBild() {

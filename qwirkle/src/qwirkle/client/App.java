@@ -33,43 +33,9 @@ public class App implements EntryPoint {
 		
 		SVGSVGElement vorratsAnzeige = (SVGSVGElement) DomGlobal.document.getElementById("vorrat");
 		
-		Zug zug = new Zug(spielfeldDarstellung);
-		
-		for (int n = 0; n < 6; n++) {
-			Stein stein = stapel.nimmStein();
-			SteinDarstellung darstellung = new SteinDarstellung(vorratsAnzeige, stein);
-			darstellung.positioniere(50 + n*100, 0);
-			darstellung.zeigeAn();
-			
-			darstellung.macheVerschiebbar(zug);
-		}
-	}
-	
-	static class Zug implements Aktion {
-
-		private SpielfeldDarstellung _spielfeldDarstellung;
-
-		/** 
-		 * Creates a {@link Zug}.
-		 */
-		public Zug(SpielfeldDarstellung spielfeldDarstellung) {
-			_spielfeldDarstellung = spielfeldDarstellung;
-		}
-		
-		@Override
-		public void beiKnopfLosLassen(double left, double top, SteinDarstellung steinDarstellung) {
-			Position position = _spielfeldDarstellung.berechneSpielfeldPosition((int)left, (int)top);
-			Stein stein = steinDarstellung.getStein();
-			int x = position.getX();
-			int y = position.getY();
-			if (_spielfeldDarstellung.getSpielfeld().zugErlaubt(x, y, stein)) {
-				_spielfeldDarstellung.fügeEin(x, y, stein);
-				steinDarstellung.fixiere();
-			} else {
-				steinDarstellung.zeigeAn();
-			}
-		}
-		
+		Vorrat vorrat = new Vorrat(vorratsAnzeige, stapel);
+		vorrat.fülleAuf();
+		vorrat.starteZug(spielfeldDarstellung);
 	}
 	
 }
