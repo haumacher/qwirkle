@@ -9,6 +9,11 @@ import elemental2.dom.MouseEvent;
 import elemental2.svg.SVGGElement;
 import elemental2.svg.SVGSVGElement;
 
+/**
+ * Verschiebeoperation einer {@link SteinDarstellung} mit der Maus durch klicken und ziehen.
+ * 
+ * @see #start(MouseEvent)
+ */
 class Verschiebung {
 
 	/**
@@ -46,11 +51,25 @@ class Verschiebung {
 
 	private Aktion _aktion;
 
+	/**
+	 * Erzeugt eine {@link Verschiebung} für die gegebene
+	 * {@link SteinDarstellung}.
+	 *
+	 * @param darstellung
+	 *        Die zu verschiebende {@link SteinDarstellung}.
+	 * @param aktion
+	 *        Die Aktion, die beim Loslassen der Maus ausgeführt werden soll,
+	 *        siehe
+	 *        {@link Aktion#beiKnopfLosLassen(double, double, SteinDarstellung)}.
+	 */
 	public Verschiebung(SteinDarstellung darstellung, Aktion aktion) {
 		_darstellung = darstellung;
 		_aktion = aktion;
 	}
 
+	/**
+	 * Started die {@link Verschiebung} mit einem Klick an der gegebenen Mausposition.
+	 */
 	public void start(MouseEvent evt) {
 		DomGlobal.document.addEventListener("mousemove", _beiMausverschiebung = this::beiMausverschiebung);
 		DomGlobal.document.addEventListener("mouseup", _beiKnopfLoslassen = this::beiKnopfLoslassen);
