@@ -93,7 +93,16 @@ public class Vorrat {
 		_steine.remove(stein);
 	}
 
-	
+	/**
+	 * Erbauer für einen Spielzug.
+	 * 
+	 * <p>
+	 * Nach einer {@link Verschiebung} einer {@link SteinDarstellung} aus dem
+	 * {@link Vorrat} wird der entsprechende Stein und seine Zielposition in den
+	 * {@link Zug} eingefügt. Es können mehrere {@link Verschiebung}en getätigt
+	 * werden, um einen {@link Zug} aufzubauen.
+	 * </p>
+	 */
 	class Zug implements Aktion {
 		
 		final SpielfeldDarstellung _anzeige;
@@ -252,6 +261,15 @@ public class Vorrat {
 			return true;
 		}
 		
+		/**
+		 * Ein Teilzug, der eine {@link SteinDarstellung} aus dem {@link Vorrat}
+		 * auf das {@link Spielfeld} legt.
+		 * 
+		 * <p>
+		 * Der Teilzug merkt sich alle Informationen, um ihn eventuell
+		 * nocheinmal rückgängig machen zu können, siehe {@link #macheRückgängig()}.
+		 * </p>
+		 */
 		class AnlegeOperation {
 			private SteinDarstellung _vorratsStein;
 			private int _x;
@@ -286,10 +304,16 @@ public class Vorrat {
 				return _gesetzterStein;
 			}
 
+			/**
+			 * Die X-Position an die der {@link Stein} auf das {@link Spielfeld} gelegt wurde.
+			 */
 			public int x() {
 				return _x;
 			}
 
+			/**
+			 * Die Y-Position an die der {@link Stein} auf das {@link Spielfeld} gelegt wurde.
+			 */
 			public int y() {
 				return _y;
 			}
