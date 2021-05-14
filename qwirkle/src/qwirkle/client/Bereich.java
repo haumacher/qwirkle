@@ -57,13 +57,36 @@ public class Bereich implements Iterable<Position> {
 
 		_positionen.add(new Position(x, y));
 	}
+	
+	/**
+	 * Alle {@link Position}en, welche diesen {@link Bereich} aufspannen.
+	 */
+	public Set<Position> gibPositionen() {
+		return _positionen;
+	}
 
 	/**
 	 * Prüft, ob alle {@link Position}en dieses {@link Bereich}s sich in einer
 	 * Reihe (horizontal oder vertikal) befinden.
 	 */
 	public boolean istReihe() {
-		return _x1 == _x2 || _y1 == _y2;
+		return istSpalte() || istZeile();
+	}
+
+	/**
+	 * Prüft, ob alle {@link Position}en dieses {@link Bereich}s sich in einer
+	 * Zeile befinden.
+	 */
+	public boolean istZeile() {
+		return _y1 == _y2;
+	}
+
+	/** 
+	 * Prüft, ob alle {@link Position}en dieses {@link Bereich}s sich in einer
+	 * Spalte befinden.
+	 */
+	public boolean istSpalte() {
+		return _x1 == _x2;
 	}
 
 	/**
@@ -118,7 +141,7 @@ public class Bereich implements Iterable<Position> {
 					continue;
 				}
 
-				if (spielfeld.get(nachbar.x(), nachbar.y()) != null) {
+				if (spielfeld.istBesetzt(nachbar.x(), nachbar.y())) {
 					return true;
 				}
 			}

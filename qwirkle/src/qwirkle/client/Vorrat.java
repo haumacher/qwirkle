@@ -121,38 +121,80 @@ public class Vorrat {
 			Stein stein = steinDarstellung.getStein();
 			Spielfeld spielfeld = _anzeige.getSpielfeld();
 			boolean zugErlaubt = spielfeld.zugErlaubt(x, y, stein);
-			
-			testeZug:
+
 			if (zugErlaubt) {
-				// Prüfe, ob alle bisherigen Teilzüge in dieselbe Reihe anlegen.
-				Bereich bereich = new Bereich(x, y);
-				for (AnlegeOperation operation : _teilZüge.values()) {
-					bereich.add(operation.x(), operation.y());
-				}
-				if (!bereich.istReihe()) {
-					zugErlaubt = false;
-					break testeZug;
-				}
+				zugErlaubt = prüfeGesamtzug(spielfeld, x, y);
 				
-				// Prüfe, ob die Reihe keine Lücken enthält.
-				for (int testX = bereich.x1(); testX <= bereich.x2(); testX++) {
-					for (int testY = bereich.y1(); testY <= bereich.y2(); testY++) {
-						if (spielfeld.get(testX, testY) == null) {
-							if (testX != x || testY != y) {
-								zugErlaubt = false;
-								break testeZug;
+				if (!zugErlaubt) {
+					// Prüfe, ob duch Zurücknehmen von bereits getätigten Zügen, der Zug legalisiert werden kann.
+					
+					// Bilde eine Bereich, der nur aus einer Reihe besteht.
+					Bereich bereich = new Bereich(x, y);
+					for (AnlegeOperation operation : _teilZüge.values()) {
+						int opX = operation.x();
+						int opY = operation.y();
+						
+						if (bereich.istZeile() && opY == bereich.y1() || bereich.istSpalte() && opX == bereich.x1()) {
+							bereich.add(opX, opY);
+						}
+					}
+					
+					// Behalte nur solche Teilzüge, die zusammen mit der
+					// aktuellen Position in einer Reihe liegen (ohne Lücken).
+					for (java.util.Iterator<Position> positionen = bereich.iterator();  positionen.hasNext(); ) {
+						Position zugPosition = positionen.next();
+						
+						if (bereich.istZeile()) {
+							int dx = zugPosition.x() > x ? -1 : 1;
+							for (int testX = zugPosition.x(); testX != x; testX += dx) {
+								Position testPosition = new Position(testX, y);
+								if (!bereich.enthält(testPosition) && !spielfeld.istBesetzt(testPosition)) {
+									positionen.remove();
+									continue;
+								}
+							}
+						} else {
+							int dy = zugPosition.y() > y ? -1 : 1;
+							for (int testY = zugPosition.y(); testY != y; testY += dy) {
+								Position testPosition = new Position(x, testY);
+								if (!bereich.enthält(testPosition) && !spielfeld.istBesetzt(testPosition)) {
+									positionen.remove();
+									continue;
+								}
 							}
 						}
 					}
-				}
-				
-				// Prüfe, ob die Reihe (noch) an einen Stein anstößt, der nicht
-				// aus dem aktuellen Zug stammt. Durch forgesetztes verschieben
-				// der Steine auf dem Spielfeld kann man sonst die ursprüngliche
-				// Gültigkeitsregel für einen Zug umgehen.
-				if (!bereich.nachbarBesetztIn(spielfeld)) {
-					zugErlaubt = false;
-					break testeZug;
+
+					// Prüfe, ob die verbleibenden Züge noch Kontakt zu einem bestehenden Stein auf dem Spielfeld haben.
+					for (Position zugPosition : bereich) {
+						for (Position nachbar : zugPosition.nachbarn()) {
+							if (bereich.enthält(nachbar)) {
+								// Zählt nicht, nicht auf dem ursprünglichen Spielfeld.
+								continue;
+							}
+							
+							if (spielfeld.istBesetzt(nachbar)) {
+								zugErlaubt = true;
+								break;
+							}
+						}
+					}
+					
+					if (zugErlaubt) {
+						// Zug wurde zu einem legalen Zug verkleinert.
+						for (java.util.Iterator<AnlegeOperation> operationen = _teilZüge.values().iterator();  operationen.hasNext(); ) {
+							AnlegeOperation operation = operationen.next();
+							if (!bereich.enthält(operation.position())) {
+								SteinDarstellung vorratsStein = operation.macheRückgängig();
+								SteinDarstellung gesetzterStein = operation.gesetzterStein();
+								gesetzterStein.fixiere();
+								gesetzterStein.verstecke();
+								vorratsStein.zeigeAn();
+								vorratsStein.macheVerschiebbar(this);
+								operationen.remove();
+							}
+						}
+					}
 				}
 			}
 			
@@ -174,6 +216,41 @@ public class Vorrat {
 				}
 			}
 		}
+
+		/**
+		 * Prüfe, ob der Gesamtzug noch legal ist.
+		 */
+		private boolean prüfeGesamtzug(Spielfeld spielfeld, int x, int y) {
+			// Prüfe, ob alle bisherigen Teilzüge in dieselbe Reihe anlegen.
+			Bereich bereich = new Bereich(x, y);
+			for (AnlegeOperation operation : _teilZüge.values()) {
+				bereich.add(operation.x(), operation.y());
+			}
+			if (!bereich.istReihe()) {
+				return false;
+			}
+			
+			// Prüfe, ob die Reihe keine Lücken enthält.
+			for (int testX = bereich.x1(); testX <= bereich.x2(); testX++) {
+				for (int testY = bereich.y1(); testY <= bereich.y2(); testY++) {
+					if (spielfeld.get(testX, testY) == null) {
+						if (testX != x || testY != y) {
+							return false;
+						}
+					}
+				}
+			}
+			
+			// Prüfe, ob die Reihe (noch) an einen Stein anstößt, der nicht
+			// aus dem aktuellen Zug stammt. Durch forgesetztes verschieben
+			// der Steine auf dem Spielfeld kann man sonst die ursprüngliche
+			// Gültigkeitsregel für einen Zug umgehen.
+			if (!bereich.nachbarBesetztIn(spielfeld)) {
+				return false;
+			}
+			
+			return true;
+		}
 		
 		class AnlegeOperation {
 			private SteinDarstellung _vorratsStein;
@@ -186,6 +263,13 @@ public class Vorrat {
 				_x = x;
 				_y = y;
 				_gesetzterStein = gesetzterStein;
+			}
+
+			/** 
+			 * Die {@link Position} dieser {@link AnlegeOperation}.
+			 */
+			public Position position() {
+				return new Position(_x, _y);
 			}
 
 			public SteinDarstellung macheRückgängig() {

@@ -239,10 +239,32 @@ public class Spielfeld {
 		}
 	}
 
-	private boolean istBesetzt(int x, int y) {
+	/**
+	 * Prüfe, ob sich an der Position (x, y) ein {@link Stein} befindet.  
+	 */
+	public boolean istBesetzt(int x, int y) {
 		return get(x, y) != null;
 	}
 
+	/**
+	 * Prüfe ob sich an der gegebenen {@link Position} ein {@link Stein} befindet.
+	 */
+	public boolean istBesetzt(Position position) {
+		return istBesetzt(position.x(), position.y());
+	}
+	
+	/**
+	 * Prüfe ob sich an einer der gegebenen {@link Position}en ein {@link Stein} befindet.
+	 */
+	public boolean istEineBesetzt(Iterable<Position> positionen) {
+		for (Position position : positionen) {
+			if (istBesetzt(position)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	private boolean hatNachbarn(int x, int y) {
 		return istBesetzt(x - 1, y) || istBesetzt(x + 1, y) || istBesetzt(x, y - 1) || istBesetzt(x, y + 1);
 	}
