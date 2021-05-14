@@ -4,6 +4,7 @@ import com.google.gwt.core.client.EntryPoint;
 
 import elemental2.dom.DomGlobal;
 import elemental2.svg.SVGSVGElement;
+import qwirkle.shared.Nachzugstapel;
 import qwirkle.shared.Qwirkle.Farbe;
 import qwirkle.shared.Qwirkle.Form;
 import qwirkle.shared.Qwirkle.Stein;
@@ -18,6 +19,8 @@ public class App implements EntryPoint {
 	
 	@Override
 	public void onModuleLoad() {
+		Nachzugstapel stapel = new Nachzugstapel();
+		
 		SVGSVGElement spielfeldAnzeige = (SVGSVGElement) DomGlobal.document.getElementById("spielfeld");
 		
 		Spielfeld spielfeld = new Spielfeld();
@@ -33,7 +36,7 @@ public class App implements EntryPoint {
 		Zug zug = new Zug(spielfeldDarstellung);
 		
 		for (int n = 0; n < 6; n++) {
-			Stein stein = new Stein(Farbe.values()[n], Form.values()[n]);
+			Stein stein = stapel.nimmStein();
 			SteinDarstellung darstellung = new SteinDarstellung(vorratsAnzeige, stein);
 			darstellung.positioniere(50 + n*100, 0);
 			darstellung.zeigeAn();
