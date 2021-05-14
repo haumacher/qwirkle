@@ -154,13 +154,14 @@ public class Vorrat {
 					// aktuellen Position in einer Reihe liegen (ohne Lücken).
 					Bereich reihe = new Bereich(x, y);
 					boolean istZeile = linie.istZeile();
+					baueReihe:
 					for (Position zugPosition : linie) {
 						if (istZeile) {
 							int dx = zugPosition.x() > x ? -1 : 1;
 							for (int testX = zugPosition.x(); testX != x; testX += dx) {
 								Position testPosition = new Position(testX, y);
 								if (!linie.enthält(testPosition) && !spielfeld.istBesetzt(testPosition)) {
-									continue;
+									continue baueReihe;
 								}
 							}
 						} else {
@@ -168,7 +169,7 @@ public class Vorrat {
 							for (int testY = zugPosition.y(); testY != y; testY += dy) {
 								Position testPosition = new Position(x, testY);
 								if (!linie.enthält(testPosition) && !spielfeld.istBesetzt(testPosition)) {
-									continue;
+									continue baueReihe;
 								}
 							}
 						}
@@ -194,7 +195,7 @@ public class Vorrat {
 						// Zug wurde zu einem legalen Zug verkleinert.
 						for (java.util.Iterator<AnlegeOperation> operationen = _teilZüge.values().iterator();  operationen.hasNext(); ) {
 							AnlegeOperation operation = operationen.next();
-							if (!linie.enthält(operation.position())) {
+							if (!reihe.enthält(operation.position())) {
 								SteinDarstellung vorratsStein = operation.macheRückgängig();
 								SteinDarstellung gesetzterStein = operation.gesetzterStein();
 								gesetzterStein.fixiere();
