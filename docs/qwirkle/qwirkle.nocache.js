@@ -292,14 +292,6 @@ function qwirkle(){
   function getCompiledCodeFilename(){
     var answers = [];
     var softPermutationId = 0;
-    function unflattenKeylistIntoAnswers(propValArray, value_0){
-      var answer = answers;
-      for (var i = 0, n = propValArray.length - 1; i < n; ++i) {
-        answer = answer[propValArray[i]] || (answer[propValArray[i]] = []);
-      }
-      answer[propValArray[n]] = value_0;
-    }
-
     var values = [];
     var providers = [];
     function computePropValue(propName){
@@ -317,38 +309,6 @@ function qwirkle(){
       throw null;
     }
 
-    providers['user.agent'] = function(){
-      var ua = navigator.userAgent.toLowerCase();
-      var docMode = $doc_0.documentMode;
-      if (function(){
-        return ua.indexOf('webkit') != -1;
-      }
-      ())
-        return 'safari';
-      if (function(){
-        return ua.indexOf('msie') != -1 && (docMode >= 10 && docMode < 11);
-      }
-      ())
-        return 'ie10';
-      if (function(){
-        return ua.indexOf('msie') != -1 && (docMode >= 9 && docMode < 11);
-      }
-      ())
-        return 'ie9';
-      if (function(){
-        return ua.indexOf('msie') != -1 && (docMode >= 8 && docMode < 11);
-      }
-      ())
-        return 'ie8';
-      if (function(){
-        return ua.indexOf('gecko') != -1 || docMode >= 11;
-      }
-      ())
-        return 'gecko1_8';
-      return '';
-    }
-    ;
-    values['user.agent'] = {'gecko1_8':0, 'ie10':1, 'ie8':2, 'ie9':3, 'safari':4};
     __gwt_isKnownPropertyValue = function(propName, propValue){
       return propValue in values[propName];
     }
@@ -371,12 +331,7 @@ function qwirkle(){
     }
     var strongName;
     try {
-      unflattenKeylistIntoAnswers(['ie9'], '367996E2E585DDDEEB46921C96000079');
-      unflattenKeylistIntoAnswers(['safari'], '5BABBB5A8DC3D5C413AC6C7081C89E0F');
-      unflattenKeylistIntoAnswers(['ie10'], '82CE3A834A3B13C7BDA4396FEBEBC76E');
-      unflattenKeylistIntoAnswers(['ie8'], 'DEBB0F4298A5DBFC87AE35007C733066');
-      unflattenKeylistIntoAnswers(['gecko1_8'], 'EB52F7D86E2BA184A63D99BF12BFFE1D');
-      strongName = answers[computePropValue('user.agent')];
+      strongName = 'FA080D60D72B9BBC2295259A91EB386D';
       var idx = strongName.indexOf(':');
       if (idx != -1) {
         softPermutationId = parseInt(strongName.substring(idx + 1), 10);
@@ -393,18 +348,7 @@ function qwirkle(){
     if (!$wnd_0.__gwt_stylesLoaded) {
       $wnd_0.__gwt_stylesLoaded = {};
     }
-    function installOneStylesheet(stylesheetUrl){
-      if (!__gwt_stylesLoaded[stylesheetUrl]) {
-        var l = $doc_0.createElement('link');
-        l.setAttribute('rel', 'stylesheet');
-        l.setAttribute('href', computeUrlForResource(stylesheetUrl));
-        $doc_0.getElementsByTagName('head')[0].appendChild(l);
-        __gwt_stylesLoaded[stylesheetUrl] = true;
-      }
-    }
-
     sendStats('loadExternalRefs', 'begin');
-    installOneStylesheet('gwt/clean/clean.css');
     sendStats('loadExternalRefs', 'end');
   }
 
