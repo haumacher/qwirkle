@@ -5,18 +5,12 @@
 -->
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.9.0//EN"
   "http://www.gwtproject.org/doctype/2.9.0/gwt-module.dtd">
-<module>
+<module rename-to='Common'>
+
   <inherits name='de.haumacher.msgbuf.MsgBuf'/>
-  <inherits name='qwirkle.common.Common'/>
 
-  <inherits name='elemental2.dom.Dom'/>
-  <inherits name='elemental2.core.Core'/>
-  <inherits name='elemental2.svg.Svg'/>
-
-  <entry-point class='qwirkle.app.client.App'/>
-
-  <source path='client'/>
-  <source path='shared'/>
+  <!-- Specify the paths for translatable code                    -->
+  <source path='messages'/>
 
   <!-- allow Super Dev Mode -->
   <add-linker name="xsiframe"/>

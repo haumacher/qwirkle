@@ -1,0 +1,74 @@
+syntax="msgbuf";
+
+package qwirkle.common.messages;
+
+abstract message ClientMessage {
+}
+
+abstract message Request extends ClientMessage {
+	string msgId;
+}
+
+abstract message ServerMessage {
+}
+
+abstract message Response extends ServerMessage {
+	string msgId;
+}
+
+// Model types
+
+message GameInfo {
+	string gameId;
+	string name;
+	repeated UserInfo users;
+}
+
+message UserInfo {
+	string userId;
+	string name;
+}
+
+// Concrete messages.
+
+message CreateGame extends Request {
+	string name;
+}
+
+message CreateGameResult extends Response {
+	GameInfo game;
+}
+
+message ServerError extends Response {
+	string `message`;
+}
+
+message Login extends ClientMessage {
+	string name;
+}
+
+message Logout extends ClientMessage {
+}
+
+message OpenGames extends ServerMessage {
+	repeated GameInfo games;
+}
+
+message GameOpened extends ServerMessage {
+	GameInfo game;
+}
+
+message GameClosed extends ServerMessage {
+	string gameId;
+}
+
+message UserJoined extends ServerMessage {
+	string gameId;
+	UserInfo user;
+}
+
+message UserLeft extends ServerMessage {
+	string gameId;
+	string userId;
+}
+

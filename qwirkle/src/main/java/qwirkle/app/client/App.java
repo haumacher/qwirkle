@@ -1,7 +1,13 @@
 package qwirkle.app.client;
 
+import java.io.IOException;
+
 import com.google.gwt.core.client.EntryPoint;
 
+import de.haumacher.msgbuf.io.StringR;
+import de.haumacher.msgbuf.io.StringW;
+import de.haumacher.msgbuf.json.JsonReader;
+import de.haumacher.msgbuf.json.JsonWriter;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.WebSocket;
 import elemental2.svg.SVGSVGElement;
@@ -10,13 +16,23 @@ import qwirkle.app.shared.Qwirkle.Farbe;
 import qwirkle.app.shared.Qwirkle.Form;
 import qwirkle.app.shared.Qwirkle.Stein;
 import qwirkle.app.shared.Spielfeld;
+import qwirkle.common.messages.ClientMessage;
+import qwirkle.common.messages.CreateGameResult;
+import qwirkle.common.messages.GameClosed;
+import qwirkle.common.messages.GameOpened;
+import qwirkle.common.messages.Login;
+import qwirkle.common.messages.OpenGames;
+import qwirkle.common.messages.ServerError;
+import qwirkle.common.messages.ServerMessage;
+import qwirkle.common.messages.UserJoined;
+import qwirkle.common.messages.UserLeft;
 
 /**
  * Einstiegspunkt in die GWT-Applikation.
  * 
  * @see #onModuleLoad()
  */
-public class App implements EntryPoint /*, ServerMessage.Visitor<Void, Void>*/ {
+public class App implements EntryPoint, ServerMessage.Visitor<Void, Void> {
 	
 	private WebSocket _socket;
 
@@ -40,8 +56,7 @@ public class App implements EntryPoint /*, ServerMessage.Visitor<Void, Void>*/ {
 		vorrat.fülleAuf();
 		vorrat.starteZug(spielfeldDarstellung);
 
-		/*
-		_socket = new WebSocket("http://localhost:8080/qwirkle/talk");
+		_socket = new WebSocket("ws://localhost:8080/qwirkle/talk");
 		_socket.onopen = evt -> {
 			login();
 		};
@@ -55,10 +70,8 @@ public class App implements EntryPoint /*, ServerMessage.Visitor<Void, Void>*/ {
 				DomGlobal.console.info("Parsing message failed.", ex);
 			}
 		};
-		*/
 	}
 
-	/*
 	private void login() {
 		send(Login.login().setName("Hi5"));
 	}
@@ -114,6 +127,5 @@ public class App implements EntryPoint /*, ServerMessage.Visitor<Void, Void>*/ {
 		DomGlobal.console.info("Received: ", self);
 		return null;
 	}
-	*/
 	
 }
