@@ -5,13 +5,19 @@
 	<groupId>haumacher.de</groupId>
 	<artifactId>qwirkle</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>gwt-app</packaging>
 
 	<properties>
 		<failOnMissingWebXml>false</failOnMissingWebXml>
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>de.haumacher</groupId>
+			<artifactId>qwirkle-common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.google.elemental2</groupId>
 			<artifactId>elemental2-core</artifactId>
@@ -29,6 +35,21 @@
 			<artifactId>elemental2-svg</artifactId>
 			<version>1.1.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt</artifactId>
+			<version>2.9.0</version>
+			<type>pom</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.2</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -43,6 +64,15 @@
 			</resource>
 		</resources>
 		<plugins>
+			<plugin>
+				<groupId>net.ltgt.gwt.maven</groupId>
+				<artifactId>gwt-maven-plugin</artifactId>
+				<version>1.0.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<moduleName>qwirkle.Qwirkle</moduleName>
+				</configuration>
+			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>

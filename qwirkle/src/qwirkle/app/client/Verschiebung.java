@@ -1,4 +1,4 @@
-package qwirkle.client;
+package qwirkle.app.client;
 
 import elemental2.dom.DOMRect;
 import elemental2.dom.DomGlobal;

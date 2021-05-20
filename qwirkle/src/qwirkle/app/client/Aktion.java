@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021 Business Operation Systems GmbH. All Rights Reserved.
  */
-package qwirkle.client;
+package qwirkle.app.client;
 
 /**
  * Aktion, die bei der {@link Verschiebung} einer {@link SteinDarstellung}

@@ -1,20 +1,13 @@
 package qwirkle;
 
-import static qwirkle.shared.Qwirkle.Farbe.blue;
-import static qwirkle.shared.Qwirkle.Farbe.green;
-import static qwirkle.shared.Qwirkle.Farbe.magenta;
-import static qwirkle.shared.Qwirkle.Farbe.orange;
-import static qwirkle.shared.Qwirkle.Farbe.red;
-import static qwirkle.shared.Qwirkle.Farbe.yellow;
-import static qwirkle.shared.Qwirkle.Form.circle;
-import static qwirkle.shared.Qwirkle.Form.square;
-import static qwirkle.shared.Qwirkle.Form.star;
+import static qwirkle.app.shared.Qwirkle.Farbe.*;
+import static qwirkle.app.shared.Qwirkle.Form.*;
 
 import junit.framework.TestCase;
-import qwirkle.shared.Spielfeld;
-import qwirkle.shared.Qwirkle.Farbe;
-import qwirkle.shared.Qwirkle.Form;
-import qwirkle.shared.Qwirkle.Stein;
+import qwirkle.app.shared.Spielfeld;
+import qwirkle.app.shared.Qwirkle.Farbe;
+import qwirkle.app.shared.Qwirkle.Form;
+import qwirkle.app.shared.Qwirkle.Stein;
 
 /**
  * Test-Klasse, welche die Implementierung von {@link Spielfeld} überprüft.

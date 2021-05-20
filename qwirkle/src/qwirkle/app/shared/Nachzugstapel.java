@@ -1,15 +1,15 @@
 /*
  * Copyright (c) 2021 Bernhard Haumacher et al. All Rights Reserved.
  */
-package qwirkle.shared;
+package qwirkle.app.shared;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import qwirkle.shared.Qwirkle.Farbe;
-import qwirkle.shared.Qwirkle.Form;
-import qwirkle.shared.Qwirkle.Stein;
+import qwirkle.app.shared.Qwirkle.Farbe;
+import qwirkle.app.shared.Qwirkle.Form;
+import qwirkle.app.shared.Qwirkle.Stein;
 
 /**
  * Ein gemischter Stapel mit allen {@link Stein}en.

@@ -1,4 +1,4 @@
-package qwirkle.shared;
+package qwirkle.app.shared;
 
 public class Qwirkle {
 

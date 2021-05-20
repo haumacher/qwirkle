@@ -1,11 +1,11 @@
-package qwirkle.client;
+package qwirkle.app.client;
 
 import elemental2.dom.DomGlobal;
 import elemental2.dom.EventListener;
 import elemental2.dom.MouseEvent;
 import elemental2.svg.SVGGElement;
 import elemental2.svg.SVGSVGElement;
-import qwirkle.shared.Qwirkle.Stein;
+import qwirkle.app.shared.Qwirkle.Stein;
 
 /**
  * Darstellung eines {@link Stein}s.

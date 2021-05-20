@@ -1,10 +1,10 @@
-package qwirkle.client;
+package qwirkle.app.client;
 
 import elemental2.svg.SVGMatrix;
 import elemental2.svg.SVGPoint;
 import elemental2.svg.SVGSVGElement;
-import qwirkle.shared.Qwirkle.Stein;
-import qwirkle.shared.Spielfeld;
+import qwirkle.app.shared.Spielfeld;
+import qwirkle.app.shared.Qwirkle.Stein;
 
 /**
  * Die Darstellung eines {@link Spielfeld}s in einem SVG Bild.

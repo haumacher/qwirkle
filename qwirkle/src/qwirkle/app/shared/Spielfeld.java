@@ -1,11 +1,11 @@
-package qwirkle.shared;
+package qwirkle.app.shared;
 
 import java.util.EnumSet;
 
-import qwirkle.client.Position;
-import qwirkle.shared.Qwirkle.Farbe;
-import qwirkle.shared.Qwirkle.Form;
-import qwirkle.shared.Qwirkle.Stein;
+import qwirkle.app.client.Position;
+import qwirkle.app.shared.Qwirkle.Farbe;
+import qwirkle.app.shared.Qwirkle.Form;
+import qwirkle.app.shared.Qwirkle.Stein;
 
 /**
  * Das Qwirkle-Spielfeld speichert, an welcher Position sich {@link Stein}e

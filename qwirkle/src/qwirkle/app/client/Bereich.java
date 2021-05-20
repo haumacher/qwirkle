@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2021 Bernhard Haumacher et al. All Rights Reserved.
  */
-package qwirkle.client;
+package qwirkle.app.client;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import qwirkle.shared.Spielfeld;
+import qwirkle.app.shared.Spielfeld;
 
 /**
  * Ein Menge von {@link Position}en auf einem {@link Spielfeld}.

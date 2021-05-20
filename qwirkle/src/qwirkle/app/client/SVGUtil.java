@@ -1,4 +1,4 @@
-package qwirkle.client;
+package qwirkle.app.client;
 
 import elemental2.svg.SVGSVGElement;
 import elemental2.svg.SVGTransform;

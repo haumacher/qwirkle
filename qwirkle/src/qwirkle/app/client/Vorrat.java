@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021 Bernhard Haumacher et al. All Rights Reserved.
  */
-package qwirkle.client;
+package qwirkle.app.client;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 import elemental2.svg.SVGSVGElement;
-import qwirkle.shared.Nachzugstapel;
-import qwirkle.shared.Qwirkle.Stein;
-import qwirkle.shared.Spielfeld;
+import qwirkle.app.shared.Nachzugstapel;
+import qwirkle.app.shared.Spielfeld;
+import qwirkle.app.shared.Qwirkle.Stein;
 
 /**
  * Der {@link Stein}-Vorrat eines Spielers.
