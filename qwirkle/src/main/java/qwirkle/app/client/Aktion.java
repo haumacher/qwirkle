@@ -1,13 +1,11 @@
 /*
- * Copyright (c) 2021 Business Operation Systems GmbH. All Rights Reserved.
+ * Copyright (c) 2021 Bernhard Haumacher et al. All Rights Reserved.
  */
 package qwirkle.app.client;
 
 /**
  * Aktion, die bei der {@link Verschiebung} einer {@link SteinDarstellung}
  * passieren soll.
- *
- * @author <a href="mailto:bhu@top-logic.com">Bernhard Haumacher</a>
  */
 public interface Aktion {
 

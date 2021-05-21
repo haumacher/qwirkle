@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Business Operation Systems GmbH. All Rights Reserved.
+ * Copyright (c) 2021 Bernhard Haumacher et al. All Rights Reserved.
  */
 package qwirkle.app.client;
 
@@ -7,8 +7,6 @@ import java.util.Arrays;
 
 /**
  * X/Y Position.
- *
- * @author <a href="mailto:bhu@top-logic.com">Bernhard Haumacher</a>
  */
 public final class Position {
 
