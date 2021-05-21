@@ -2,17 +2,45 @@ syntax="msgbuf";
 
 package qwirkle.common.messages;
 
+/**
+ * Base class for messages sent from the client to the server.
+ */
 abstract message ClientMessage {
+	// Pure base class.
 }
 
+/**
+ * Base class for {@link ClientMessage}s that are directly answered by the server.
+ * 
+ * @see #msgId
+ */
 abstract message Request extends ClientMessage {
+	/**
+	 * Identifier for this request/response communication.
+	 * 
+	 * <p>
+	 * The identifier is produced by the client. The server flags its {@link Response} with the same value in {@link Response#msgId}.
+	 * </p> 
+	 */
 	string msgId;
 }
 
+/**
+ * Base class for messages issued by the server and sent to the client.
+ */
 abstract message ServerMessage {
+	// Pure base class.
 }
 
+/**
+ * {@link ServerMessage} that is sent in direct response to a {@link Request} message.
+ * 
+ * @see #msgId
+ */
 abstract message Response extends ServerMessage {
+	/**
+	 * Value from {@link Request#msgId} as provided by the client. This value can be used by the client to associate this response to the original {@link Request}.
+	 */
 	string msgId;
 }
 

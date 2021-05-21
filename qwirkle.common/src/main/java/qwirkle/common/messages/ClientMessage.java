@@ -1,5 +1,8 @@
 package qwirkle.common.messages;
 
+/**
+ * Base class for messages sent from the client to the server.
+ */
 public abstract class ClientMessage extends de.haumacher.msgbuf.data.AbstractDataObject {
 
 	/** Visitor interface for the {@link ClientMessage} hierarchy.*/

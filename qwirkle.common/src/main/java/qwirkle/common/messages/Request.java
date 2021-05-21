@@ -1,5 +1,10 @@
 package qwirkle.common.messages;
 
+/**
+ * Base class for {@link ClientMessage}s that are directly answered by the server.
+ *
+ * @see #getMsgId()
+ */
 public abstract class Request extends ClientMessage {
 
 	/** Visitor interface for the {@link Request} hierarchy.*/
@@ -19,6 +24,13 @@ public abstract class Request extends ClientMessage {
 
 	private String _msgId = "";
 
+	/**
+	 * Identifier for this request/response communication.
+	 *
+	 * <p>
+	 * The identifier is produced by the client. The server flags its {@link Response} with the same value in {@link Response#getMsgId()}.
+	 * </p>
+	 */
 	public final String getMsgId() {
 		return _msgId;
 	}

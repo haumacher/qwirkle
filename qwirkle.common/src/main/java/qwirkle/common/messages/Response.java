@@ -1,5 +1,10 @@
 package qwirkle.common.messages;
 
+/**
+ * {@link ServerMessage} that is sent in direct response to a {@link Request} message.
+ *
+ * @see #getMsgId()
+ */
 public abstract class Response extends ServerMessage {
 
 	/** Visitor interface for the {@link Response} hierarchy.*/
@@ -22,6 +27,9 @@ public abstract class Response extends ServerMessage {
 
 	private String _msgId = "";
 
+	/**
+	 * Value from {@link Request#getMsgId()} as provided by the client. This value can be used by the client to associate this response to the original {@link Request}.
+	 */
 	public final String getMsgId() {
 		return _msgId;
 	}
