@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import qwirkle.app.shared.Qwirkle.Farbe;
-import qwirkle.app.shared.Qwirkle.Form;
-import qwirkle.app.shared.Qwirkle.Stein;
+import qwirkle.common.messages.Farbe;
+import qwirkle.common.messages.Form;
+import qwirkle.common.messages.Stein;
 
 /**
  * Ein gemischter Stapel mit allen {@link Stein}en.
@@ -27,7 +27,7 @@ public class Nachzugstapel {
 		for (int n = 0; n < 3; n++) {
 			for (int farbNummer = 0, farben = Farbe.values().length; farbNummer < farben; farbNummer++) {
 				for (int formNummer = 0, formen = Form.values().length; formNummer < formen; formNummer++) {
-					_steine.add(new Stein(Farbe.values()[farbNummer], Form.values()[formNummer]));
+					_steine.add(Qwirkle.stein(Farbe.values()[farbNummer], Form.values()[formNummer]));
 				}
 			}
 		}

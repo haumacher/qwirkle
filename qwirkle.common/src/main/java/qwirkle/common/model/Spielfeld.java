@@ -1,11 +1,10 @@
-package qwirkle.app.shared;
+package qwirkle.common.model;
 
 import java.util.EnumSet;
 
-import qwirkle.app.client.Position;
-import qwirkle.app.shared.Qwirkle.Farbe;
-import qwirkle.app.shared.Qwirkle.Form;
-import qwirkle.app.shared.Qwirkle.Stein;
+import qwirkle.common.messages.Farbe;
+import qwirkle.common.messages.Form;
+import qwirkle.common.messages.Stein;
 
 /**
  * Das Qwirkle-Spielfeld speichert, an welcher Position sich {@link Stein}e
@@ -189,8 +188,8 @@ public class Spielfeld {
 				// Kein weiterer Nachbar mehr, anlegen ist OK.
 				return true;
 			}
-			boolean gleicheFarbe = feld.farbe == stein.farbe;
-			boolean gleicheForm = feld.form == stein.form;
+			boolean gleicheFarbe = feld.getFarbe() == stein.getFarbe();
+			boolean gleicheForm = feld.getForm() == stein.getForm();
 			if (gleicheFarbe == gleicheForm) {
 				// Ein Stein muss entweder in Farbe oder Form übereinstimmen, aber nicht in beidem.
 				return false;
@@ -234,8 +233,8 @@ public class Spielfeld {
 			}
 			
 			steine++;
-			farben.add(feld.farbe);
-			formen.add(feld.form);
+			farben.add(feld.getFarbe());
+			formen.add(feld.getForm());
 		}
 	}
 

@@ -330,3 +330,27 @@ message GameStarted extends ServerMessage {
 	GameInfo game;
 }
 
+// Das Spielmodell
+
+enum Form {
+	circle;
+	square;
+	star;
+	pounce;
+	cross;
+	diamond;
+}
+
+enum Farbe {
+	yellow;
+	orange;
+	red;
+	blue;
+	green;
+	magenta;
+}
+
+message Stein {
+	Farbe farbe;
+	Form form;
+}

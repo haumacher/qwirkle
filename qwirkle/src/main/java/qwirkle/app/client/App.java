@@ -22,12 +22,12 @@ import qwirkle.app.client.views.LoginForm;
 import qwirkle.app.client.views.StartGameForm;
 import qwirkle.app.client.views.WaitForGameStartForm;
 import qwirkle.app.shared.Nachzugstapel;
-import qwirkle.app.shared.Qwirkle.Farbe;
-import qwirkle.app.shared.Qwirkle.Form;
-import qwirkle.app.shared.Qwirkle.Stein;
-import qwirkle.app.shared.Spielfeld;
+import qwirkle.app.shared.Qwirkle;
+import qwirkle.common.messages.Farbe;
+import qwirkle.common.messages.Form;
 import qwirkle.common.messages.GameInfo;
 import qwirkle.common.messages.UserInfo;
+import qwirkle.common.model.Spielfeld;
 
 /**
  * Einstiegspunkt in die GWT-Applikation.
@@ -73,9 +73,9 @@ public class App implements EntryPoint {
 		contentPanel.appendChild(vorratsAnzeige);
 		
 		Spielfeld spielfeld = new Spielfeld();
-		spielfeld.set(0, 0, new Stein(Farbe.red, Form.circle));
-		spielfeld.set(0, 1, new Stein(Farbe.red, Form.square));
-		spielfeld.set(1, 0, new Stein(Farbe.green, Form.circle));
+		spielfeld.set(0, 0, Qwirkle.stein(Farbe.red, Form.circle));
+		spielfeld.set(0, 1, Qwirkle.stein(Farbe.red, Form.square));
+		spielfeld.set(1, 0, Qwirkle.stein(Farbe.green, Form.circle));
 		
 		SpielfeldDarstellung spielfeldDarstellung = new SpielfeldDarstellung(spielfeldAnzeige, spielfeld);
 		spielfeldDarstellung.zeigeAn();

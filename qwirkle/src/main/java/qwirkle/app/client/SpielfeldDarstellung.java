@@ -3,8 +3,9 @@ package qwirkle.app.client;
 import elemental2.svg.SVGMatrix;
 import elemental2.svg.SVGPoint;
 import elemental2.svg.SVGSVGElement;
-import qwirkle.app.shared.Spielfeld;
-import qwirkle.app.shared.Qwirkle.Stein;
+import qwirkle.common.messages.Stein;
+import qwirkle.common.model.Position;
+import qwirkle.common.model.Spielfeld;
 
 /**
  * Die Darstellung eines {@link Spielfeld}s in einem SVG Bild.

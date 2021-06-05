@@ -10,8 +10,9 @@ import java.util.Map;
 
 import elemental2.svg.SVGSVGElement;
 import qwirkle.app.shared.Nachzugstapel;
-import qwirkle.app.shared.Spielfeld;
-import qwirkle.app.shared.Qwirkle.Stein;
+import qwirkle.common.messages.Stein;
+import qwirkle.common.model.Position;
+import qwirkle.common.model.Spielfeld;
 
 /**
  * Der {@link Stein}-Vorrat eines Spielers.

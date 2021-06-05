@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021 Bernhard Haumacher et al. All Rights Reserved.
  */
-package qwirkle.app.client;
+package qwirkle.common.model;
 
 import java.util.Arrays;
 

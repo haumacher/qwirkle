@@ -5,7 +5,7 @@ import elemental2.dom.EventListener;
 import elemental2.dom.MouseEvent;
 import elemental2.svg.SVGGElement;
 import elemental2.svg.SVGSVGElement;
-import qwirkle.app.shared.Qwirkle.Stein;
+import qwirkle.common.messages.Stein;
 
 /**
  * Darstellung eines {@link Stein}s.
@@ -156,7 +156,7 @@ class SteinDarstellung {
 	SVGGElement erzeugeBild() {
 		SVGGElement g = (SVGGElement) DomGlobal.document.createElementNS("http://www.w3.org/2000/svg", "g");
 
-		switch (_stein.form) {
+		switch (_stein.getForm()) {
 		case circle:
 			g.innerHTML = "<rect class=\"tile\" width=\"96\" height=\"96\" x=\"2\" y=\"2\" ry=\"3.6773801\" rx=\"3.6773801\" />\n"
 					+ "<circle class=\"circle icon\" cx=\"50\" cy=\"50\" r=\"33\" />\n";
@@ -183,7 +183,7 @@ class SteinDarstellung {
 			break;
 		}
 
-		g.className.baseVal = _stein.farbe.name();
+		g.className.baseVal = _stein.getFarbe().name();
 		return g;
 	}
 

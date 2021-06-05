@@ -7,7 +7,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import qwirkle.app.shared.Spielfeld;
+import qwirkle.common.model.Position;
+import qwirkle.common.model.Spielfeld;
 
 /**
  * Ein Menge von {@link Position}en auf einem {@link Spielfeld}.
