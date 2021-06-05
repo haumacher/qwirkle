@@ -26,9 +26,6 @@ import qwirkle.app.shared.Qwirkle.Farbe;
 import qwirkle.app.shared.Qwirkle.Form;
 import qwirkle.app.shared.Qwirkle.Stein;
 import qwirkle.app.shared.Spielfeld;
-import qwirkle.common.messages.CreateGameFailed;
-import qwirkle.common.messages.CreateGameResponse;
-import qwirkle.common.messages.GameCreated;
 import qwirkle.common.messages.GameInfo;
 import qwirkle.common.messages.UserInfo;
 
@@ -37,7 +34,7 @@ import qwirkle.common.messages.UserInfo;
  * 
  * @see #onModuleLoad()
  */
-public class App implements EntryPoint, CreateGameResponse.Visitor<Void, Void> {
+public class App implements EntryPoint {
 	
 	private Layout _layout;
 	private Communication _communication;
@@ -121,22 +118,6 @@ public class App implements EntryPoint, CreateGameResponse.Visitor<Void, Void> {
 			StartGameForm.create(_communication, _userInfo, this::gameStarted));
 	}
 	
-	private void gameStarted(GameInfo game) {
-		_game = game;
-		showGameScreen();
-	}
-	
-	@Override
-	public Void visit(GameCreated self, Void arg) {
-		return null;
-	}
-	
-	@Override
-	public Void visit(CreateGameFailed self, Void arg) {
-		//  TODO: Automatically created
-		return null;
-	}
-
 	/**
 	 * Zeigt eine Make für ein neues Spiel an. Hier kann das Spiel gestartet
 	 * werden, wenn genügend Mitspieler eingetroffen sind.
@@ -158,6 +139,11 @@ public class App implements EntryPoint, CreateGameResponse.Visitor<Void, Void> {
 	private void waitForGameStart(GameInfo game) {
 		clearContent().appendChild(
 			new WaitForGameStartForm(_communication, game, this::gameStarted));
+	}
+	
+	private void gameStarted(GameInfo game) {
+		_game = game;
+		showGameScreen();
 	}
 	
 	/**

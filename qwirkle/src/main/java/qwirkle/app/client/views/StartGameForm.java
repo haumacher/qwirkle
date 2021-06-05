@@ -123,7 +123,7 @@ public class StartGameForm extends Card implements Consumer<CreateGameResponse>,
 
 		_game = message.getGame();
 		_userList.removeAll();
-		_userList.addItems(message.getGame().getUsers());
+		_userList.addItems(message.getGame().getPlayers());
 		
 		updateStartButton();
 	}
@@ -133,7 +133,7 @@ public class StartGameForm extends Card implements Consumer<CreateGameResponse>,
 	}
 
 	private void updateStartButton() {
-		_startButton.setDisabled(_game == null || _game.getUsers().size() < 2);
+		_startButton.setDisabled(_game == null || _game.getPlayers().size() < 2);
 	}
 	
 	@Override

@@ -77,7 +77,7 @@ public class WaitForGameStartForm extends Card {
 		_gameIdField.setValue(game.getGameId());
 		
 		_userList.clearElement();
-		_userList.addItems(game.getUsers());
+		_userList.addItems(game.getPlayers());
 	}
 	
 	private void handle(GameStarted message) {

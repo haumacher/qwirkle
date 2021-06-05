@@ -25,7 +25,7 @@ public class GameInfo extends de.haumacher.msgbuf.data.AbstractDataObject {
 
 	private String _name = "";
 
-	private final java.util.List<UserInfo> _users = new java.util.ArrayList<>();
+	private final java.util.List<UserInfo> _players = new java.util.ArrayList<>();
 
 	/**
 	 * The technical ID of the game. It is assigned by the server when creating the game, see {@link GameCreated}.
@@ -62,24 +62,24 @@ public class GameInfo extends de.haumacher.msgbuf.data.AbstractDataObject {
 	 *
 	 * @see JoinGame
 	 */
-	public final java.util.List<UserInfo> getUsers() {
-		return _users;
+	public final java.util.List<UserInfo> getPlayers() {
+		return _players;
 	}
 
 	/**
-	 * @see #getUsers()
+	 * @see #getPlayers()
 	 */
-	public final GameInfo setUsers(java.util.List<UserInfo> value) {
-		_users.clear();
-		_users.addAll(value);
+	public final GameInfo setPlayers(java.util.List<UserInfo> value) {
+		_players.clear();
+		_players.addAll(value);
 		return this;
 	}
 
 	/**
-	 * Adds a value to the {@link #getUsers()} list.
+	 * Adds a value to the {@link #getPlayers()} list.
 	 */
-	public final GameInfo addUser(UserInfo value) {
-		_users.add(value);
+	public final GameInfo addPlayer(UserInfo value) {
+		_players.add(value);
 		return this;
 	}
 
@@ -102,7 +102,7 @@ public class GameInfo extends de.haumacher.msgbuf.data.AbstractDataObject {
 		switch (field) {
 			case "gameId": return getGameId();
 			case "name": return getName();
-			case "users": return getUsers();
+			case "players": return getPlayers();
 			default: return super.get(field);
 		}
 	}
@@ -112,7 +112,7 @@ public class GameInfo extends de.haumacher.msgbuf.data.AbstractDataObject {
 		switch (field) {
 			case "gameId": setGameId((String) value); break;
 			case "name": setName((String) value); break;
-			case "users": setUsers((java.util.List<UserInfo>) value); break;
+			case "players": setPlayers((java.util.List<UserInfo>) value); break;
 		}
 	}
 
@@ -123,9 +123,9 @@ public class GameInfo extends de.haumacher.msgbuf.data.AbstractDataObject {
 		out.value(getGameId());
 		out.name("name");
 		out.value(getName());
-		out.name("users");
+		out.name("players");
 		out.beginArray();
-		for (UserInfo x : getUsers()) {
+		for (UserInfo x : getPlayers()) {
 			x.writeTo(out);
 		}
 		out.endArray();
@@ -136,10 +136,10 @@ public class GameInfo extends de.haumacher.msgbuf.data.AbstractDataObject {
 		switch (field) {
 			case "gameId": setGameId(in.nextString()); break;
 			case "name": setName(in.nextString()); break;
-			case "users": {
+			case "players": {
 				in.beginArray();
 				while (in.hasNext()) {
-					addUser(UserInfo.readUserInfo(in));
+					addPlayer(UserInfo.readUserInfo(in));
 				}
 				in.endArray();
 			}

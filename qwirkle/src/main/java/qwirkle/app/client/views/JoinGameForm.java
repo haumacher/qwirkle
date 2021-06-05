@@ -66,7 +66,7 @@ public class JoinGameForm extends Card implements JoinGameResponse.Visitor<Void,
 					.appendChild(FlexItem.create()
 	                    .css(Styles.padding_5)
 						.styler(style -> style.setWidth("20px").setBackgroundColor("red").setLineHeight("62px"))
-						.appendChild(TextNode.of(Integer.toString(item.getValue().getUsers().size())))
+						.appendChild(TextNode.of(Integer.toString(item.getValue().getPlayers().size())))
 					)
 					.appendChild(FlexItem.create()
 	                    .setFlexGrow(1)

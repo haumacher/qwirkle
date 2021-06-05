@@ -63,7 +63,7 @@ message GameInfo {
 	 *
 	 * @see JoinGame
 	 */
-	repeated UserInfo users;
+	repeated UserInfo players;
 }
 
 /**

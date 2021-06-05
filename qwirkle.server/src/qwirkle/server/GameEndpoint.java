@@ -58,7 +58,7 @@ public class GameEndpoint {
 			usersBefore = copyUsers();
 			_users.put(userId, user);
 			
-			_info.addUser(user.getUserInfo());
+			_info.addPlayer(user.getUserInfo());
 		}
 		
 		String gameId = getGameId();
@@ -97,8 +97,8 @@ public class GameEndpoint {
 			
 			LOG.info("User '" + userId + "' left game '" + gameId + "'.");
 			
-			_info.setUsers(
-					_info.getUsers()
+			_info.setPlayers(
+					_info.getPlayers()
 					.stream()
 					.filter(info -> !info.getUserId().equals(userId))
 					.collect(Collectors.toList()));
