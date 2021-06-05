@@ -330,6 +330,51 @@ message GameStarted extends ServerMessage {
 	GameInfo game;
 }
 
+message GameUpdate extends ServerMessage {
+	string gameId;
+	QwirkleServerMessage detail;
+}
+
+message GameAction extends ClientMessage {
+	string gameId;
+	QwirkleUserMessage detail;
+}
+
+abstract message QwirkleMessage {
+	string gameId;
+}
+
+abstract message QwirkleUserMessage {
+	string userId;
+}
+
+abstract message QwirkleServerMessage {
+}
+
+message FillInventory extends QwirkleServerMessage {
+	repeated Stein steine;
+}
+
+message StartTurn extends QwirkleServerMessage {
+	string userId;
+}
+
+message NotifyTurn extends QwirkleServerMessage {
+	string lastUserId;
+	repeated Placement placements;
+	string nextUserId;
+}
+
+message MakeTurn extends QwirkleUserMessage {
+	repeated Placement placements;
+}
+
+message Placement {
+	Stein stein;
+	int x;
+	int y;
+}
+
 // Das Spielmodell
 
 enum Form {

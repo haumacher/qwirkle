@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021 Bernhard Haumacher et al. All Rights Reserved.
  */
-package qwirkle.app.shared;
+package qwirkle.server.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,6 +10,7 @@ import java.util.List;
 import qwirkle.common.messages.Farbe;
 import qwirkle.common.messages.Form;
 import qwirkle.common.messages.Stein;
+import qwirkle.common.model.Qwirkle;
 
 /**
  * Ein gemischter Stapel mit allen {@link Stein}en.
@@ -54,6 +55,17 @@ public class Nachzugstapel {
 	 */
 	public Stein nimmStein() {
 		return _steine.remove(_steine.size() - 1);
+	}
+
+	/** 
+	 * Zieht die gegebene Anzal von {@link Stein}en vom {@link Nachzugstapel}.
+	 */
+	public List<Stein> nimmSteine(int cnt) {
+		List<Stein> result = new ArrayList<Stein>();
+		for (int n = 0; n < cnt && hatNochSteine(); n++) {
+			result.add(nimmStein());
+		}
+		return result;
 	}
 
 }

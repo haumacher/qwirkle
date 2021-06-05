@@ -21,6 +21,7 @@ import de.haumacher.msgbuf.json.JsonWriter;
 import qwirkle.common.messages.ClientMessage;
 import qwirkle.common.messages.CreateGame;
 import qwirkle.common.messages.FindOpenGames;
+import qwirkle.common.messages.GameAction;
 import qwirkle.common.messages.GameCreated;
 import qwirkle.common.messages.GameJoined;
 import qwirkle.common.messages.GameOpened;
@@ -30,6 +31,7 @@ import qwirkle.common.messages.Login;
 import qwirkle.common.messages.LoginSuccess;
 import qwirkle.common.messages.Logout;
 import qwirkle.common.messages.OpenGames;
+import qwirkle.common.messages.QwirkleUserMessage;
 import qwirkle.common.messages.Request;
 import qwirkle.common.messages.Response;
 import qwirkle.common.messages.ServerError;
@@ -192,6 +194,16 @@ public class UserEndpoint extends Endpoint implements MessageHandler.Whole<Reade
 			
 			UserManager.removeUser(_user.getUserId());
 		}
+		return null;
+	}
+	
+	@Override
+	public Void visit(GameAction self, Void arg) {
+		GameEndpoint game = GameManager.getGame(self.getGameId());
+		QwirkleUserMessage detail = self.getDetail();
+		// Do not allow the user act as some other user.
+		detail.setUserId(getUserId());
+		game.handle(detail);
 		return null;
 	}
 

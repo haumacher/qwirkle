@@ -3,9 +3,7 @@
  */
 package qwirkle.app.client.views;
 
-import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.dominokit.domino.ui.cards.Card;
@@ -33,6 +31,7 @@ import qwirkle.common.messages.JoinFailed.Reason;
 import qwirkle.common.messages.JoinGame;
 import qwirkle.common.messages.JoinGameResponse;
 import qwirkle.common.messages.OpenGames;
+import qwirkle.common.util.Util;
 
 /**
  * TODO
@@ -145,7 +144,7 @@ public class JoinGameForm extends Card implements JoinGameResponse.Visitor<Void,
 		GameInfo newGameInfo = message.getGame();
 		String gameId = newGameInfo.getGameId();
 		
-		int index = indexOf(_gameList.getValues(), game -> game.getGameId().equals(gameId));
+		int index = Util.indexOf(_gameList.getValues(), game -> game.getGameId().equals(gameId));
 		if (index >= 0) {
 			ListItem<GameInfo> item = _gameList.getItems().get(index);
 			_gameList.removeItem(item, true);
@@ -153,18 +152,6 @@ public class JoinGameForm extends Card implements JoinGameResponse.Visitor<Void,
 		}
 	}
 	
-	/** 
-	 * Berechnet den ersten Index, an dem die gegebene Liste einen Wert speichert, auf den das gegebene Prädikat zutrifft.
-	 */
-	private static <T> int indexOf(List<T> values, Predicate<? super T> predicate) {
-		for (int n = 0, cnt = values.size(); n < cnt; n++) {
-			if (predicate.test(values.get(n))) {
-				return n;
-			}
-		}
-		return -1;
-	}
-
 	private void handle(GameClosed message) {
 		String gameId = message.getGameId();
 		_gameList.setItems(

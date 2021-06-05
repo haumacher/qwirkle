@@ -14,6 +14,9 @@ public abstract class ClientMessage extends de.haumacher.msgbuf.data.AbstractDat
 		/** Visit case for {@link StartGame}.*/
 		R visit(StartGame self, A arg);
 
+		/** Visit case for {@link GameAction}.*/
+		R visit(GameAction self, A arg);
+
 	}
 
 	/**
@@ -31,6 +34,7 @@ public abstract class ClientMessage extends de.haumacher.msgbuf.data.AbstractDat
 		switch (type) {
 			case "Logout": result = Logout.readLogout(in); break;
 			case "StartGame": result = StartGame.readStartGame(in); break;
+			case "GameAction": result = GameAction.readGameAction(in); break;
 			case "CreateGame": result = CreateGame.readCreateGame(in); break;
 			case "Login": result = Login.readLogin(in); break;
 			case "FindOpenGames": result = FindOpenGames.readFindOpenGames(in); break;

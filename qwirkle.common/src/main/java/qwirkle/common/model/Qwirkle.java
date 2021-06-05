@@ -1,4 +1,4 @@
-package qwirkle.app.shared;
+package qwirkle.common.model;
 
 import qwirkle.common.messages.Farbe;
 import qwirkle.common.messages.Form;

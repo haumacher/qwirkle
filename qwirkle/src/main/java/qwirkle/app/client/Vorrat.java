@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import elemental2.svg.SVGSVGElement;
-import qwirkle.app.shared.Nachzugstapel;
+import qwirkle.common.messages.Placement;
 import qwirkle.common.messages.Stein;
 import qwirkle.common.model.Position;
 import qwirkle.common.model.Spielfeld;
@@ -19,7 +20,7 @@ import qwirkle.common.model.Spielfeld;
  * 
  * <p>
  * Der {@link Vorrat} umfasst am Anfang eines Zuges normalerweise 6
- * {@link Stein}e, solange der {@link Nachzugstapel} noch ausreichend gefüllt
+ * {@link Stein}e, solange der Nachzugstapel noch ausreichend gefüllt
  * ist.
  * </p>
  */
@@ -28,15 +29,18 @@ public class Vorrat {
 	private List<SteinDarstellung> _steine = new ArrayList<>();
 	
 	private SVGSVGElement _svg;
-	
-	private Nachzugstapel _stapel;
 
+	private SpielfeldDarstellung _spielfeldDarstellung;
+
+	private Zug _zug;
+	
 	/** 
 	 * Creates a {@link Vorrat}.
+	 * @param spielfeldDarstellung 
 	 */
-	public Vorrat(SVGSVGElement svg, Nachzugstapel stapel) {
+	public Vorrat(SpielfeldDarstellung spielfeldDarstellung, SVGSVGElement svg) {
+		_spielfeldDarstellung = spielfeldDarstellung;
 		_svg = svg;
-		_stapel = stapel;
 	}
 	
 	/** 
@@ -54,9 +58,9 @@ public class Vorrat {
 	}
 
 	/**
-	 * Füllt den {@link Vorrat} mit neuen Steinen aus dem {@link Nachzugstapel} auf. 
+	 * Füllt den {@link Vorrat} mit den neuen Steinen auf. 
 	 */
-	public void fülleAuf() {
+	public void fülleAuf(List<Stein> steine) {
 		// Bringe Steine-Liste in die Reihenfolge, in der die Steine gerade auf dem Bildschirm angezeigt werden.
 		_steine.sort((s1, s2) -> Double.compare(s1.getX(), s2.getX()));
 		
@@ -68,8 +72,8 @@ public class Vorrat {
 			x += SteinDarstellung.WIDTH;
 		}
 		
-		while (anzahlSteine() < 6 && _stapel.hatNochSteine()) {
-			SteinDarstellung darstellung = new SteinDarstellung(_svg, _stapel.nimmStein());
+		for (Stein stein : steine) {
+			SteinDarstellung darstellung = new SteinDarstellung(_svg, stein);
 			_steine.add(darstellung);
 			
 			darstellung.positioniere(x, 0);
@@ -82,12 +86,29 @@ public class Vorrat {
 	/** 
 	 * Startet einen Spielzug, indem die {@link Stein}e im {@link Vorrat} verschiebbar gemacht werden.
 	 */
-	public void starteZug(SpielfeldDarstellung spielfeld) {
-		Zug zug = new Zug(spielfeld);
+	public void starteZug() {
+		_zug = new Zug(_spielfeldDarstellung);
 		
 		for (SteinDarstellung stein : _steine) {
-			stein.macheVerschiebbar(zug);
+			stein.macheVerschiebbar(_zug);
 		}
+	}
+	
+	/**
+	 * Beendet den aktiven {@link Zug} und liefert eine Zugbeschreibung zurück.
+	 */
+	public List<Placement> beendeZug() {
+		_zug.beende();
+		
+		for (SteinDarstellung stein : _zug.benutzteSteine()) {
+			entferneStein(stein);
+		}
+		
+		for (SteinDarstellung stein : _steine) {
+			stein.fixiere();
+		}
+		
+		return _zug.getPlacements();
 	}
 	
 	void entferneStein(SteinDarstellung stein) {
@@ -117,18 +138,48 @@ public class Vorrat {
 			_anzeige = anzeige;
 		}
 		
+		/** 
+		 * Schließt den Zug ab, indem die gesetzten Steine fixiert werden.
+		 */
+		public void beende() {
+			for (AnlegeOperation operation : _teilZüge.values()) {
+				operation.beende();
+			}
+		}
+		
+		/**
+		 * Die {@link SteinDarstellung}en aus dem {@link Vorrat}, die von diesem {@link Zug} verwendet wurden.
+		 */
+		public List<SteinDarstellung> benutzteSteine() {
+			return _teilZüge.values().stream().map(op -> op.vorratsStein()).collect(Collectors.toList());
+		}
+
+		/** 
+		 * Liefert eine Zugbeschreibung, welche an andere Spieler übermittelt werden kann.
+		 */
+		public List<Placement> getPlacements() {
+			List<Placement> result = new ArrayList<>();
+			for (AnlegeOperation operation : _teilZüge.values()) {
+				result.add(Placement.placement()
+					.setX(operation.x())
+					.setY(operation.y())
+					.setStein(operation.gesetzterStein().getStein()));
+			}
+			return result;
+		}
+
 		@Override
-		public void beiKnopfLosLassen(double left, double top, SteinDarstellung steinDarstellung) {
+		public void beiKnopfLosLassen(double left, double top, SteinDarstellung vorratsStein) {
 			Position position = _anzeige.berechneSpielfeldPosition((int)left, (int)top);
 			int x = position.x();
 			int y = position.y();
 			
-			AnlegeOperation teilZug = _teilZüge.remove(steinDarstellung);
+			AnlegeOperation teilZug = _teilZüge.remove(vorratsStein);
 			if (teilZug != null) {
-				steinDarstellung = teilZug.macheRückgängig();
+				vorratsStein = teilZug.macheRückgängig();
 			}
 			
-			Stein stein = steinDarstellung.getStein();
+			Stein stein = vorratsStein.getStein();
 			Spielfeld spielfeld = _anzeige.getSpielfeld();
 			boolean zugErlaubt = spielfeld.zugErlaubt(x, y, stein);
 
@@ -197,12 +248,12 @@ public class Vorrat {
 						for (java.util.Iterator<AnlegeOperation> operationen = _teilZüge.values().iterator();  operationen.hasNext(); ) {
 							AnlegeOperation operation = operationen.next();
 							if (!reihe.enthält(operation.position())) {
-								SteinDarstellung vorratsStein = operation.macheRückgängig();
+								SteinDarstellung benutzterVorratsStein = operation.macheRückgängig();
 								SteinDarstellung gesetzterStein = operation.gesetzterStein();
 								gesetzterStein.fixiere();
 								gesetzterStein.verstecke();
-								vorratsStein.zeigeAn();
-								vorratsStein.macheVerschiebbar(this);
+								benutzterVorratsStein.zeigeAn();
+								benutzterVorratsStein.macheVerschiebbar(this);
 								operationen.remove();
 							}
 						}
@@ -215,16 +266,16 @@ public class Vorrat {
 				gesetzterStein.setzeVorschau(true);
 				gesetzterStein.macheVerschiebbar(this);
 				
-				steinDarstellung.fixiere();
-				entferneStein(steinDarstellung);
+				vorratsStein.fixiere();
+				entferneStein(vorratsStein);
 				
-				_teilZüge.put(gesetzterStein, new AnlegeOperation(steinDarstellung, x, y, gesetzterStein));
+				_teilZüge.put(gesetzterStein, new AnlegeOperation(vorratsStein, x, y, gesetzterStein));
 			} else {
 				if (teilZug != null) {
 					teilZug.wiederhole();
 					_teilZüge.put(teilZug.gesetzterStein(), teilZug);
 				} else {
-					steinDarstellung.zeigeAn();
+					vorratsStein.zeigeAn();
 				}
 			}
 		}
@@ -279,6 +330,18 @@ public class Vorrat {
 		 * </p>
 		 */
 		class AnlegeOperation {
+			
+			/**
+			 * Die {@link SteinDarstellung} aus dem {@link Vorrat}, welche
+			 * gezogen und angelegt wurde.
+			 * 
+			 * <p>
+			 * Durch diese Operation ist eine neue {@link SteinDarstellung}
+			 * ({@link #gesetzterStein()}) entstanden, welche jetzt auf dem
+			 * Spielfeld liegt. Der die ursprüngliche {@link SteinDarstellung}
+			 * aus dem Vorrat ist unverändert und lediglich unsichtbar gemacht.
+			 * </p>
+			 */
 			private final SteinDarstellung _vorratsStein;
 			private final Position _position;
 			private final SteinDarstellung _gesetzterStein;
@@ -298,11 +361,20 @@ public class Vorrat {
 
 			public SteinDarstellung macheRückgängig() {
 				_anzeige.getSpielfeld().set(x(), y(), null);
-				return _vorratsStein;
+				return vorratsStein();
+			}
+			
+			/**
+			 * Beendet die Operation, indem die {@link SteinDarstellung} des
+			 * {@link #gesetzterStein() gesetzten Steins} fixiert wird.
+			 */
+			public void beende() {
+				_gesetzterStein.fixiere();
+				vorratsStein().fixiere();
 			}
 
 			public void wiederhole() {
-				_anzeige.getSpielfeld().set(x(), y(), _vorratsStein.getStein());
+				_anzeige.getSpielfeld().set(x(), y(), vorratsStein().getStein());
 				gesetzterStein().zeigeAn();
 			}
 
@@ -322,6 +394,13 @@ public class Vorrat {
 			 */
 			public int y() {
 				return _position.y();
+			}
+
+			/**
+			 * Die in dieser Operation benutzte {@link SteinDarstellung} aus dem {@link Vorrat}. 
+			 */
+			public SteinDarstellung vorratsStein() {
+				return _vorratsStein;
 			}
 		}
 		

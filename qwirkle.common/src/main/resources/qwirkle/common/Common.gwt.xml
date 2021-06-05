@@ -10,7 +10,7 @@
   <inherits name='de.haumacher.msgbuf.MsgBuf'/>
 
   <!-- Specify the paths for translatable code                    -->
-  <source path='messages'/>
+  <source path=''/>
 
   <!-- allow Super Dev Mode -->
   <add-linker name="xsiframe"/>

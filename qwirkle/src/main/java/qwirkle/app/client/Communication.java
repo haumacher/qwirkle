@@ -21,11 +21,13 @@ import qwirkle.common.messages.GameCreated;
 import qwirkle.common.messages.GameJoined;
 import qwirkle.common.messages.GameOpened;
 import qwirkle.common.messages.GameStarted;
+import qwirkle.common.messages.GameUpdate;
 import qwirkle.common.messages.GameUpdated;
 import qwirkle.common.messages.JoinFailed;
 import qwirkle.common.messages.LoginFailed;
 import qwirkle.common.messages.LoginSuccess;
 import qwirkle.common.messages.OpenGames;
+import qwirkle.common.messages.QwirkleServerMessage;
 import qwirkle.common.messages.Request;
 import qwirkle.common.messages.Response;
 import qwirkle.common.messages.ServerError;
@@ -45,6 +47,8 @@ public class Communication implements ServerMessage.Visitor<Void, Void> {
 	private HashMap<String, Consumer<? extends Response>> _handlers = new HashMap<>();
 	
 	private Map<Class<?>, Consumer<? extends ServerMessage>> _listeners = new HashMap<>();
+	
+	private Map<String, Consumer<QwirkleServerMessage>> _gameListeners = new HashMap<>();
 	
 	/** 
 	 * Creates a {@link Communication}.
@@ -174,6 +178,15 @@ public class Communication implements ServerMessage.Visitor<Void, Void> {
 	public Void visit(CreateGameFailed self, Void arg) {
 		return handle(self);
 	}
+	
+	@Override
+	public Void visit(GameUpdate self, Void arg) {
+		Consumer<? super QwirkleServerMessage> listener = _gameListeners.get(self.getGameId());
+		if (listener != null) {
+			listener.accept(self.getDetail());
+		}
+		return null;
+	}
 
 	private <T extends ServerMessage> Void handle(T self) {
 		DomGlobal.console.info("Received: ", self);
@@ -196,6 +209,20 @@ public class Communication implements ServerMessage.Visitor<Void, Void> {
 		return null;
 	}
 	
+	public Registration addGameListener(String gameId, Consumer<QwirkleServerMessage> listener) {
+		_gameListeners.put(gameId, listener);
+		return () -> removeGameListener(gameId, listener);
+	}
+	
+	public boolean removeGameListener(String gameId, Consumer<QwirkleServerMessage> listener) {
+		if (_gameListeners.get(gameId) != listener) {
+			return false;
+		}
+		
+		_gameListeners.remove(gameId);
+		return true;
+	}
+
 	/** 
 	 * TODO
 	 */

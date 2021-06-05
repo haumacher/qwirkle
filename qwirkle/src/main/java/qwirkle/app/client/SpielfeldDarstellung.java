@@ -34,8 +34,6 @@ public class SpielfeldDarstellung {
 
 		_xOffset = _svg.clientWidth / 2 - SteinDarstellung.WIDTH / 2;
 		_yOffset = _svg.clientHeight / 2 - SteinDarstellung.HEIGHT / 2;
-
-		_tx = _svg.getScreenCTM().inverse().translate(-_xOffset, -_yOffset);
 	}
 
 	/**
@@ -76,7 +74,7 @@ public class SpielfeldDarstellung {
 	 * Berechnet die {@link Spielfeld} Position zu der gegebenen Maus-Koordinate.
 	 */
 	public Position berechneSpielfeldPosition(int clientX, int clientY) {
-		SVGPoint p = point(clientX, clientY).matrixTransform(_tx);
+		SVGPoint p = point(clientX, clientY).matrixTransform(tx());
 
 		int x = roundToRaster(((int) p.x), SteinDarstellung.WIDTH);
 		int y = roundToRaster(((int) p.y), SteinDarstellung.HEIGHT);
@@ -114,6 +112,13 @@ public class SpielfeldDarstellung {
 	public SteinDarstellung fügeEin(int x, int y, Stein stein) {
 		_spielfeld.set(x, y, stein);
 		return zeigeStein(x, y, stein);
+	}
+
+	private SVGMatrix tx() {
+		if (_tx == null) {
+			_tx = _svg.getScreenCTM().inverse().translate(-_xOffset, -_yOffset);
+		}
+		return _tx;
 	}
 
 }

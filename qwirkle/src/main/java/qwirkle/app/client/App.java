@@ -12,22 +12,15 @@ import org.dominokit.domino.ui.utils.DominoElement;
 
 import com.google.gwt.core.client.EntryPoint;
 
-import elemental2.dom.DomGlobal;
 import elemental2.dom.Event;
 import elemental2.dom.HTMLDivElement;
-import elemental2.svg.SVGLength;
-import elemental2.svg.SVGSVGElement;
+import qwirkle.app.client.views.GameScreen;
 import qwirkle.app.client.views.JoinGameForm;
 import qwirkle.app.client.views.LoginForm;
 import qwirkle.app.client.views.StartGameForm;
 import qwirkle.app.client.views.WaitForGameStartForm;
-import qwirkle.app.shared.Nachzugstapel;
-import qwirkle.app.shared.Qwirkle;
-import qwirkle.common.messages.Farbe;
-import qwirkle.common.messages.Form;
 import qwirkle.common.messages.GameInfo;
 import qwirkle.common.messages.UserInfo;
-import qwirkle.common.model.Spielfeld;
 
 /**
  * Einstiegspunkt in die GWT-Applikation.
@@ -63,26 +56,7 @@ public class App implements EntryPoint {
 	}
 
 	private void showGameScreen() {
-		DominoElement<HTMLDivElement> contentPanel = clearContent();
-
-		Nachzugstapel stapel = new Nachzugstapel();
-		SVGSVGElement spielfeldAnzeige = createSVG(1000, 800);
-		contentPanel.appendChild(spielfeldAnzeige);
-
-		SVGSVGElement vorratsAnzeige = createSVG(1000, 100);
-		contentPanel.appendChild(vorratsAnzeige);
-		
-		Spielfeld spielfeld = new Spielfeld();
-		spielfeld.set(0, 0, Qwirkle.stein(Farbe.red, Form.circle));
-		spielfeld.set(0, 1, Qwirkle.stein(Farbe.red, Form.square));
-		spielfeld.set(1, 0, Qwirkle.stein(Farbe.green, Form.circle));
-		
-		SpielfeldDarstellung spielfeldDarstellung = new SpielfeldDarstellung(spielfeldAnzeige, spielfeld);
-		spielfeldDarstellung.zeigeAn();
-		
-		Vorrat vorrat = new Vorrat(vorratsAnzeige, stapel);
-		vorrat.fülleAuf();
-		vorrat.starteZug(spielfeldDarstellung);
+		clearContent().appendChild(new GameScreen(_communication, _userInfo, _game));
 	}
 
 	private void showHomeScreen() {
@@ -169,11 +143,4 @@ public class App implements EntryPoint {
 		showGameScreen();
 	}
 	
-	private SVGSVGElement createSVG(int width, int height) {
-		SVGSVGElement result = (SVGSVGElement) DomGlobal.document.createElementNS("http://www.w3.org/2000/svg", "svg");
-		result.width.baseVal.newValueSpecifiedUnits((int) SVGLength.SVG_LENGTHTYPE_PX, width);
-		result.height.baseVal.newValueSpecifiedUnits((int) SVGLength.SVG_LENGTHTYPE_PX, height);
-		return result;
-	}
-
 }

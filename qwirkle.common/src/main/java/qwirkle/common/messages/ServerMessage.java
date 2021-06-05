@@ -20,6 +20,9 @@ public abstract class ServerMessage extends de.haumacher.msgbuf.data.AbstractDat
 		/** Visit case for {@link GameStarted}.*/
 		R visit(GameStarted self, A arg);
 
+		/** Visit case for {@link GameUpdate}.*/
+		R visit(GameUpdate self, A arg);
+
 	}
 
 	/**
@@ -39,6 +42,7 @@ public abstract class ServerMessage extends de.haumacher.msgbuf.data.AbstractDat
 			case "GameClosed": result = GameClosed.readGameClosed(in); break;
 			case "GameUpdated": result = GameUpdated.readGameUpdated(in); break;
 			case "GameStarted": result = GameStarted.readGameStarted(in); break;
+			case "GameUpdate": result = GameUpdate.readGameUpdate(in); break;
 			case "ServerError": result = ServerError.readServerError(in); break;
 			case "OpenGames": result = OpenGames.readOpenGames(in); break;
 			case "GameCreated": result = GameCreated.readGameCreated(in); break;
