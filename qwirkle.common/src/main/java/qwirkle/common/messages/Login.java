@@ -1,6 +1,9 @@
 package qwirkle.common.messages;
 
-public class Login extends ClientMessage {
+/**
+ * {@link Request} creating a new user that may participate in games.
+ */
+public class Login extends Request {
 
 	/**
 	 * Creates a {@link Login} instance.
@@ -20,6 +23,9 @@ public class Login extends ClientMessage {
 
 	private String _name = "";
 
+	/**
+	 * The name of the user as displayed to other users
+	 */
 	public final String getName() {
 		return _name;
 	}
@@ -78,7 +84,7 @@ public class Login extends ClientMessage {
 	}
 
 	@Override
-	public <R,A> R visit(ClientMessage.Visitor<R,A> v, A arg) {
+	public <R,A> R visit(Request.Visitor<R,A> v, A arg) {
 		return v.visit(this, arg);
 	}
 

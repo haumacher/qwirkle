@@ -1,30 +1,37 @@
 package qwirkle.common.messages;
 
 /**
- * Informs about a newly created game that can be joined.
+ * Informs of a state change of an open game. 
+ *
+ * <p>
+ * Normally this happens, if the number of players has changed, either if a new player has joined 
+ * the game, or a player has again left the game. The message is sent to all users that have already
+ * entered the game, and all users that have not yet entered a game but sent a {@link FindOpenGames} 
+ * message.
+ * </p>
  */
-public class GameOpened extends ServerMessage {
+public class GameUpdated extends ServerMessage {
 
 	/**
-	 * Creates a {@link GameOpened} instance.
+	 * Creates a {@link GameUpdated} instance.
 	 */
-	public static GameOpened gameOpened() {
-		return new GameOpened();
+	public static GameUpdated gameUpdated() {
+		return new GameUpdated();
 	}
 
 	/**
-	 * Creates a {@link GameOpened} instance.
+	 * Creates a {@link GameUpdated} instance.
 	 *
-	 * @see #gameOpened()
+	 * @see #gameUpdated()
 	 */
-	protected GameOpened() {
+	protected GameUpdated() {
 		super();
 	}
 
 	private GameInfo _game = null;
 
 	/**
-	 * Information about the newly created game.
+	 * New game information. This information replaces the last one published with the same {@link GameInfo#getGameId()}.
 	 */
 	public final GameInfo getGame() {
 		return _game;
@@ -33,7 +40,7 @@ public class GameOpened extends ServerMessage {
 	/**
 	 * @see #getGame()
 	 */
-	public final GameOpened setGame(GameInfo value) {
+	public final GameUpdated setGame(GameInfo value) {
 		_game = value;
 		return this;
 	}
@@ -46,8 +53,8 @@ public class GameOpened extends ServerMessage {
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static GameOpened readGameOpened(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		GameOpened result = new GameOpened();
+	public static GameUpdated readGameUpdated(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		GameUpdated result = new GameUpdated();
 		in.beginObject();
 		result.readFields(in);
 		in.endObject();
@@ -56,7 +63,7 @@ public class GameOpened extends ServerMessage {
 
 	@Override
 	protected String jsonType() {
-		return "GameOpened";
+		return "GameUpdated";
 	}
 
 	@Override

@@ -8,11 +8,11 @@ public abstract class ClientMessage extends de.haumacher.msgbuf.data.AbstractDat
 	/** Visitor interface for the {@link ClientMessage} hierarchy.*/
 	public interface Visitor<R,A> extends Request.Visitor<R,A> {
 
-		/** Visit case for {@link Login}.*/
-		R visit(Login self, A arg);
-
 		/** Visit case for {@link Logout}.*/
 		R visit(Logout self, A arg);
+
+		/** Visit case for {@link StartGame}.*/
+		R visit(StartGame self, A arg);
 
 	}
 
@@ -29,9 +29,12 @@ public abstract class ClientMessage extends de.haumacher.msgbuf.data.AbstractDat
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
-			case "Login": result = Login.readLogin(in); break;
 			case "Logout": result = Logout.readLogout(in); break;
+			case "StartGame": result = StartGame.readStartGame(in); break;
 			case "CreateGame": result = CreateGame.readCreateGame(in); break;
+			case "Login": result = Login.readLogin(in); break;
+			case "FindOpenGames": result = FindOpenGames.readFindOpenGames(in); break;
+			case "JoinGame": result = JoinGame.readJoinGame(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();

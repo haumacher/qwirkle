@@ -8,13 +8,13 @@ package qwirkle.common.messages;
 public abstract class Response extends ServerMessage {
 
 	/** Visitor interface for the {@link Response} hierarchy.*/
-	public interface Visitor<R,A> {
-
-		/** Visit case for {@link CreateGameResult}.*/
-		R visit(CreateGameResult self, A arg);
+	public interface Visitor<R,A> extends CreateGameResponse.Visitor<R,A>, LoginResponse.Visitor<R,A>, JoinGameResponse.Visitor<R,A> {
 
 		/** Visit case for {@link ServerError}.*/
 		R visit(ServerError self, A arg);
+
+		/** Visit case for {@link OpenGames}.*/
+		R visit(OpenGames self, A arg);
 
 	}
 
@@ -48,8 +48,14 @@ public abstract class Response extends ServerMessage {
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
-			case "CreateGameResult": result = CreateGameResult.readCreateGameResult(in); break;
 			case "ServerError": result = ServerError.readServerError(in); break;
+			case "OpenGames": result = OpenGames.readOpenGames(in); break;
+			case "GameCreated": result = GameCreated.readGameCreated(in); break;
+			case "CreateGameFailed": result = CreateGameFailed.readCreateGameFailed(in); break;
+			case "LoginSuccess": result = LoginSuccess.readLoginSuccess(in); break;
+			case "LoginFailed": result = LoginFailed.readLoginFailed(in); break;
+			case "GameJoined": result = GameJoined.readGameJoined(in); break;
+			case "JoinFailed": result = JoinFailed.readJoinFailed(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();

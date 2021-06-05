@@ -1,27 +1,39 @@
 package qwirkle.common.messages;
 
-public class UserLeft extends ServerMessage {
+/**
+ * Requests a game to start. 
+ *
+ * <p>
+ * This message must only be sent by the {@link CreateGame owner of the game}. All players of 
+ * the game receive a {@link GameStarted} message in response. All other users 
+ * {@link FindOpenGames searching for an open game} receive a {@link GameClosed} message. 
+ * </p>
+ */
+public class StartGame extends ClientMessage {
 
 	/**
-	 * Creates a {@link UserLeft} instance.
+	 * Creates a {@link StartGame} instance.
 	 */
-	public static UserLeft userLeft() {
-		return new UserLeft();
+	public static StartGame startGame() {
+		return new StartGame();
 	}
 
 	/**
-	 * Creates a {@link UserLeft} instance.
+	 * Creates a {@link StartGame} instance.
 	 *
-	 * @see #userLeft()
+	 * @see #startGame()
 	 */
-	protected UserLeft() {
+	protected StartGame() {
 		super();
 	}
 
 	private String _gameId = "";
 
-	private String _userId = "";
-
+	/**
+	 * The ID of the game to start.
+	 *
+	 * @see GameInfo#getGameId()
+	 */
 	public final String getGameId() {
 		return _gameId;
 	}
@@ -29,26 +41,14 @@ public class UserLeft extends ServerMessage {
 	/**
 	 * @see #getGameId()
 	 */
-	public final UserLeft setGameId(String value) {
+	public final StartGame setGameId(String value) {
 		_gameId = value;
 		return this;
 	}
 
-	public final String getUserId() {
-		return _userId;
-	}
-
-	/**
-	 * @see #getUserId()
-	 */
-	public final UserLeft setUserId(String value) {
-		_userId = value;
-		return this;
-	}
-
 	/** Reads a new instance from the given reader. */
-	public static UserLeft readUserLeft(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		UserLeft result = new UserLeft();
+	public static StartGame readStartGame(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		StartGame result = new StartGame();
 		in.beginObject();
 		result.readFields(in);
 		in.endObject();
@@ -57,14 +57,13 @@ public class UserLeft extends ServerMessage {
 
 	@Override
 	protected String jsonType() {
-		return "UserLeft";
+		return "StartGame";
 	}
 
 	@Override
 	public Object get(String field) {
 		switch (field) {
 			case "gameId": return getGameId();
-			case "userId": return getUserId();
 			default: return super.get(field);
 		}
 	}
@@ -73,7 +72,6 @@ public class UserLeft extends ServerMessage {
 	public void set(String field, Object value) {
 		switch (field) {
 			case "gameId": setGameId((String) value); break;
-			case "userId": setUserId((String) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -83,21 +81,18 @@ public class UserLeft extends ServerMessage {
 		super.writeFields(out);
 		out.name("gameId");
 		out.value(getGameId());
-		out.name("userId");
-		out.value(getUserId());
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
 			case "gameId": setGameId(in.nextString()); break;
-			case "userId": setUserId(in.nextString()); break;
 			default: super.readField(in, field);
 		}
 	}
 
 	@Override
-	public <R,A> R visit(ServerMessage.Visitor<R,A> v, A arg) {
+	public <R,A> R visit(ClientMessage.Visitor<R,A> v, A arg) {
 		return v.visit(this, arg);
 	}
 

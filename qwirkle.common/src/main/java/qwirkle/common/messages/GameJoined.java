@@ -1,25 +1,36 @@
 package qwirkle.common.messages;
 
-public class CreateGameResult extends Response {
+/**
+ * Successful {@link Response} to a {@link JoinGame} {@link link Request}.
+ *
+ * <p>
+ * When this message is received, the game has not yet started. This is announced with a separate 
+ * {@link GameStarted} message.
+ * </p>
+ */
+public class GameJoined extends JoinGameResponse {
 
 	/**
-	 * Creates a {@link CreateGameResult} instance.
+	 * Creates a {@link GameJoined} instance.
 	 */
-	public static CreateGameResult createGameResult() {
-		return new CreateGameResult();
+	public static GameJoined gameJoined() {
+		return new GameJoined();
 	}
 
 	/**
-	 * Creates a {@link CreateGameResult} instance.
+	 * Creates a {@link GameJoined} instance.
 	 *
-	 * @see #createGameResult()
+	 * @see #gameJoined()
 	 */
-	protected CreateGameResult() {
+	protected GameJoined() {
 		super();
 	}
 
 	private GameInfo _game = null;
 
+	/**
+	 * Updated information about the joined game.
+	 */
 	public final GameInfo getGame() {
 		return _game;
 	}
@@ -27,7 +38,7 @@ public class CreateGameResult extends Response {
 	/**
 	 * @see #getGame()
 	 */
-	public final CreateGameResult setGame(GameInfo value) {
+	public final GameJoined setGame(GameInfo value) {
 		_game = value;
 		return this;
 	}
@@ -40,8 +51,8 @@ public class CreateGameResult extends Response {
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static CreateGameResult readCreateGameResult(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		CreateGameResult result = new CreateGameResult();
+	public static GameJoined readGameJoined(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		GameJoined result = new GameJoined();
 		in.beginObject();
 		result.readFields(in);
 		in.endObject();
@@ -50,7 +61,7 @@ public class CreateGameResult extends Response {
 
 	@Override
 	protected String jsonType() {
-		return "CreateGameResult";
+		return "GameJoined";
 	}
 
 	@Override
@@ -87,7 +98,7 @@ public class CreateGameResult extends Response {
 	}
 
 	@Override
-	public <R,A> R visit(Response.Visitor<R,A> v, A arg) {
+	public <R,A> R visit(JoinGameResponse.Visitor<R,A> v, A arg) {
 		return v.visit(this, arg);
 	}
 

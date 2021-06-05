@@ -1,7 +1,7 @@
 package qwirkle.common.messages;
 
 /**
- * Base class for {@link ClientMessage}s that are directly answered by the server.
+ * Base class for {@link ClientMessage}s that are directly answered by the server with a {@link Response}.
  *
  * @see #getMsgId()
  */
@@ -12,6 +12,15 @@ public abstract class Request extends ClientMessage {
 
 		/** Visit case for {@link CreateGame}.*/
 		R visit(CreateGame self, A arg);
+
+		/** Visit case for {@link Login}.*/
+		R visit(Login self, A arg);
+
+		/** Visit case for {@link FindOpenGames}.*/
+		R visit(FindOpenGames self, A arg);
+
+		/** Visit case for {@link JoinGame}.*/
+		R visit(JoinGame self, A arg);
 
 	}
 
@@ -50,6 +59,9 @@ public abstract class Request extends ClientMessage {
 		String type = in.nextString();
 		switch (type) {
 			case "CreateGame": result = CreateGame.readCreateGame(in); break;
+			case "Login": result = Login.readLogin(in); break;
+			case "FindOpenGames": result = FindOpenGames.readFindOpenGames(in); break;
+			case "JoinGame": result = JoinGame.readJoinGame(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();

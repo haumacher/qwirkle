@@ -1,46 +1,78 @@
 package qwirkle.app.client;
 
-import java.io.IOException;
+import org.dominokit.domino.ui.cards.Card;
+import org.dominokit.domino.ui.grid.Column;
+import org.dominokit.domino.ui.grid.Row;
+import org.dominokit.domino.ui.icons.Icons;
+import org.dominokit.domino.ui.layout.Layout;
+import org.dominokit.domino.ui.tree.ToggleTarget;
+import org.dominokit.domino.ui.tree.Tree;
+import org.dominokit.domino.ui.tree.TreeItem;
+import org.dominokit.domino.ui.utils.DominoElement;
 
 import com.google.gwt.core.client.EntryPoint;
 
-import de.haumacher.msgbuf.io.StringR;
-import de.haumacher.msgbuf.io.StringW;
-import de.haumacher.msgbuf.json.JsonReader;
-import de.haumacher.msgbuf.json.JsonWriter;
 import elemental2.dom.DomGlobal;
-import elemental2.dom.WebSocket;
+import elemental2.dom.Event;
+import elemental2.dom.HTMLDivElement;
+import elemental2.svg.SVGLength;
 import elemental2.svg.SVGSVGElement;
+import qwirkle.app.client.views.JoinGameForm;
+import qwirkle.app.client.views.LoginForm;
+import qwirkle.app.client.views.StartGameForm;
 import qwirkle.app.shared.Nachzugstapel;
 import qwirkle.app.shared.Qwirkle.Farbe;
 import qwirkle.app.shared.Qwirkle.Form;
 import qwirkle.app.shared.Qwirkle.Stein;
 import qwirkle.app.shared.Spielfeld;
-import qwirkle.common.messages.ClientMessage;
-import qwirkle.common.messages.CreateGameResult;
-import qwirkle.common.messages.GameClosed;
-import qwirkle.common.messages.GameOpened;
-import qwirkle.common.messages.Login;
-import qwirkle.common.messages.OpenGames;
-import qwirkle.common.messages.ServerError;
-import qwirkle.common.messages.ServerMessage;
-import qwirkle.common.messages.UserJoined;
-import qwirkle.common.messages.UserLeft;
+import qwirkle.common.messages.CreateGameFailed;
+import qwirkle.common.messages.CreateGameResponse;
+import qwirkle.common.messages.GameCreated;
+import qwirkle.common.messages.GameInfo;
+import qwirkle.common.messages.UserInfo;
 
 /**
  * Einstiegspunkt in die GWT-Applikation.
  * 
  * @see #onModuleLoad()
  */
-public class App implements EntryPoint, ServerMessage.Visitor<Void, Void> {
+public class App implements EntryPoint, CreateGameResponse.Visitor<Void, Void> {
 	
-	private WebSocket _socket;
+	private Layout _layout;
+	private Communication _communication;
+	private UserInfo _userInfo;
+	private GameInfo _game;
 
 	@Override
 	public void onModuleLoad() {
-		Nachzugstapel stapel = new Nachzugstapel();
+		_layout = Layout.create("Qwirkle");
+		_layout.getLeftPanel().appendChild(	
+			Tree.create("GAME")
+				.setToggleTarget(ToggleTarget.ICON)
+				.appendChild(
+		            TreeItem.create("Startseite", Icons.ALL.home())
+		                .addClickListener(this::homeClicked)));
+        
+		showHomeScreen();
+		_layout.show();
 		
-		SVGSVGElement spielfeldAnzeige = (SVGSVGElement) DomGlobal.document.getElementById("spielfeld");
+		_communication = Communication.create().start();
+	}
+	
+	private void homeClicked(Event evt) {
+		showHomeScreen();
+		_layout.hideLeftPanel();
+	}
+
+	private void showGameScreen() {
+		DominoElement<HTMLDivElement> contentPanel = clearContent();
+
+		Nachzugstapel stapel = new Nachzugstapel();
+		SVGSVGElement spielfeldAnzeige = createSVG(1000, 800);
+		contentPanel.appendChild(spielfeldAnzeige);
+
+		SVGSVGElement vorratsAnzeige = createSVG(1000, 100);
+		contentPanel.appendChild(vorratsAnzeige);
 		
 		Spielfeld spielfeld = new Spielfeld();
 		spielfeld.set(0, 0, new Stein(Farbe.red, Form.circle));
@@ -50,82 +82,106 @@ public class App implements EntryPoint, ServerMessage.Visitor<Void, Void> {
 		SpielfeldDarstellung spielfeldDarstellung = new SpielfeldDarstellung(spielfeldAnzeige, spielfeld);
 		spielfeldDarstellung.zeigeAn();
 		
-		SVGSVGElement vorratsAnzeige = (SVGSVGElement) DomGlobal.document.getElementById("vorrat");
-		
 		Vorrat vorrat = new Vorrat(vorratsAnzeige, stapel);
 		vorrat.fülleAuf();
 		vorrat.starteZug(spielfeldDarstellung);
+	}
 
-		_socket = new WebSocket("ws://localhost:8080/qwirkle/talk");
-		_socket.onopen = evt -> {
-			login();
-		};
+	private void showHomeScreen() {
+		DominoElement<HTMLDivElement> contentPanel = clearContent();
 		
-		_socket.onmessage = evt -> {
-			try {
-				String data = evt.data.asString();
-				ServerMessage message = ServerMessage.readServerMessage(new JsonReader(new StringR(data)));
-				message.visit(this, null);
-			} catch (IOException ex) {
-				DomGlobal.console.info("Parsing message failed.", ex);
-			}
-		};
+		contentPanel.appendChild(
+			Row.create().addColumn(
+				Column.span4().appendChild(
+					Card.create("Starte Spiel", "Starte ein neues Spiel und lade andere Leute im Netzwerk dazu ein.")
+						.withWaves().addClickListener(this::startGameClicked)))
+			.addColumn(
+				Column.span4().appendChild(
+					Card.create("Mitspielen", "Suche ein Spiel, das ein anderer gestartet hat und spiele dort mit.")
+						.withWaves().addClickListener(this::joinGameClicked)))
+			.addColumn(
+				Column.span4().appendChild(
+					Card.create("Lokal spielen", "Spiele für dich gegen einen Computer-Gegner nur auf deinem Rechner.")
+						.withWaves().addClickListener(this::playLocallyClicked))));
 	}
 
-	private void login() {
-		send(Login.login().setName("Hi5"));
+	private DominoElement<HTMLDivElement> clearContent() {
+		DominoElement<HTMLDivElement> contentPanel = _layout.getContentPanel();
+		contentPanel.clearElement();
+		return contentPanel;
 	}
-
-	private void send(ClientMessage message) {
-		try {
-			StringW out = new StringW();
-			message.writeTo(new JsonWriter(out));
-			_socket.send(out.toString());
-		} catch (IOException ex) {
-			DomGlobal.console.info("Sending message failed.", ex);
-		}
+	
+	private void startGameClicked(Event evt) {
+		ensureLogin(this::createGame);
 	}
-
+	
+	private void createGame() {
+		clearContent().appendChild(
+			StartGameForm.create(_communication, _userInfo, this::gameStarted));
+	}
+	
+	private void gameStarted(GameInfo game) {
+		_game = game;
+		showGameScreen();
+	}
+	
 	@Override
-	public Void visit(CreateGameResult self, Void arg) {
-		DomGlobal.console.info("Received: ", self);
-		return null;
-	}
-
-	@Override
-	public Void visit(ServerError self, Void arg) {
-		DomGlobal.console.info("Received: ", self);
-		return null;
-	}
-
-	@Override
-	public Void visit(OpenGames self, Void arg) {
-		DomGlobal.console.info("Received: ", self);
-		return null;
-	}
-
-	@Override
-	public Void visit(GameOpened self, Void arg) {
-		DomGlobal.console.info("Received: ", self);
-		return null;
-	}
-
-	@Override
-	public Void visit(GameClosed self, Void arg) {
-		DomGlobal.console.info("Received: ", self);
-		return null;
-	}
-
-	@Override
-	public Void visit(UserJoined self, Void arg) {
-		DomGlobal.console.info("Received: ", self);
-		return null;
-	}
-
-	@Override
-	public Void visit(UserLeft self, Void arg) {
-		DomGlobal.console.info("Received: ", self);
+	public Void visit(GameCreated self, Void arg) {
 		return null;
 	}
 	
+	@Override
+	public Void visit(CreateGameFailed self, Void arg) {
+		//  TODO: Automatically created
+		return null;
+	}
+
+	/**
+	 * Zeigt eine Make für ein neues Spiel an. Hier kann das Spiel gestartet
+	 * werden, wenn genügend Mitspieler eingetroffen sind.
+	 */
+	private void showStartScreen() {
+		//  TODO: Automatically created
+		
+	}
+	
+	private void joinGameClicked(Event evt) {
+		ensureLogin(this::joinGame);
+	}
+	
+	private void joinGame() {
+		clearContent().appendChild(
+			JoinGameForm.create(_communication, this::gameStarted));
+	}
+	
+	/**
+	 * Wenn der Nutzer noch nicht angemeldet ist, wird eine Anmeldemaske gezeigt
+	 * und die Anmeldung durchgeführt. Anschließend wird die gegebene Aktion
+	 * ausgeführt.
+	 * 
+	 * @param okClicked
+	 *        Aktion, die ausgeführt werden soll, wenn die Anmeldung erfolgreich war.
+	 */
+	private void ensureLogin(Runnable okClicked) {
+		if (_userInfo == null) {
+			clearContent().appendChild(LoginForm.create(_communication).setContinuation(userInfo -> {
+				_userInfo = userInfo;
+				okClicked.run();
+			}));
+		} else {
+			okClicked.run();
+		}
+	}
+
+	private void playLocallyClicked(Event evt) {
+		showGameScreen();
+	}
+	
+	private SVGSVGElement createSVG(int width, int height) {
+		SVGSVGElement result = (SVGSVGElement) DomGlobal.document.createElementNS("http://www.w3.org/2000/svg", "svg");
+		result.width.baseVal.newValueSpecifiedUnits((int) SVGLength.SVG_LENGTHTYPE_PX, width);
+		result.height.baseVal.newValueSpecifiedUnits((int) SVGLength.SVG_LENGTHTYPE_PX, height);
+		return result;
+	}
+
 }

@@ -35,11 +35,9 @@ public class UserManager {
 	public static void broadCastToIdleUsers(ServerMessage message) {
 		String data = UserEndpoint.serialize(message);
 		for (UserEndpoint user : _users.values()) {
-			if (user.hasGame()) {
-				continue;
+			if (user.isWaitingForGame()) {
+				user.send(data);
 			}
-			
-			user.send(data);
 		}
 	}
 

@@ -1,5 +1,8 @@
 package qwirkle.common.messages;
 
+/**
+ * Information exchanged for describing a game.
+ */
 public class GameInfo extends de.haumacher.msgbuf.data.AbstractDataObject {
 
 	/**
@@ -24,6 +27,9 @@ public class GameInfo extends de.haumacher.msgbuf.data.AbstractDataObject {
 
 	private final java.util.List<UserInfo> _users = new java.util.ArrayList<>();
 
+	/**
+	 * The technical ID of the game. It is assigned by the server when creating the game, see {@link GameCreated}.
+	 */
 	public final String getGameId() {
 		return _gameId;
 	}
@@ -36,6 +42,9 @@ public class GameInfo extends de.haumacher.msgbuf.data.AbstractDataObject {
 		return this;
 	}
 
+	/**
+	 * Name of the game assigned by the client creating the game, see {@link CreateGame#getName()}.
+	 */
 	public final String getName() {
 		return _name;
 	}
@@ -48,6 +57,11 @@ public class GameInfo extends de.haumacher.msgbuf.data.AbstractDataObject {
 		return this;
 	}
 
+	/**
+	 * List of users currently assigned to this game.
+	 *
+	 * @see JoinGame
+	 */
 	public final java.util.List<UserInfo> getUsers() {
 		return _users;
 	}

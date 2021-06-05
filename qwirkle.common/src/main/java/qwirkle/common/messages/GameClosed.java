@@ -1,5 +1,8 @@
 package qwirkle.common.messages;
 
+/**
+ * Informs about a game that can no longer be joined. The game was either started by its players, or has been deleted in the meantime.
+ */
 public class GameClosed extends ServerMessage {
 
 	/**
@@ -20,6 +23,11 @@ public class GameClosed extends ServerMessage {
 
 	private String _gameId = "";
 
+	/**
+	 * ID of the closed game.
+	 *
+	 * @see GameInfo#getGameId()
+	 */
 	public final String getGameId() {
 		return _gameId;
 	}

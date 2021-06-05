@@ -9,10 +9,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
+import qwirkle.common.messages.GameClosed;
 import qwirkle.common.messages.GameInfo;
-import qwirkle.common.messages.UserJoined;
-import qwirkle.common.messages.UserLeft;
+import qwirkle.common.messages.GameStarted;
+import qwirkle.common.messages.GameUpdated;
 
 /**
  * Endpoint for all communication that is specific to a certain game instance.
@@ -25,6 +27,8 @@ public class GameEndpoint {
 	
 	private final Map<String, UserEndpoint> _users = new HashMap<>();
 
+	private boolean _started;
+
 	/** 
 	 * Creates a {@link GameEndpoint}.
 	 * @param name 
@@ -34,22 +38,34 @@ public class GameEndpoint {
 		_info = GameInfo.gameInfo().setGameId(IDSource.createId()).setName(name);
 	}
 	
+	public boolean isStarted() {
+		return _started;
+	}
+	
 	/** 
-	 * TODO
+	 * Fügt den gegebenen Spieler zu diesem Spiel hinzu.
+	 * 
+	 * @return Ob der Spieler hinzugefügt werden konnte. Wenn nicht, dann hat das Spiel bereits begonnen.
 	 */
-	public void addUser(UserEndpoint user) {
+	public boolean addUser(UserEndpoint user) {
 		String userId = user.getUserId();
 		
 		List<UserEndpoint> usersBefore;
 		synchronized (_users) {
+			if (_started) {
+				return false;
+			}
 			usersBefore = copyUsers();
 			_users.put(userId, user);
+			
+			_info.addUser(user.getUserInfo());
 		}
 		
 		String gameId = getGameId();
 		LOG.info("User '" + userId + "' joined game '" + gameId + "'.");
 
-		UserEndpoint.broadCast(usersBefore, UserJoined.userJoined().setGameId(gameId).setUser(user.getUserInfo()));
+		sendGameUpdate(usersBefore);
+		return true;
 	}
 
 	private List<UserEndpoint> copyUsers() {
@@ -66,26 +82,45 @@ public class GameEndpoint {
 	}
 
 	/** 
-	 * TODO
-	 * @return 
+	 * Entfernt den Mitspieler mit der gegebenen ID aus diesem Spiel. 
 	 */
-	public List<UserEndpoint> removeUser(String userId) {
+	public void removeUser(String userId) {
+		String gameId = getGameId();
+		
 		List<UserEndpoint> remainingUsers;
 		synchronized (_users) {
 			UserEndpoint removed = _users.remove(userId);
 			remainingUsers = copyUsers();
 			if (removed == null) {
-				return remainingUsers;
+				return;
 			}
+			
+			LOG.info("User '" + userId + "' left game '" + gameId + "'.");
+			
+			_info.setUsers(
+					_info.getUsers()
+					.stream()
+					.filter(info -> !info.getUserId().equals(userId))
+					.collect(Collectors.toList()));
 		}
 		
-		String gameId = getGameId();
-		LOG.info("User '" + userId + "' left game '" + gameId + "'.");
+		if (remainingUsers.isEmpty()) {
+			GameManager.internalGameClosed(this);
+			if (!isStarted()) {
+				UserManager.broadCastToIdleUsers(GameClosed.gameClosed().setGameId(gameId));
+			}
+		} else {
+			sendGameUpdate(remainingUsers); 
+		}
+	}
+	
+	private void sendGameUpdate(List<UserEndpoint> receivers) {
+		GameUpdated message = GameUpdated.gameUpdated().setGame(_info);
+		UserEndpoint.broadCast(receivers, message);
 		
-		UserEndpoint.broadCast(remainingUsers, 
-			UserLeft.userLeft().setGameId(gameId).setUserId(userId));
-		
-		return remainingUsers;
+		if (!isStarted()) {
+			UserManager.broadCastToIdleUsers(message);
+		}
 	}
 
 	public String getGameId() {
@@ -99,6 +134,21 @@ public class GameEndpoint {
 		synchronized (_users) {
 			return new HashSet<>(_users.keySet());
 		}
+	}
+
+	/** 
+	 * TODO
+	 */
+	public void start() {
+		synchronized (_users) {
+			if (_started) {
+				return;
+			}
+			
+			_started = true;
+		}
+		
+		UserEndpoint.broadCast(_users.values(), GameStarted.gameStarted().setGame(_info));
 	}
 
 }

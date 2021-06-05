@@ -20,15 +20,15 @@ public class Qwirkle {
 		}
 	}
 
-	public static void main(String[] args) {
-		System.out.println("Quirkle trial!!!");
-		Stein[] steine = new Stein[4 * 6 * 6];
-		for (int i = 0; i <= 3; i++) {
-			for (int j = 0; j <= 5; j++) {
-				for (int k = 0; k <= 5; k++) {
-					steine[j + 6 * k + 36 * i] = new Stein(Farbe.values()[j], Form.values()[k]);
-				}
-			}
-		}
-	}
+//	public static void main(String[] args) {
+//		System.out.println("Quirkle trial!!!");
+//		Stein[] steine = new Stein[4 * 6 * 6];
+//		for (int i = 0; i <= 3; i++) {
+//			for (int j = 0; j <= 5; j++) {
+//				for (int k = 0; k <= 5; k++) {
+//					steine[j + 6 * k + 36 * i] = new Stein(Farbe.values()[j], Form.values()[k]);
+//				}
+//			}
+//		}
+//	}
 }

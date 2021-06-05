@@ -10,7 +10,7 @@ abstract message ClientMessage {
 }
 
 /**
- * Base class for {@link ClientMessage}s that are directly answered by the server.
+ * Base class for {@link ClientMessage}s that are directly answered by the server with a {@link Response}.
  * 
  * @see #msgId
  */
@@ -46,57 +46,287 @@ abstract message Response extends ServerMessage {
 
 // Model types
 
+/**
+ * Information exchanged for describing a game.
+ */
 message GameInfo {
+	/** The technical ID of the game. It is assigned by the server when creating the game, see {@link GameCreated}. */
 	string gameId;
+	
+	/**
+	 * Name of the game assigned by the client creating the game, see {@link CreateGame#name}.
+	 */
 	string name;
+	
+	/**
+	 * List of users currently assigned to this game.
+	 *
+	 * @see JoinGame
+	 */
 	repeated UserInfo users;
 }
 
+/**
+ * Description of a user playing a game.
+ * 
+ * @see GameInfo#users
+ */
 message UserInfo {
+	/**
+	 * Technical ID of the user. It is assigned by the server when logging in. 
+	 *
+	 * @see LoginSuccess
+	 */
 	string userId;
+	
+	/**
+	 * The name of the user as given by the client when logging in.
+	 *
+	 * @see Login#name
+	 */
 	string name;
 }
 
 // Concrete messages.
 
+/**
+ * {@link Request} creating a game.
+ */
 message CreateGame extends Request {
+	/**
+	 * The name of the game as show to potential players.
+	 */
 	string name;
 }
 
-message CreateGameResult extends Response {
+/**
+ * Base class for all messages sent in response to {@link CreateGame}.
+ */
+abstract message CreateGameResponse extends Response {
+}
+
+/**
+ * Informs about successfully creating a game.
+ */
+message GameCreated extends CreateGameResponse {
+	/** 
+	 * Info about the newly created game.
+	 *
+	 * <p>
+	 * The user that requested creating the new game is the first {@link GameInfo#users user}.
+	 * </p> 
+	 */
 	GameInfo game;
+}
+
+/**
+ * Rejects creating a game. Sent in response to {@link CreateGame}.
+ */
+message CreateGameFailed extends CreateGameResponse {
+	/** Reason why the game could not be created by the server. */
+	string `message`;
 }
 
 message ServerError extends Response {
 	string `message`;
 }
 
-message Login extends ClientMessage {
+/**
+ * {@link Request} creating a new user that may participate in games.
+ */
+message Login extends Request {
+	/** The name of the user as displayed to other users */
 	string name;
+}
+
+/**
+ * Base class of possible {@link Response} messages to {@link Login}.
+ */
+abstract message LoginResponse extends Response {
+
+}
+
+/**
+ * Notifies about a successful user creation in response to {@link Login}.
+ */
+message LoginSuccess extends LoginResponse {
+	/**
+	 * User information of the newly created user.
+	 */
+	UserInfo user;
+}
+
+/**
+ * Rejects creating a new user in {@link Response} to {@link Login}.
+ */
+message LoginFailed extends LoginResponse {
+	/**
+	 * Reason why no new user could be created.
+	 */
+	string `message`;
 }
 
 message Logout extends ClientMessage {
 }
 
-message OpenGames extends ServerMessage {
+/**
+ * {@link Request} sending the list of games that can be {@link JoinGame joined}.
+ *
+ * <p>
+ * This {@link Request} is answered by a {@link OpenGames} message, followed by a sequence 
+ * of {@link GameOpened}, {@link GameClosed}, and {@link GameUpdated} messages.
+ * </p>
+ */
+message FindOpenGames extends Request {
+}
+
+/**
+ * Notifies about currently open games in {@link Response} to a {@link FindOpenGames} message.
+ */
+message OpenGames extends Response {
+	/**
+	 * List of games that can be joined.
+	 */
 	repeated GameInfo games;
 }
 
+/**
+ * Informs about a newly created game that can be joined. 
+ */
 message GameOpened extends ServerMessage {
+	/** Information about the newly created game. */
 	GameInfo game;
 }
 
+/**
+ * Informs about a game that can no longer be joined. The game was either started by its players, or has been deleted in the meantime.
+ */
 message GameClosed extends ServerMessage {
+	/**
+	 * ID of the closed game.
+	 *
+	 * @see GameInfo#gameId
+	 */
 	string gameId;
 }
 
-message UserJoined extends ServerMessage {
-	string gameId;
-	UserInfo user;
+/**
+ * Informs of a state change of an open game. 
+ * 
+ * <p>
+ * Normally this happens, if the number of players has changed, either if a new player has joined 
+ * the game, or a player has again left the game. The message is sent to all users that have already
+ * entered the game, and all users that have not yet entered a game but sent a {@link FindOpenGames} 
+ * message.
+ * </p>
+ */
+message GameUpdated extends ServerMessage {
+	/**
+	 * New game information. This information replaces the last one published with the same {@link GameInfo#gameId}.
+	 */
+	GameInfo game;
 }
 
-message UserLeft extends ServerMessage {
+/**
+ * {@link Request} joining an open game.
+ * 
+ * @see GameJoined
+ */
+message JoinGame extends Request {
+	/**
+	 * ID of the game to join.
+	 *
+	 * <p>
+	 * To successfully join a game, the game must not have been started before. 
+	 * </p>
+	 *
+	 * @see GameInfo#gameId 
+	 */
 	string gameId;
-	string userId;
+}
+
+/**
+ * Base class of messages sent in {@link Response} to a {@link JoinGame} message.
+ */
+abstract message JoinGameResponse extends Response {
+}
+
+/**
+ * Successful {@link Response} to a {@link JoinGame} {@link link Request}.
+ * 
+ * <p>
+ * When this message is received, the game has not yet started. This is announced with a separate 
+ * {@link GameStarted} message.
+ * </p>
+ */
+message GameJoined extends JoinGameResponse {
+	/**
+	 * Updated information about the joined game.
+	 */
+	GameInfo game;
+}
+
+/**
+ * {@link Response} to {@link JoinGame} that rejects joining the game.
+ *
+ * <p>
+ * Reasons why a join may be that the game has been started before the join request was received, or the game 
+ * has been closed by its owner.
+ * </p>
+ */
+message JoinFailed extends JoinGameResponse {
+
+	/**
+	 * Reason why a game could not be joined.
+	 */
+	enum Reason {
+		/** The game with the given ID was not found on the server. This means that the game has been closed in the meantime. */
+		GAME_NOT_FOUND;
+
+		/** You tried to enter a game while you are still part of another game. */
+		ALREADY_PART_OF_A_GAME;
+		
+		/** The game can no longer be joined, because it has been started before the join request was received. */
+		GAME_ALREADY_STARTED;
+	}
+	
+	/**
+	 * Reason why joining the game has failed.
+	 */
+	Reason reason;
+}
+
+
+/**
+ * Requests a game to start. 
+ *
+ * <p>
+ * This message must only be sent by the {@link CreateGame owner of the game}. All players of 
+ * the game receive a {@link GameStarted} message in response. All other users 
+ * {@link FindOpenGames searching for an open game} receive a {@link GameClosed} message. 
+ * </p> 
+ */
+message StartGame extends ClientMessage {
+	/**
+	 * The ID of the game to start.
+	 *
+	 * @see GameInfo#gameId
+	 */
+	string gameId;
+}
+
+/**
+ * Notifies that a game has started. 
+ * 
+ * <p>
+ * This message is sent to all players that have {@link JoinGame joined} this game before. All other
+ * users {@link FindOpenGames searching for an open game} receive the {@link GameClosed} message instead.
+ * </p>
+ */
+message GameStarted extends ServerMessage {
+	/**
+	 * Updated information containing the final list of players of the game that has been started.
+	 */
+	GameInfo game;
 }
 

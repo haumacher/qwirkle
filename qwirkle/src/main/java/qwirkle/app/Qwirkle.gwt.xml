@@ -9,10 +9,15 @@
   <inherits name='de.haumacher.msgbuf.MsgBuf'/>
   <inherits name='qwirkle.common.Common'/>
 
+  <inherits name="org.dominokit.domino.ui.DominoUI" />
+
   <inherits name='elemental2.dom.Dom'/>
   <inherits name='elemental2.core.Core'/>
   <inherits name='elemental2.svg.Svg'/>
 
+  <!-- Inherit the core Web Toolkit stuff. -->
+  <inherits name="com.google.gwt.user.User"/>
+  
   <entry-point class='qwirkle.app.client.App'/>
 
   <source path='client'/>

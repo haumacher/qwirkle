@@ -1,27 +1,39 @@
 package qwirkle.common.messages;
 
-public class UserJoined extends ServerMessage {
+/**
+ * {@link Request} joining an open game.
+ *
+ * @see GameJoined
+ */
+public class JoinGame extends Request {
 
 	/**
-	 * Creates a {@link UserJoined} instance.
+	 * Creates a {@link JoinGame} instance.
 	 */
-	public static UserJoined userJoined() {
-		return new UserJoined();
+	public static JoinGame joinGame() {
+		return new JoinGame();
 	}
 
 	/**
-	 * Creates a {@link UserJoined} instance.
+	 * Creates a {@link JoinGame} instance.
 	 *
-	 * @see #userJoined()
+	 * @see #joinGame()
 	 */
-	protected UserJoined() {
+	protected JoinGame() {
 		super();
 	}
 
 	private String _gameId = "";
 
-	private UserInfo _user = null;
-
+	/**
+	 * ID of the game to join.
+	 *
+	 * <p>
+	 * To successfully join a game, the game must not have been started before. 
+	 * </p>
+	 *
+	 * @see GameInfo#getGameId()
+	 */
 	public final String getGameId() {
 		return _gameId;
 	}
@@ -29,33 +41,14 @@ public class UserJoined extends ServerMessage {
 	/**
 	 * @see #getGameId()
 	 */
-	public final UserJoined setGameId(String value) {
+	public final JoinGame setGameId(String value) {
 		_gameId = value;
 		return this;
 	}
 
-	public final UserInfo getUser() {
-		return _user;
-	}
-
-	/**
-	 * @see #getUser()
-	 */
-	public final UserJoined setUser(UserInfo value) {
-		_user = value;
-		return this;
-	}
-
-	/**
-	 * Checks, whether {@link #getUser()} has a value.
-	 */
-	public final boolean hasUser() {
-		return _user != null;
-	}
-
 	/** Reads a new instance from the given reader. */
-	public static UserJoined readUserJoined(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		UserJoined result = new UserJoined();
+	public static JoinGame readJoinGame(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		JoinGame result = new JoinGame();
 		in.beginObject();
 		result.readFields(in);
 		in.endObject();
@@ -64,14 +57,13 @@ public class UserJoined extends ServerMessage {
 
 	@Override
 	protected String jsonType() {
-		return "UserJoined";
+		return "JoinGame";
 	}
 
 	@Override
 	public Object get(String field) {
 		switch (field) {
 			case "gameId": return getGameId();
-			case "user": return getUser();
 			default: return super.get(field);
 		}
 	}
@@ -80,7 +72,6 @@ public class UserJoined extends ServerMessage {
 	public void set(String field, Object value) {
 		switch (field) {
 			case "gameId": setGameId((String) value); break;
-			case "user": setUser((UserInfo) value); break;
 			default: super.set(field, value); break;
 		}
 	}
@@ -90,23 +81,18 @@ public class UserJoined extends ServerMessage {
 		super.writeFields(out);
 		out.name("gameId");
 		out.value(getGameId());
-		if (hasUser()) {
-			out.name("user");
-			getUser().writeTo(out);
-		}
 	}
 
 	@Override
 	protected void readField(de.haumacher.msgbuf.json.JsonReader in, String field) throws java.io.IOException {
 		switch (field) {
 			case "gameId": setGameId(in.nextString()); break;
-			case "user": setUser(UserInfo.readUserInfo(in)); break;
 			default: super.readField(in, field);
 		}
 	}
 
 	@Override
-	public <R,A> R visit(ServerMessage.Visitor<R,A> v, A arg) {
+	public <R,A> R visit(Request.Visitor<R,A> v, A arg) {
 		return v.visit(this, arg);
 	}
 

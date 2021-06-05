@@ -1,30 +1,35 @@
 package qwirkle.common.messages;
 
 /**
- * Informs about a newly created game that can be joined.
+ * Notifies that a game has started. 
+ *
+ * <p>
+ * This message is sent to all players that have {@link JoinGame joined} this game before. All other
+ * users {@link FindOpenGames searching for an open game} receive the {@link GameClosed} message instead.
+ * </p>
  */
-public class GameOpened extends ServerMessage {
+public class GameStarted extends ServerMessage {
 
 	/**
-	 * Creates a {@link GameOpened} instance.
+	 * Creates a {@link GameStarted} instance.
 	 */
-	public static GameOpened gameOpened() {
-		return new GameOpened();
+	public static GameStarted gameStarted() {
+		return new GameStarted();
 	}
 
 	/**
-	 * Creates a {@link GameOpened} instance.
+	 * Creates a {@link GameStarted} instance.
 	 *
-	 * @see #gameOpened()
+	 * @see #gameStarted()
 	 */
-	protected GameOpened() {
+	protected GameStarted() {
 		super();
 	}
 
 	private GameInfo _game = null;
 
 	/**
-	 * Information about the newly created game.
+	 * Updated information containing the final list of players of the game that has been started.
 	 */
 	public final GameInfo getGame() {
 		return _game;
@@ -33,7 +38,7 @@ public class GameOpened extends ServerMessage {
 	/**
 	 * @see #getGame()
 	 */
-	public final GameOpened setGame(GameInfo value) {
+	public final GameStarted setGame(GameInfo value) {
 		_game = value;
 		return this;
 	}
@@ -46,8 +51,8 @@ public class GameOpened extends ServerMessage {
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static GameOpened readGameOpened(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		GameOpened result = new GameOpened();
+	public static GameStarted readGameStarted(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		GameStarted result = new GameStarted();
 		in.beginObject();
 		result.readFields(in);
 		in.endObject();
@@ -56,7 +61,7 @@ public class GameOpened extends ServerMessage {
 
 	@Override
 	protected String jsonType() {
-		return "GameOpened";
+		return "GameStarted";
 	}
 
 	@Override

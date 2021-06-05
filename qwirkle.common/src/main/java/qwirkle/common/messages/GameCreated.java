@@ -1,30 +1,34 @@
 package qwirkle.common.messages;
 
 /**
- * Informs about a newly created game that can be joined.
+ * Informs about successfully creating a game.
  */
-public class GameOpened extends ServerMessage {
+public class GameCreated extends CreateGameResponse {
 
 	/**
-	 * Creates a {@link GameOpened} instance.
+	 * Creates a {@link GameCreated} instance.
 	 */
-	public static GameOpened gameOpened() {
-		return new GameOpened();
+	public static GameCreated gameCreated() {
+		return new GameCreated();
 	}
 
 	/**
-	 * Creates a {@link GameOpened} instance.
+	 * Creates a {@link GameCreated} instance.
 	 *
-	 * @see #gameOpened()
+	 * @see #gameCreated()
 	 */
-	protected GameOpened() {
+	protected GameCreated() {
 		super();
 	}
 
 	private GameInfo _game = null;
 
 	/**
-	 * Information about the newly created game.
+	 * Info about the newly created game.
+	 *
+	 * <p>
+	 * The user that requested creating the new game is the first {@link GameInfo#getUsers() user}.
+	 * </p>
 	 */
 	public final GameInfo getGame() {
 		return _game;
@@ -33,7 +37,7 @@ public class GameOpened extends ServerMessage {
 	/**
 	 * @see #getGame()
 	 */
-	public final GameOpened setGame(GameInfo value) {
+	public final GameCreated setGame(GameInfo value) {
 		_game = value;
 		return this;
 	}
@@ -46,8 +50,8 @@ public class GameOpened extends ServerMessage {
 	}
 
 	/** Reads a new instance from the given reader. */
-	public static GameOpened readGameOpened(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
-		GameOpened result = new GameOpened();
+	public static GameCreated readGameCreated(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
+		GameCreated result = new GameCreated();
 		in.beginObject();
 		result.readFields(in);
 		in.endObject();
@@ -56,7 +60,7 @@ public class GameOpened extends ServerMessage {
 
 	@Override
 	protected String jsonType() {
-		return "GameOpened";
+		return "GameCreated";
 	}
 
 	@Override
@@ -93,7 +97,7 @@ public class GameOpened extends ServerMessage {
 	}
 
 	@Override
-	public <R,A> R visit(ServerMessage.Visitor<R,A> v, A arg) {
+	public <R,A> R visit(CreateGameResponse.Visitor<R,A> v, A arg) {
 		return v.visit(this, arg);
 	}
 

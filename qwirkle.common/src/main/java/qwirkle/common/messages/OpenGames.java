@@ -1,6 +1,9 @@
 package qwirkle.common.messages;
 
-public class OpenGames extends ServerMessage {
+/**
+ * Notifies about currently open games in {@link Response} to a {@link FindOpenGames} message.
+ */
+public class OpenGames extends Response {
 
 	/**
 	 * Creates a {@link OpenGames} instance.
@@ -20,6 +23,9 @@ public class OpenGames extends ServerMessage {
 
 	private final java.util.List<GameInfo> _games = new java.util.ArrayList<>();
 
+	/**
+	 * List of games that can be joined.
+	 */
 	public final java.util.List<GameInfo> getGames() {
 		return _games;
 	}
@@ -98,7 +104,7 @@ public class OpenGames extends ServerMessage {
 	}
 
 	@Override
-	public <R,A> R visit(ServerMessage.Visitor<R,A> v, A arg) {
+	public <R,A> R visit(Response.Visitor<R,A> v, A arg) {
 		return v.visit(this, arg);
 	}
 

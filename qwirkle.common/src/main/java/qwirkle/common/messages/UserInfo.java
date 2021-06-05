@@ -1,5 +1,10 @@
 package qwirkle.common.messages;
 
+/**
+ * Description of a user playing a game.
+ *
+ * @see GameInfo#getUsers()
+ */
 public class UserInfo extends de.haumacher.msgbuf.data.AbstractDataObject {
 
 	/**
@@ -22,6 +27,11 @@ public class UserInfo extends de.haumacher.msgbuf.data.AbstractDataObject {
 
 	private String _name = "";
 
+	/**
+	 * Technical ID of the user. It is assigned by the server when logging in. 
+	 *
+	 * @see LoginSuccess
+	 */
 	public final String getUserId() {
 		return _userId;
 	}
@@ -34,6 +44,11 @@ public class UserInfo extends de.haumacher.msgbuf.data.AbstractDataObject {
 		return this;
 	}
 
+	/**
+	 * The name of the user as given by the client when logging in.
+	 *
+	 * @see Login#getName()
+	 */
 	public final String getName() {
 		return _name;
 	}

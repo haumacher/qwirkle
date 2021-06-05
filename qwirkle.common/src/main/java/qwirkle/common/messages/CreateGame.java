@@ -1,5 +1,8 @@
 package qwirkle.common.messages;
 
+/**
+ * {@link Request} creating a game.
+ */
 public class CreateGame extends Request {
 
 	/**
@@ -20,6 +23,9 @@ public class CreateGame extends Request {
 
 	private String _name = "";
 
+	/**
+	 * The name of the game as show to potential players.
+	 */
 	public final String getName() {
 		return _name;
 	}

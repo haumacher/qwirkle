@@ -8,20 +8,17 @@ public abstract class ServerMessage extends de.haumacher.msgbuf.data.AbstractDat
 	/** Visitor interface for the {@link ServerMessage} hierarchy.*/
 	public interface Visitor<R,A> extends Response.Visitor<R,A> {
 
-		/** Visit case for {@link OpenGames}.*/
-		R visit(OpenGames self, A arg);
-
 		/** Visit case for {@link GameOpened}.*/
 		R visit(GameOpened self, A arg);
 
 		/** Visit case for {@link GameClosed}.*/
 		R visit(GameClosed self, A arg);
 
-		/** Visit case for {@link UserJoined}.*/
-		R visit(UserJoined self, A arg);
+		/** Visit case for {@link GameUpdated}.*/
+		R visit(GameUpdated self, A arg);
 
-		/** Visit case for {@link UserLeft}.*/
-		R visit(UserLeft self, A arg);
+		/** Visit case for {@link GameStarted}.*/
+		R visit(GameStarted self, A arg);
 
 	}
 
@@ -38,13 +35,18 @@ public abstract class ServerMessage extends de.haumacher.msgbuf.data.AbstractDat
 		in.beginArray();
 		String type = in.nextString();
 		switch (type) {
-			case "OpenGames": result = OpenGames.readOpenGames(in); break;
 			case "GameOpened": result = GameOpened.readGameOpened(in); break;
 			case "GameClosed": result = GameClosed.readGameClosed(in); break;
-			case "UserJoined": result = UserJoined.readUserJoined(in); break;
-			case "UserLeft": result = UserLeft.readUserLeft(in); break;
-			case "CreateGameResult": result = CreateGameResult.readCreateGameResult(in); break;
+			case "GameUpdated": result = GameUpdated.readGameUpdated(in); break;
+			case "GameStarted": result = GameStarted.readGameStarted(in); break;
 			case "ServerError": result = ServerError.readServerError(in); break;
+			case "OpenGames": result = OpenGames.readOpenGames(in); break;
+			case "GameCreated": result = GameCreated.readGameCreated(in); break;
+			case "CreateGameFailed": result = CreateGameFailed.readCreateGameFailed(in); break;
+			case "LoginSuccess": result = LoginSuccess.readLoginSuccess(in); break;
+			case "LoginFailed": result = LoginFailed.readLoginFailed(in); break;
+			case "GameJoined": result = GameJoined.readGameJoined(in); break;
+			case "JoinFailed": result = JoinFailed.readJoinFailed(in); break;
 			default: in.skipValue(); result = null; break;
 		}
 		in.endArray();
