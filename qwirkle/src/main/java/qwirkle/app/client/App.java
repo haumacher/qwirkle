@@ -20,6 +20,7 @@ import elemental2.svg.SVGSVGElement;
 import qwirkle.app.client.views.JoinGameForm;
 import qwirkle.app.client.views.LoginForm;
 import qwirkle.app.client.views.StartGameForm;
+import qwirkle.app.client.views.WaitForGameStartForm;
 import qwirkle.app.shared.Nachzugstapel;
 import qwirkle.app.shared.Qwirkle.Farbe;
 import qwirkle.app.shared.Qwirkle.Form;
@@ -151,7 +152,12 @@ public class App implements EntryPoint, CreateGameResponse.Visitor<Void, Void> {
 	
 	private void joinGame() {
 		clearContent().appendChild(
-			JoinGameForm.create(_communication, this::gameStarted));
+			JoinGameForm.create(_communication, this::waitForGameStart));
+	}
+	
+	private void waitForGameStart(GameInfo game) {
+		clearContent().appendChild(
+			new WaitForGameStartForm(_communication, game, this::gameStarted));
 	}
 	
 	/**

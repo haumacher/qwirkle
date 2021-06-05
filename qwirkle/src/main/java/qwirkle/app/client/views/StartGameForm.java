@@ -41,7 +41,7 @@ public class StartGameForm extends Card implements Consumer<CreateGameResponse>,
 	private GameInfo _game;
 	private ListGroup<UserInfo> _userList;
 	private Button _startButton;
-	private Registration _onJoin;
+	private Registration _onUpdate;
 	private Registration _onLeave;
 	private Registration _onStart;
 	private Loader _loader;
@@ -89,8 +89,8 @@ public class StartGameForm extends Card implements Consumer<CreateGameResponse>,
 		appendChild(_startButton = Button.createPrimary("Spiel beginnen").addClickListener(this::startGameClicked));
 		updateStartButton();
 		
-		_onJoin = _communication.addListener(GameUpdated.class, this::gameUpdatedReceived);
-		_onStart = _communication.addListener(GameStarted.class, this::gameStartedReceived);
+		_onUpdate = _communication.addListener(GameUpdated.class, this::handle);
+		_onStart = _communication.addListener(GameStarted.class, this::handle);
 		
 		_communication.send(CreateGame.createGame().setName(_userInfo.getName()), this);
 	}
@@ -103,20 +103,20 @@ public class StartGameForm extends Card implements Consumer<CreateGameResponse>,
 		_communication.send(StartGame.startGame().setGameId(_game.getGameId()));
 	}
 	
-	private void gameStartedReceived(GameStarted message) {
+	private void handle(GameStarted message) {
 		if (_loader != null) {
 			_loader.stop();
 			_loader = null;
 		}
 		
-		_onJoin = Registration.cancelRegistration(_onJoin);
-		_onJoin = Registration.cancelRegistration(_onLeave);
-		_onJoin = Registration.cancelRegistration(_onStart);
+		_onUpdate = Registration.cancelRegistration(_onUpdate);
+		_onUpdate = Registration.cancelRegistration(_onLeave);
+		_onUpdate = Registration.cancelRegistration(_onStart);
 		
 		_continuation.accept(message.getGame());
 	}
 	
-	private void gameUpdatedReceived(GameUpdated message) {
+	private void handle(GameUpdated message) {
 		if (!matchesGameId(message)) {
 			return;
 		}
