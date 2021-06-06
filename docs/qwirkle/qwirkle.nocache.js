@@ -292,6 +292,14 @@ function qwirkle(){
   function getCompiledCodeFilename(){
     var answers = [];
     var softPermutationId = 0;
+    function unflattenKeylistIntoAnswers(propValArray, value_0){
+      var answer = answers;
+      for (var i = 0, n = propValArray.length - 1; i < n; ++i) {
+        answer = answer[propValArray[i]] || (answer[propValArray[i]] = []);
+      }
+      answer[propValArray[n]] = value_0;
+    }
+
     var values = [];
     var providers = [];
     function computePropValue(propName){
@@ -309,6 +317,38 @@ function qwirkle(){
       throw null;
     }
 
+    providers['user.agent'] = function(){
+      var ua = navigator.userAgent.toLowerCase();
+      var docMode = $doc_0.documentMode;
+      if (function(){
+        return ua.indexOf('webkit') != -1;
+      }
+      ())
+        return 'safari';
+      if (function(){
+        return ua.indexOf('msie') != -1 && (docMode >= 10 && docMode < 11);
+      }
+      ())
+        return 'ie10';
+      if (function(){
+        return ua.indexOf('msie') != -1 && (docMode >= 9 && docMode < 11);
+      }
+      ())
+        return 'ie9';
+      if (function(){
+        return ua.indexOf('msie') != -1 && (docMode >= 8 && docMode < 11);
+      }
+      ())
+        return 'ie8';
+      if (function(){
+        return ua.indexOf('gecko') != -1 || docMode >= 11;
+      }
+      ())
+        return 'gecko1_8';
+      return '';
+    }
+    ;
+    values['user.agent'] = {'gecko1_8':0, 'ie10':1, 'ie8':2, 'ie9':3, 'safari':4};
     __gwt_isKnownPropertyValue = function(propName, propValue){
       return propValue in values[propName];
     }
@@ -331,7 +371,12 @@ function qwirkle(){
     }
     var strongName;
     try {
-      strongName = 'FA080D60D72B9BBC2295259A91EB386D';
+      unflattenKeylistIntoAnswers(['gecko1_8'], '13FE80A00A9B6406E7094A4723615122');
+      unflattenKeylistIntoAnswers(['ie8'], '200FA71D550971EB7FC20B33FD7BE2B0');
+      unflattenKeylistIntoAnswers(['ie9'], '7FDF637A908E2ADB53D82835262FB418');
+      unflattenKeylistIntoAnswers(['safari'], '925D29A8F8AA2BAAAF36FEE14148695A');
+      unflattenKeylistIntoAnswers(['ie10'], '9FF484DDF0BC8CFB39E903155A5C2346');
+      strongName = answers[computePropValue('user.agent')];
       var idx = strongName.indexOf(':');
       if (idx != -1) {
         softPermutationId = parseInt(strongName.substring(idx + 1), 10);
