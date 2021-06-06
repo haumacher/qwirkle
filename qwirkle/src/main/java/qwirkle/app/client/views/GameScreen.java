@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import org.dominokit.domino.ui.button.Button;
+import org.dominokit.domino.ui.layout.Layout;
 import org.dominokit.domino.ui.notifications.Notification;
-import org.jboss.elemento.Elements;
-import org.jboss.elemento.IsElement;
+import org.dominokit.domino.ui.utils.DominoElement;
 
 import elemental2.dom.DomGlobal;
 import elemental2.dom.Event;
@@ -36,33 +36,45 @@ import qwirkle.common.model.Spielfeld;
 /**
  * TODO
  */
-public class GameScreen implements IsElement<HTMLDivElement>, Consumer<QwirkleServerMessage>, QwirkleServerMessage.Visitor<Void, Void> {
+public class GameScreen implements Consumer<QwirkleServerMessage>, QwirkleServerMessage.Visitor<Void, Void> {
 
 	private Communication _communication;
 	private UserInfo _userInfo;
 	private GameInfo _game;
 	
-	private HTMLDivElement _element;
 	private Spielfeld _spielfeld;
 	private SpielfeldDarstellung _spielfeldDarstellung;
 	private Vorrat _vorrat;
+	private Layout _layout;
 
 	/** 
 	 * Creates a {@link GameScreen}.
-	 * @param userInfo 
 	 */
-	public GameScreen(Communication communication, UserInfo userInfo, GameInfo game) {
+	public GameScreen(Communication communication, UserInfo userInfo, GameInfo game, Layout layout) {
 		_communication = communication;
 		_userInfo = userInfo;
 		_game = game;
+		_layout = layout;
 
-		_element = Elements.div().element();
+		_communication.addGameListener(game.getGameId(), this);
+	}
+	
+	/** 
+	 * TODO
+	 */
+	public void show() {
+		HTMLDivElement top = DominoElement.div().styler(s -> s.setPosition("absolute").setTop("0px").setLeft("0px").setWidth("100%").setHeight("100%")).element();
+		SVGSVGElement spielfeldAnzeige = createSVG();
+		top.appendChild(spielfeldAnzeige);
+		_layout.getContentPanel().appendChild(top);
 		
-		SVGSVGElement spielfeldAnzeige = createSVG(1000, 800);
-		_element.appendChild(spielfeldAnzeige);
-
-		SVGSVGElement vorratsAnzeige = createSVG(1000, 100);
-		_element.appendChild(vorratsAnzeige);
+		HTMLDivElement bottom = DominoElement.div().styler(s -> s.setPosition("absolute").setTop("0px").setLeft("0px").setWidth("100%").setHeight("100%")).element();
+		SVGSVGElement vorratsAnzeige = createSVG();
+		bottom.appendChild(vorratsAnzeige);
+		
+		_layout.showFooter();
+		_layout.fixFooter();
+		_layout.getFooter().appendChild(bottom);
 		
 		_spielfeld = new Spielfeld();
 		_spielfeld.set(0, 0, Qwirkle.stein(Farbe.red, Form.circle));
@@ -73,12 +85,9 @@ public class GameScreen implements IsElement<HTMLDivElement>, Consumer<QwirkleSe
 		_spielfeldDarstellung.zeigeAn();
 		
 		_vorrat = new Vorrat(_spielfeldDarstellung, vorratsAnzeige);
-		
-		_element.appendChild(Button.createDefault("Fertig").addClickListener(this::beendeZug).element());
-		
-		_communication.addGameListener(game.getGameId(), this);
+		_layout.getFooter().appendChild(Button.createDefault("Fertig").addClickListener(this::beendeZug).element());
 	}
-	
+
 	private void starteZug(String nextUserId) {
 		if (nextUserId.equals(_userInfo.getUserId())) {
 			_vorrat.starteZug();
@@ -99,16 +108,11 @@ public class GameScreen implements IsElement<HTMLDivElement>, Consumer<QwirkleSe
 				.setUserId(_userInfo.getUserId())));
 	}
 
-	private SVGSVGElement createSVG(int width, int height) {
+	private SVGSVGElement createSVG() {
 		SVGSVGElement result = (SVGSVGElement) DomGlobal.document.createElementNS("http://www.w3.org/2000/svg", "svg");
-		result.width.baseVal.newValueSpecifiedUnits((int) SVGLength.SVG_LENGTHTYPE_PX, width);
-		result.height.baseVal.newValueSpecifiedUnits((int) SVGLength.SVG_LENGTHTYPE_PX, height);
+		result.width.baseVal.newValueSpecifiedUnits((int) SVGLength.SVG_LENGTHTYPE_PERCENTAGE, 100);
+		result.height.baseVal.newValueSpecifiedUnits((int) SVGLength.SVG_LENGTHTYPE_PERCENTAGE, 100);
 		return result;
-	}
-
-	@Override
-	public HTMLDivElement element() {
-		return _element;
 	}
 
 	@Override

@@ -56,7 +56,9 @@ public class App implements EntryPoint {
 	}
 
 	private void showGameScreen() {
-		clearContent().appendChild(new GameScreen(_communication, _userInfo, _game));
+		clearContent();
+		
+		new GameScreen(_communication, _userInfo, _game, _layout).show();
 	}
 
 	private void showHomeScreen() {

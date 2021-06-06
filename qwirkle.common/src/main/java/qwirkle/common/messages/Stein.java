@@ -18,7 +18,7 @@ public class Stein extends de.haumacher.msgbuf.data.AbstractDataObject {
 		super();
 	}
 
-	private Farbe _farbe = Farbe.yellow;
+	private Farbe _farbe = Farbe.red;
 
 	private Form _form = Form.circle;
 

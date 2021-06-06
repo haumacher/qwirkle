@@ -27,7 +27,7 @@ public class GameCreated extends CreateGameResponse {
 	 * Info about the newly created game.
 	 *
 	 * <p>
-	 * The user that requested creating the new game is the first {@link GameInfo#users user}.
+	 * The user that requested creating the new game is the first {@link GameInfo#getPlayers() user}.
 	 * </p>
 	 */
 	public final GameInfo getGame() {

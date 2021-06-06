@@ -2,15 +2,15 @@ package qwirkle.common.messages;
 
 public enum Farbe {
 
-	yellow,
-
-	orange,
-
 	red,
+
+	green,
 
 	blue,
 
-	green,
+	yellow,
+
+	orange,
 
 	magenta,
 

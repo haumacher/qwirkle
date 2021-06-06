@@ -3,7 +3,7 @@ package qwirkle.common.messages;
 /**
  * Description of a user playing a game.
  *
- * @see GameInfo#users
+ * @see GameInfo#getPlayers()
  */
 public class UserInfo extends de.haumacher.msgbuf.data.AbstractDataObject {
 
