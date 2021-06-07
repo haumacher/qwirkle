@@ -1,5 +1,6 @@
 package qwirkle.app.client;
 
+import elemental2.svg.SVGGElement;
 import elemental2.svg.SVGMatrix;
 import elemental2.svg.SVGPoint;
 import elemental2.svg.SVGSVGElement;
@@ -12,15 +13,15 @@ import qwirkle.common.model.Spielfeld;
  */
 public class SpielfeldDarstellung {
 
+	private static final int PADDING = 10;
+
 	private SVGSVGElement _svg;
 
 	private Spielfeld _spielfeld;
 
-	private int _xOffset;
-
-	private int _yOffset;
-
 	private SVGMatrix _tx;
+
+	private SVGGElement _hintergrund;
 
 	/**
 	 * Erzeugt eine {@link SpielfeldDarstellung}.
@@ -31,9 +32,82 @@ public class SpielfeldDarstellung {
 	public SpielfeldDarstellung(SVGSVGElement svg, Spielfeld spielfeld) {
 		_svg = svg;
 		_spielfeld = spielfeld;
+		
+		_hintergrund = SVGUtil.createG();
+		_svg.appendChild(_hintergrund);
+	}
 
-		_xOffset = _svg.clientWidth / 2 - SteinDarstellung.WIDTH / 2;
-		_yOffset = _svg.clientHeight / 2 - SteinDarstellung.HEIGHT / 2;
+	private void updateDimensions() {
+		double clientWidth = clientWidth();
+		double clientHeight = clientHeight();
+		
+		double paddedWidth = clientWidth - 2 * PADDING;
+		double paddedHeight = clientHeight - 2 * PADDING;
+		
+		 // Größe der Darstellung eines Steins in Pixeln, so dass alle Steine des
+		 // Spielfeldes inklusive von mindestens einem freien Feld am Rand des
+		 // Spielfeldes dargestellt werden können.
+		 // 
+		 // Die maximale Steingröße beträgt {@link SteinDarstellung#SIZE}.
+		double steinGröße;
+		{
+			double steinBreite = Math.min(SteinDarstellung.SIZE, paddedWidth / (_spielfeld.getWidth() + 2));
+			double steinHöhe = Math.min(SteinDarstellung.SIZE, paddedHeight / (_spielfeld.getHeight() + 2));
+			steinGröße = Math.min(steinBreite, steinHöhe);
+		}
+		
+		// An welcher Stelle muss der Ursprung des Spielfeldes (Stein 0,0)
+		// dargestellt werden, damit alle Steine des Spielfeldes angezeigt
+		// werden können? Wenn möglich soll der erste Stein (Stein 0,0) in der
+		// Mitte des Bildschrimes angezeigt werden. Erst wenn das nicht mehr
+		// möglich ist, weil zu weit in eine Richtung gebaut wurde, sollen alle
+		// Steine entsprechend verschoben werden.
+		
+		// Position des Koordinatenursprungs, wenn der erste Stein (Stein 0,0)
+		// in der Bildschirmmitte dargestellt wird.
+		double xUrsprung = clientWidth / 2 - steinGröße / 2;
+		double yUrsprung = clientHeight / 2 - steinGröße / 2;
+		
+		double verfügbarLinksVomUrsprung = xUrsprung;
+		double verfügbarRechtsVomUrsprung = paddedWidth - xUrsprung;
+		double verfügbarOberhalbVomUrsprung = yUrsprung;
+		double verfügbarUnterhalbVomUrsprung = paddedHeight - yUrsprung;
+		
+		// Benötigter Platz, wenn der Ursprung des Spielfeldes in der Mitte des
+		// Bildschrims angezeigt wird und rings um das Spielfeld Platz für
+		// mindestens einen weiteren Stein sein soll.
+		double benötigtLinksVomUrsprung = (-_spielfeld.getXMin() + 1) * steinGröße;
+		double benötigtRechtsVomUrsprung = (_spielfeld.getXMin() + _spielfeld.getWidth() + 1) * steinGröße;
+		double benötigtOberhalbVomUrsprung = (-_spielfeld.getYMin() + 1) * steinGröße;
+		double benötigtUnterhalbVomUrsprung = (_spielfeld.getYMin() + _spielfeld.getHeight() + 1) * steinGröße;
+		
+		// Wir sind schon sicher, dass das Spielfeld in dem verfügbaren platz
+		// dargestellt werden kann. Es muss nur noch möglicherweise um eine
+		// gewisse Anzahl von Steinen verschoben werden.
+		if (benötigtLinksVomUrsprung > verfügbarLinksVomUrsprung) {
+			xUrsprung += benötigtLinksVomUrsprung - verfügbarLinksVomUrsprung;
+		} else if (benötigtRechtsVomUrsprung > verfügbarRechtsVomUrsprung) {
+			xUrsprung -= benötigtRechtsVomUrsprung - verfügbarRechtsVomUrsprung;
+		}
+		if (benötigtOberhalbVomUrsprung > verfügbarOberhalbVomUrsprung) {
+			yUrsprung += benötigtOberhalbVomUrsprung - verfügbarOberhalbVomUrsprung;
+		} else if (benötigtUnterhalbVomUrsprung > verfügbarUnterhalbVomUrsprung) {
+			yUrsprung -= benötigtUnterhalbVomUrsprung - verfügbarUnterhalbVomUrsprung;
+		}
+		
+		double scaleFactor = steinGröße / SteinDarstellung.SIZE;
+		SVGMatrix tx = _svg.createSVGMatrix().translate(xUrsprung, yUrsprung).scale(scaleFactor);
+		_hintergrund.transform.baseVal.initialize(_svg.createSVGTransformFromMatrix(tx));
+		
+		_tx = _svg.getScreenCTM().inverse().scale(SteinDarstellung.SIZE / steinGröße).translate(-xUrsprung, -yUrsprung);
+	}
+
+	private int clientHeight() {
+		return _svg.clientHeight;
+	}
+
+	private int clientWidth() {
+		return _svg.clientWidth;
 	}
 
 	/**
@@ -47,6 +121,8 @@ public class SpielfeldDarstellung {
 	 * Stellt die {@link Stein}e auf dem {@link Spielfeld} dar.
 	 */
 	public void zeigeAn() {
+		updateDimensions();
+		
 		int xMin = _spielfeld.getXMin();
 		int yMin = _spielfeld.getYMin();
 		int width = _spielfeld.getWidth();
@@ -63,9 +139,8 @@ public class SpielfeldDarstellung {
 	}
 
 	private SteinDarstellung zeigeStein(int x, int y, Stein stein) {
-		SteinDarstellung darstellung = new SteinDarstellung(_svg, stein);
-		darstellung.positioniere(_xOffset + x * SteinDarstellung.WIDTH,
-				_yOffset + y * SteinDarstellung.HEIGHT);
+		SteinDarstellung darstellung = new SteinDarstellung(_svg, _hintergrund, stein);
+		darstellung.positioniere(x * SteinDarstellung.SIZE, y * SteinDarstellung.SIZE);
 		darstellung.zeigeAn();
 		return darstellung;
 	}
@@ -76,8 +151,8 @@ public class SpielfeldDarstellung {
 	public Position berechneSpielfeldPosition(int clientX, int clientY) {
 		SVGPoint p = point(clientX, clientY).matrixTransform(tx());
 
-		int x = roundToRaster(((int) p.x), SteinDarstellung.WIDTH);
-		int y = roundToRaster(((int) p.y), SteinDarstellung.HEIGHT);
+		int x = roundToRaster(p.x, SteinDarstellung.SIZE);
+		int y = roundToRaster(p.y, SteinDarstellung.SIZE);
 
 		return new Position(x, y);
 	}
@@ -88,11 +163,11 @@ public class SpielfeldDarstellung {
 	 * muss, um sie von ihrem ursprünglichen Anfangspunkt <code>value</code>
 	 * möglichst wenig verschieben zu müssen.
 	 */
-	private static int roundToRaster(int value, int rasterWidth) {
+	private static int roundToRaster(double value, double rasterWidth) {
 		if (value >= 0) {
-			return (value + (rasterWidth / 2)) / rasterWidth;
+			return (int) ((value + (rasterWidth / 2)) / rasterWidth);
 		} else {
-			return (value - (rasterWidth / 2)) / rasterWidth;
+			return (int) ((value - (rasterWidth / 2)) / rasterWidth);
 		}
 	}
 
@@ -111,13 +186,13 @@ public class SpielfeldDarstellung {
 	 */
 	public SteinDarstellung fügeEin(int x, int y, Stein stein) {
 		_spielfeld.set(x, y, stein);
-		return zeigeStein(x, y, stein);
+		SteinDarstellung neueDarstellung = zeigeStein(x, y, stein);
+		
+		updateDimensions();
+		return neueDarstellung;
 	}
 
 	private SVGMatrix tx() {
-		if (_tx == null) {
-			_tx = _svg.getScreenCTM().inverse().translate(-_xOffset, -_yOffset);
-		}
 		return _tx;
 	}
 

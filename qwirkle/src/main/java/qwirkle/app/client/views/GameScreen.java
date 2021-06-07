@@ -65,7 +65,14 @@ public class GameScreen implements Consumer<QwirkleServerMessage>, QwirkleServer
 	public void show() {
 		DominoElement<HTMLDivElement> contentPanel = _layout.getContentPanel();
 		
-		HTMLDivElement root = DominoElement.div().styler(s -> s.setPosition("absolute").setTop("0px").setLeft("0px").setWidth("100%").setHeight("100%").setOverFlow("hidden")).element();
+		HTMLDivElement root = DominoElement.div()
+			.styler(s -> s.setPosition("absolute")
+				.setTop("70px")
+				.setLeft("0px")
+				.setRight("0px")
+				.setBottom("0px")
+				.setOverFlow("hidden"))
+			.element();
 		
 		HTMLDivElement top = DominoElement.div().styler(s -> s.setPosition("absolute").setTop("0px").setLeft("0px").setRight("0px").setBottom("120px")).element();
 		SVGSVGElement spielfeldAnzeige = createSVG();

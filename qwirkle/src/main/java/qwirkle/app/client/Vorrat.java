@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import elemental2.svg.SVGGElement;
 import elemental2.svg.SVGSVGElement;
 import qwirkle.common.messages.Placement;
 import qwirkle.common.messages.Stein;
@@ -29,6 +30,8 @@ public class Vorrat {
 	private List<SteinDarstellung> _steine = new ArrayList<>();
 	
 	private SVGSVGElement _svg;
+	
+	private SVGGElement _hintergrund;
 
 	private SpielfeldDarstellung _spielfeldDarstellung;
 
@@ -41,6 +44,9 @@ public class Vorrat {
 	public Vorrat(SpielfeldDarstellung spielfeldDarstellung, SVGSVGElement svg) {
 		_spielfeldDarstellung = spielfeldDarstellung;
 		_svg = svg;
+		
+		_hintergrund = SVGUtil.createG();
+		_svg.appendChild(_hintergrund);
 	}
 	
 	/** 
@@ -69,17 +75,17 @@ public class Vorrat {
 		for (int n = 0, cnt = anzahlSteine(); n < cnt; n++) {
 			_steine.get(n).positioniere(x, 0);
 			
-			x += SteinDarstellung.WIDTH;
+			x += SteinDarstellung.SIZE;
 		}
 		
 		for (Stein stein : steine) {
-			SteinDarstellung darstellung = new SteinDarstellung(_svg, stein);
+			SteinDarstellung darstellung = new SteinDarstellung(_svg, _hintergrund, stein);
 			_steine.add(darstellung);
 			
 			darstellung.positioniere(x, 0);
 			darstellung.zeigeAn();
 			
-			x += SteinDarstellung.WIDTH;
+			x += SteinDarstellung.SIZE;
 		}
 	}
 

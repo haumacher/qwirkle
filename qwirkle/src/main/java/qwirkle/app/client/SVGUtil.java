@@ -1,5 +1,7 @@
 package qwirkle.app.client;
 
+import elemental2.dom.DomGlobal;
+import elemental2.svg.SVGGElement;
 import elemental2.svg.SVGSVGElement;
 import elemental2.svg.SVGTransform;
 import elemental2.svg.SVGTransformable;
@@ -21,6 +23,10 @@ public class SVGUtil {
 		SVGTransform tx = svg.createSVGTransform();
 		tx.setTranslate(x, y);
 		bild.getTransform().baseVal.initialize(tx);
+	}
+
+	public static SVGGElement createG() {
+		return (SVGGElement) DomGlobal.document.createElementNS("http://www.w3.org/2000/svg", "g");
 	}
 
 }

@@ -13,14 +13,9 @@ import qwirkle.common.messages.Stein;
 class SteinDarstellung {
 
 	/**
-	 * Die Beite eine dargestellten Steins in SVG-Koordinaten.
+	 * Die maximale Beite und Höhe eine dargestellten Steins in SVG-Koordinaten.
 	 */
-	public static final int WIDTH = 100;
-
-	/**
-	 * Die Beite eine dargestellten Steins in SVG-Koordinaten.
-	 */
-	public static final int HEIGHT = 100;
+	public static final int SIZE = 100;
 
 	/**
 	 * Das SVG-Element, in dem die Darstellung angezeigt werden soll.
@@ -48,6 +43,8 @@ class SteinDarstellung {
 
 	private double _y;
 
+	private SVGGElement _hintergrund;
+
 	/**
 	 * Erzeugt die Darstellung eines {@link Stein}s.
 	 * 
@@ -60,9 +57,11 @@ class SteinDarstellung {
 	 * @param svg   Das SVG-Bild, in dem die Darstellung erzeugt wird.
 	 * @param stein Der darzustellende {@link Stein}.
 	 */
-	public SteinDarstellung(SVGSVGElement svg, Stein stein) {
+	public SteinDarstellung(SVGSVGElement svg, SVGGElement hintergrund, Stein stein) {
 		_svg = svg;
+		_hintergrund = hintergrund;
 		_stein = stein;
+		
 		_bild = erzeugeBild();
 	}
 	
@@ -76,17 +75,21 @@ class SteinDarstellung {
 	/**
 	 * Zeig die Darstellung in ihrem aktuellen SVG an.
 	 * 
+	 * @param hintergrund
+	 *        Das SVG-Element in des die Darstellung des Steins eingefügt werden
+	 *        soll.
+	 * 
 	 * @see #verstecke()
 	 */
 	public void zeigeAn() {
-		_svg.appendChild(_bild);
+		_hintergrund.appendChild(_bild);
 	}
 
 	/**
 	 * Macht die Darstellung wieder unsichtbar.
 	 */
 	public void verstecke() {
-		_svg.removeChild(_bild);
+		_bild.parentNode.removeChild(_bild);
 	}
 
 	/**
