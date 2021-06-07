@@ -63,29 +63,40 @@ public class GameScreen implements Consumer<QwirkleServerMessage>, QwirkleServer
 	 * TODO
 	 */
 	public void show() {
-		HTMLDivElement top = DominoElement.div().styler(s -> s.setPosition("absolute").setTop("0px").setLeft("0px").setWidth("100%").setHeight("100%")).element();
+		DominoElement<HTMLDivElement> contentPanel = _layout.getContentPanel();
+		
+		HTMLDivElement root = DominoElement.div().styler(s -> s.setPosition("absolute").setTop("0px").setLeft("0px").setWidth("100%").setHeight("100%").setOverFlow("hidden")).element();
+		
+		HTMLDivElement top = DominoElement.div().styler(s -> s.setPosition("absolute").setTop("0px").setLeft("0px").setRight("0px").setBottom("120px")).element();
 		SVGSVGElement spielfeldAnzeige = createSVG();
 		top.appendChild(spielfeldAnzeige);
-		_layout.getContentPanel().appendChild(top);
+		root.appendChild(top);
 		
-		HTMLDivElement bottom = DominoElement.div().styler(s -> s.setPosition("absolute").setTop("0px").setLeft("0px").setWidth("100%").setHeight("100%")).element();
+		HTMLDivElement bottomLeft = DominoElement.div().styler(s -> s.setPosition("absolute").setBottom("0px").setLeft("0px").setWidth("calc(50% - 60px)").setHeight("120px")).element();
 		SVGSVGElement vorratsAnzeige = createSVG();
-		bottom.appendChild(vorratsAnzeige);
+		bottomLeft.appendChild(vorratsAnzeige);
+		root.appendChild(bottomLeft);
+
+		HTMLDivElement bottomMiddle = DominoElement.div()
+			.styler(s -> s.setPosition("absolute")
+				.setBottom("0px")
+				.setLeft("calc(50% - 60px)")
+				.setWidth("120px")
+				.setHeight("120px")
+				.setPadding("10px"))
+			.element();
+		bottomMiddle.appendChild(Button.createPrimary("Fertig").addClickListener(this::beendeZug).element());
+		root.appendChild(bottomMiddle);
 		
-		_layout.showFooter();
-		_layout.fixFooter();
-		_layout.getFooter().appendChild(bottom);
+		contentPanel.appendChild(root);
 		
 		_spielfeld = new Spielfeld();
 		_spielfeld.set(0, 0, Qwirkle.stein(Farbe.red, Form.circle));
-		_spielfeld.set(0, 1, Qwirkle.stein(Farbe.red, Form.square));
-		_spielfeld.set(1, 0, Qwirkle.stein(Farbe.green, Form.circle));
 		
 		_spielfeldDarstellung = new SpielfeldDarstellung(spielfeldAnzeige, _spielfeld);
 		_spielfeldDarstellung.zeigeAn();
 		
 		_vorrat = new Vorrat(_spielfeldDarstellung, vorratsAnzeige);
-		_layout.getFooter().appendChild(Button.createDefault("Fertig").addClickListener(this::beendeZug).element());
 	}
 
 	private void starteZug(String nextUserId) {
