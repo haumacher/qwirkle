@@ -365,7 +365,11 @@ message GameAction extends ClientMessage {
 abstract message QwirkleServerMessage {
 }
 
+/**
+ * Notifies a player about new tiles he gets after he has done a move.
+ */
 message FillInventory extends QwirkleServerMessage {
+	/** The new tiles to place into the target player's inventory */
 	repeated Stein steine;
 }
 

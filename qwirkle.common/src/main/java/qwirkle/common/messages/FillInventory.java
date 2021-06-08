@@ -1,5 +1,8 @@
 package qwirkle.common.messages;
 
+/**
+ * Notifies a player about new tiles he gets after he has done a move.
+ */
 public class FillInventory extends QwirkleServerMessage {
 
 	/**
@@ -20,6 +23,9 @@ public class FillInventory extends QwirkleServerMessage {
 
 	private final java.util.List<Stein> _steine = new java.util.ArrayList<>();
 
+	/**
+	 * The new tiles to place into the target player's inventory
+	 */
 	public final java.util.List<Stein> getSteine() {
 		return _steine;
 	}
