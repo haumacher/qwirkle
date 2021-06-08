@@ -1,5 +1,8 @@
 package qwirkle.common.messages;
 
+/**
+ * The color of a tile.
+ */
 public enum Farbe {
 
 	red,

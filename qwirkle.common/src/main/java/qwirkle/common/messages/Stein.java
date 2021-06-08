@@ -1,5 +1,11 @@
 package qwirkle.common.messages;
 
+/**
+ * Description of a tile placed in a move.
+ *
+ * @see Placement#getStein()
+ * @see NotifyTurn#getPlacements()
+ */
 public class Stein extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	/**
@@ -22,6 +28,9 @@ public class Stein extends de.haumacher.msgbuf.data.AbstractDataObject implement
 
 	private Form _form = Form.circle;
 
+	/**
+	 * The color of this tile.
+	 */
 	public final Farbe getFarbe() {
 		return _farbe;
 	}
@@ -41,6 +50,9 @@ public class Stein extends de.haumacher.msgbuf.data.AbstractDataObject implement
 		return _farbe != null;
 	}
 
+	/**
+	 * The shape of this tile.
+	 */
 	public final Form getForm() {
 		return _form;
 	}

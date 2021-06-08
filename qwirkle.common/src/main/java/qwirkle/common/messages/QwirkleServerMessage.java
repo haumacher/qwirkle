@@ -1,5 +1,10 @@
 package qwirkle.common.messages;
 
+/**
+ * Common base-class for message details sent by the Qwirkle server-logic.
+ *
+ * @see GameUpdate#getDetail()
+ */
 public abstract class QwirkleServerMessage extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	/** Visitor interface for the {@link QwirkleServerMessage} hierarchy.*/

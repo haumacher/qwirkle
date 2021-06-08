@@ -1,5 +1,10 @@
 package qwirkle.common.messages;
 
+/**
+ * The encoding of a player's move consists of a number of {@link Placement}s.
+ *
+ * @see NotifyTurn#getPlacements()
+ */
 public class Placement extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	/**
@@ -24,6 +29,9 @@ public class Placement extends de.haumacher.msgbuf.data.AbstractDataObject imple
 
 	private int _y = 0;
 
+	/**
+	 * Apperance of the tile that has been placed.
+	 */
 	public final Stein getStein() {
 		return _stein;
 	}
@@ -43,6 +51,13 @@ public class Placement extends de.haumacher.msgbuf.data.AbstractDataObject imple
 		return _stein != null;
 	}
 
+	/**
+	 * The X coordinate where the tile has been placed on the board.
+	 *
+	 * <p>
+	 * The first move must always be contain the position (0,0).
+	 * </p>
+	 */
 	public final int getX() {
 		return _x;
 	}
@@ -55,6 +70,11 @@ public class Placement extends de.haumacher.msgbuf.data.AbstractDataObject imple
 		return this;
 	}
 
+	/**
+	 * The Y coordinate where the tile has been placed on the board.
+	 *
+	 * @see #getX()
+	 */
 	public final int getY() {
 		return _y;
 	}

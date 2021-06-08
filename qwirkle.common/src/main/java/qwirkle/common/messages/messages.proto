@@ -330,16 +330,38 @@ message GameStarted extends ServerMessage {
 	GameInfo game;
 }
 
+/**
+ * Envelop for sending a game-specific message to players of a certain game.
+ *
+ * <p>
+ * Such a method is typically produced by the server-side game logic in response to 
+ * {@link GameAction}s sent by players of that game.
+ * </p>
+ */
 message GameUpdate extends ServerMessage {
+	/** The ID of the game to send this message to */
 	string gameId;
+	
+	/** The game-specific message detail. */
 	QwirkleServerMessage detail;
 }
 
+/**
+ * Envelop for sending a game-specific message from a certain player of the game to the server-side game logic.
+ */
 message GameAction extends ClientMessage {
+	/** The ID of the game to send the given {@link #detail} to. */
 	string gameId;
+	
+	/** Game-specific message detail containing the concrete action to perform by the sending player */
 	QwirkleUserMessage detail;
 }
 
+/**
+ * Common base-class for message details sent by the Qwirkle server-logic.
+ * 
+ * @see GameUpdate#detail
+ */
 abstract message QwirkleServerMessage {
 }
 
@@ -347,32 +369,80 @@ message FillInventory extends QwirkleServerMessage {
 	repeated Stein steine;
 }
 
+/**
+ * Notification that it's the turn of a certain player.
+ *
+ * <p>
+ * The message is sent to all players. This enables the UI of all players to show who's turn it is.
+ * </p> 
+ */
 message StartTurn extends QwirkleServerMessage {
+	/** The ID of the player who has the next turn.  */
 	string userId;
 }
 
+/**
+ * Notification that a certain player has made it's turn.
+ *
+ * <p>
+ * The message is sent to all players. This enables to update the UI according to the move a player has made.
+ * </p> 
+ */
 message NotifyTurn extends QwirkleServerMessage {
+	/** The ID of the player who did his move. */
 	string lastUserId;
+
+	/** Encoding of the move */
 	repeated Placement placements;
+	
+	/** The ID of the player who has to play the next turn. */
 	string nextUserId;
 }
 
+/**
+ * Common base-class for message details sent by a Qwirkle player during a game.
+ */
 abstract message QwirkleUserMessage {
+	/** The user ID of the player that sent the message. */
 	string userId;
 }
 
 message MakeTurn extends QwirkleUserMessage {
+	/** Encoding of the player's move. */
 	repeated Placement placements;
 }
 
+/**
+ * The encoding of a player's move consists of a number of {@link Placement}s.
+ *
+ * @see NotifyTurn#placements
+ */
 message Placement {
+	/** Apperance of the tile that has been placed. */
 	Stein stein;
+	
+	/** 
+	 * The X coordinate where the tile has been placed on the board.
+	 *
+	 * <p>
+	 * The first move must always be contain the position (0,0).
+	 * </p> 
+	 */
 	int x;
+	
+	/** 
+	 * The Y coordinate where the tile has been placed on the board.
+	 * 
+	 * @see #x 
+	 */
 	int y;
 }
 
 // Das Spielmodell
 
+/**
+ * The shape of a tile.
+ */
 enum Form {
 	circle;
 	square;
@@ -382,6 +452,9 @@ enum Form {
 	diamond;
 }
 
+/**
+ * The color of a tile.
+ */
 enum Farbe {
 	red;
 	green;
@@ -391,7 +464,16 @@ enum Farbe {
 	magenta;
 }
 
+/**
+ * Description of a tile placed in a move.
+ *
+ * @see Placement#stein
+ * @see NotifyTurn#placements
+ */
 message Stein {
+	/** The color of this tile. */
 	Farbe farbe;
+	
+	/** The shape of this tile. */
 	Form form;
 }

@@ -1,5 +1,13 @@
 package qwirkle.common.messages;
 
+/**
+ * Envelop for sending a game-specific message to players of a certain game.
+ *
+ * <p>
+ * Such a method is typically produced by the server-side game logic in response to 
+ * {@link GameAction}s sent by players of that game.
+ * </p>
+ */
 public class GameUpdate extends ServerMessage {
 
 	/**
@@ -22,6 +30,9 @@ public class GameUpdate extends ServerMessage {
 
 	private QwirkleServerMessage _detail = null;
 
+	/**
+	 * The ID of the game to send this message to
+	 */
 	public final String getGameId() {
 		return _gameId;
 	}
@@ -34,6 +45,9 @@ public class GameUpdate extends ServerMessage {
 		return this;
 	}
 
+	/**
+	 * The game-specific message detail.
+	 */
 	public final QwirkleServerMessage getDetail() {
 		return _detail;
 	}

@@ -1,5 +1,8 @@
 package qwirkle.common.messages;
 
+/**
+ * Common base-class for message details sent by a Qwirkle player during a game.
+ */
 public abstract class QwirkleUserMessage extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	/** Visitor interface for the {@link QwirkleUserMessage} hierarchy.*/
@@ -19,6 +22,9 @@ public abstract class QwirkleUserMessage extends de.haumacher.msgbuf.data.Abstra
 
 	private String _userId = "";
 
+	/**
+	 * The user ID of the player that sent the message.
+	 */
 	public final String getUserId() {
 		return _userId;
 	}

@@ -1,5 +1,8 @@
 package qwirkle.common.messages;
 
+/**
+ * The shape of a tile.
+ */
 public enum Form {
 
 	circle,

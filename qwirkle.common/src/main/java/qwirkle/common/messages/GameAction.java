@@ -1,5 +1,8 @@
 package qwirkle.common.messages;
 
+/**
+ * Envelop for sending a game-specific message from a certain player of the game to the server-side game logic.
+ */
 public class GameAction extends ClientMessage {
 
 	/**
@@ -22,6 +25,9 @@ public class GameAction extends ClientMessage {
 
 	private QwirkleUserMessage _detail = null;
 
+	/**
+	 * The ID of the game to send the given {@link #getDetail()} to.
+	 */
 	public final String getGameId() {
 		return _gameId;
 	}
@@ -34,6 +40,9 @@ public class GameAction extends ClientMessage {
 		return this;
 	}
 
+	/**
+	 * Game-specific message detail containing the concrete action to perform by the sending player
+	 */
 	public final QwirkleUserMessage getDetail() {
 		return _detail;
 	}

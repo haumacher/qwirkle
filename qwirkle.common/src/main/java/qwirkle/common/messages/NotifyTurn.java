@@ -1,5 +1,12 @@
 package qwirkle.common.messages;
 
+/**
+ * Notification that a certain player has made it's turn.
+ *
+ * <p>
+ * The message is sent to all players. This enables to update the UI according to the move a player has made.
+ * </p>
+ */
 public class NotifyTurn extends QwirkleServerMessage {
 
 	/**
@@ -24,6 +31,9 @@ public class NotifyTurn extends QwirkleServerMessage {
 
 	private String _nextUserId = "";
 
+	/**
+	 * The ID of the player who did his move.
+	 */
 	public final String getLastUserId() {
 		return _lastUserId;
 	}
@@ -36,6 +46,9 @@ public class NotifyTurn extends QwirkleServerMessage {
 		return this;
 	}
 
+	/**
+	 * Encoding of the move
+	 */
 	public final java.util.List<Placement> getPlacements() {
 		return _placements;
 	}
@@ -57,6 +70,9 @@ public class NotifyTurn extends QwirkleServerMessage {
 		return this;
 	}
 
+	/**
+	 * The ID of the player who has to play the next turn.
+	 */
 	public final String getNextUserId() {
 		return _nextUserId;
 	}

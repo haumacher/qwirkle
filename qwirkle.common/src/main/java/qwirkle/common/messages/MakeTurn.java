@@ -20,6 +20,9 @@ public class MakeTurn extends QwirkleUserMessage {
 
 	private final java.util.List<Placement> _placements = new java.util.ArrayList<>();
 
+	/**
+	 * Encoding of the player's move.
+	 */
 	public final java.util.List<Placement> getPlacements() {
 		return _placements;
 	}

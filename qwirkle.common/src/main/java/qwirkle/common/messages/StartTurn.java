@@ -1,5 +1,12 @@
 package qwirkle.common.messages;
 
+/**
+ * Notification that it's the turn of a certain player.
+ *
+ * <p>
+ * The message is sent to all players. This enables the UI of all players to show who's turn it is.
+ * </p>
+ */
 public class StartTurn extends QwirkleServerMessage {
 
 	/**
@@ -20,6 +27,9 @@ public class StartTurn extends QwirkleServerMessage {
 
 	private String _userId = "";
 
+	/**
+	 * The ID of the player who has the next turn.
+	 */
 	public final String getUserId() {
 		return _userId;
 	}
