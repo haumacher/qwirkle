@@ -1,6 +1,6 @@
 package qwirkle.common.messages;
 
-public abstract class QwirkleServerMessage extends de.haumacher.msgbuf.data.AbstractDataObject {
+public abstract class QwirkleServerMessage extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	/** Visitor interface for the {@link QwirkleServerMessage} hierarchy.*/
 	public interface Visitor<R,A> {
@@ -48,6 +48,50 @@ public abstract class QwirkleServerMessage extends de.haumacher.msgbuf.data.Abst
 
 	/** The type identifier for this concrete subtype. */
 	protected abstract String jsonType();
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.beginObject();
+		out.name(0);
+		out.value(typeId());
+		writeFields(out);
+		out.endObject();
+	}
+
+	/** The binary identifier for this concrete type in the polymorphic {@link QwirkleServerMessage} hierarchy. */
+	protected abstract int typeId();
+
+	/** Serializes all fields of this instance to the given binary output. */
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+	}
+
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			default: in.skipValue(); 
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static QwirkleServerMessage readQwirkleServerMessage(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		QwirkleServerMessage result;
+		int typeField = in.nextName();
+		assert typeField == 0;
+		int type = in.nextInt();
+		switch (type) {
+			case 1: result = FillInventory.create(); break;
+			case 2: result = StartTurn.create(); break;
+			case 3: result = NotifyTurn.create(); break;
+			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
+		}
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
+	}
 
 	/** Accepts the given visitor. */
 	public abstract <R,A> R visit(Visitor<R,A> v, A arg);

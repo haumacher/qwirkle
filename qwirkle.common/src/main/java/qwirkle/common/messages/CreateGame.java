@@ -8,14 +8,14 @@ public class CreateGame extends Request {
 	/**
 	 * Creates a {@link CreateGame} instance.
 	 */
-	public static CreateGame createGame() {
+	public static CreateGame create() {
 		return new CreateGame();
 	}
 
 	/**
 	 * Creates a {@link CreateGame} instance.
 	 *
-	 * @see #createGame()
+	 * @see #create()
 	 */
 	protected CreateGame() {
 		super();
@@ -81,6 +81,38 @@ public class CreateGame extends Request {
 			case "name": setName(in.nextString()); break;
 			default: super.readField(in, field);
 		}
+	}
+
+	@Override
+	protected int typeId() {
+		return 1;
+	}
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		out.name(2);
+		out.value(getName());
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 2: setName(in.nextString()); break;
+			default: super.readField(in, field);
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static CreateGame readCreateGame(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		CreateGame result = new CreateGame();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 	@Override

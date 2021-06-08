@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import elemental2.dom.HTMLElement;
 import elemental2.svg.SVGGElement;
 import elemental2.svg.SVGSVGElement;
 import qwirkle.common.messages.Placement;
@@ -39,14 +40,18 @@ public class Vorrat {
 	
 	/** 
 	 * Creates a {@link Vorrat}.
-	 * @param spielfeldDarstellung 
+	 * 
+	 * @param container Das Umschließende HTML-Element, in dem der {@link Vorrat} dargestellt wird.
+	 * @param spielfeldDarstellung Darstellung des Spielfeldes, in das bei einem Zug Steine abgelegt werden können. 
 	 */
-	public Vorrat(SpielfeldDarstellung spielfeldDarstellung, SVGSVGElement svg) {
+	public Vorrat(HTMLElement container, SpielfeldDarstellung spielfeldDarstellung) {
 		_spielfeldDarstellung = spielfeldDarstellung;
-		_svg = svg;
+		_svg = SVGUtil.createSVG();
 		
 		_hintergrund = SVGUtil.createG();
 		_svg.appendChild(_hintergrund);
+		
+		container.appendChild(container);
 	}
 	
 	/** 
@@ -166,7 +171,7 @@ public class Vorrat {
 		public List<Placement> getPlacements() {
 			List<Placement> result = new ArrayList<>();
 			for (AnlegeOperation operation : _teilZüge.values()) {
-				result.add(Placement.placement()
+				result.add(Placement.create()
 					.setX(operation.x())
 					.setY(operation.y())
 					.setStein(operation.gesetzterStein().getStein()));

@@ -63,11 +63,6 @@ public abstract class Response extends ServerMessage {
 	}
 
 	@Override
-	protected String jsonType() {
-		return "Response";
-	}
-
-	@Override
 	public Object get(String field) {
 		switch (field) {
 			case "msgId": return getMsgId();
@@ -96,6 +91,47 @@ public abstract class Response extends ServerMessage {
 			case "msgId": setMsgId(in.nextString()); break;
 			default: super.readField(in, field);
 		}
+	}
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		out.name(1);
+		out.value(getMsgId());
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setMsgId(in.nextString()); break;
+			default: super.readField(in, field);
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static Response readResponse(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		Response result;
+		int typeField = in.nextName();
+		assert typeField == 0;
+		int type = in.nextInt();
+		switch (type) {
+			case 3: result = ServerError.create(); break;
+			case 6: result = OpenGames.create(); break;
+			case 1: result = GameCreated.create(); break;
+			case 2: result = CreateGameFailed.create(); break;
+			case 4: result = LoginSuccess.create(); break;
+			case 5: result = LoginFailed.create(); break;
+			case 7: result = GameJoined.create(); break;
+			case 8: result = JoinFailed.create(); break;
+			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
+		}
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 	/** Accepts the given visitor. */

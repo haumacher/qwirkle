@@ -37,9 +37,24 @@ public abstract class LoginResponse extends Response {
 		return result;
 	}
 
-	@Override
-	protected String jsonType() {
-		return "LoginResponse";
+	/** Reads a new instance from the given reader. */
+	public static LoginResponse readLoginResponse(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		LoginResponse result;
+		int typeField = in.nextName();
+		assert typeField == 0;
+		int type = in.nextInt();
+		switch (type) {
+			case 4: result = LoginSuccess.create(); break;
+			case 5: result = LoginFailed.create(); break;
+			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
+		}
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 	/** Accepts the given visitor. */

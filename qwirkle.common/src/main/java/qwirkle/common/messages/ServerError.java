@@ -5,14 +5,14 @@ public class ServerError extends Response {
 	/**
 	 * Creates a {@link ServerError} instance.
 	 */
-	public static ServerError serverError() {
+	public static ServerError create() {
 		return new ServerError();
 	}
 
 	/**
 	 * Creates a {@link ServerError} instance.
 	 *
-	 * @see #serverError()
+	 * @see #create()
 	 */
 	protected ServerError() {
 		super();
@@ -75,6 +75,38 @@ public class ServerError extends Response {
 			case "message": setMessage(in.nextString()); break;
 			default: super.readField(in, field);
 		}
+	}
+
+	@Override
+	protected int typeId() {
+		return 3;
+	}
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		out.name(2);
+		out.value(getMessage());
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 2: setMessage(in.nextString()); break;
+			default: super.readField(in, field);
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static ServerError readServerError(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		ServerError result = new ServerError();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 	@Override

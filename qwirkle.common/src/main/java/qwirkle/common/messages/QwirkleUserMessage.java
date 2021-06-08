@@ -1,6 +1,6 @@
 package qwirkle.common.messages;
 
-public abstract class QwirkleUserMessage extends de.haumacher.msgbuf.data.AbstractDataObject {
+public abstract class QwirkleUserMessage extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	/** Visitor interface for the {@link QwirkleUserMessage} hierarchy.*/
 	public interface Visitor<R,A> {
@@ -83,6 +83,51 @@ public abstract class QwirkleUserMessage extends de.haumacher.msgbuf.data.Abstra
 			case "userId": setUserId(in.nextString()); break;
 			default: super.readField(in, field);
 		}
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.beginObject();
+		out.name(0);
+		out.value(typeId());
+		writeFields(out);
+		out.endObject();
+	}
+
+	/** The binary identifier for this concrete type in the polymorphic {@link QwirkleUserMessage} hierarchy. */
+	protected abstract int typeId();
+
+	/** Serializes all fields of this instance to the given binary output. */
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.name(1);
+		out.value(getUserId());
+	}
+
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setUserId(in.nextString()); break;
+			default: in.skipValue(); 
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static QwirkleUserMessage readQwirkleUserMessage(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		QwirkleUserMessage result;
+		int typeField = in.nextName();
+		assert typeField == 0;
+		int type = in.nextInt();
+		switch (type) {
+			case 1: result = MakeTurn.create(); break;
+			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
+		}
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 	/** Accepts the given visitor. */

@@ -92,7 +92,7 @@ public class StartGameForm extends Card implements Consumer<CreateGameResponse>,
 		_onUpdate = _communication.addListener(GameUpdated.class, this::handle);
 		_onStart = _communication.addListener(GameStarted.class, this::handle);
 		
-		_communication.send(CreateGame.createGame().setName(_userInfo.getName()), this);
+		_communication.send(CreateGame.create().setName(_userInfo.getName()), this);
 	}
 	
 	private void startGameClicked(Event evt) {
@@ -100,7 +100,7 @@ public class StartGameForm extends Card implements Consumer<CreateGameResponse>,
 		    .setLoadingText("Starte das Spiel, einen Moment bitte...")
 		    .start();
 		
-		_communication.send(StartGame.startGame().setGameId(_game.getGameId()));
+		_communication.send(StartGame.create().setGameId(_game.getGameId()));
 	}
 	
 	private void handle(GameStarted message) {

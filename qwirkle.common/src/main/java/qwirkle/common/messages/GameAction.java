@@ -5,14 +5,14 @@ public class GameAction extends ClientMessage {
 	/**
 	 * Creates a {@link GameAction} instance.
 	 */
-	public static GameAction gameAction() {
+	public static GameAction create() {
 		return new GameAction();
 	}
 
 	/**
 	 * Creates a {@link GameAction} instance.
 	 *
-	 * @see #gameAction()
+	 * @see #create()
 	 */
 	protected GameAction() {
 		super();
@@ -103,6 +103,43 @@ public class GameAction extends ClientMessage {
 			case "detail": setDetail(QwirkleUserMessage.readQwirkleUserMessage(in)); break;
 			default: super.readField(in, field);
 		}
+	}
+
+	@Override
+	protected int typeId() {
+		return 7;
+	}
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		out.name(1);
+		out.value(getGameId());
+		if (hasDetail()) {
+			out.name(2);
+			getDetail().writeTo(out);
+		}
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setGameId(in.nextString()); break;
+			case 2: setDetail(QwirkleUserMessage.readQwirkleUserMessage(in)); break;
+			default: super.readField(in, field);
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static GameAction readGameAction(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		GameAction result = new GameAction();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 	@Override

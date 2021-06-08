@@ -41,19 +41,37 @@ public class JoinFailed extends JoinGameResponse {
 		public static Reason readReason(de.haumacher.msgbuf.json.JsonReader in) throws java.io.IOException {
 			return valueOf(in.nextString());
 		}
+
+		/** Writes this instance to the given binary output. */
+		public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+			switch (this) {
+				case GAME_NOT_FOUND: out.value(0); break;
+				case ALREADY_PART_OF_A_GAME: out.value(0); break;
+				case GAME_ALREADY_STARTED: out.value(0); break;
+				default: out.value(0);
+			}
+		}
+
+		/** Reads a new instance from the given binary reader. */
+		public static Reason readReason(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+			switch (in.nextInt()) {
+				case 0: return GAME_NOT_FOUND;
+				default: return GAME_NOT_FOUND;
+			}
+		}
 	}
 
 	/**
 	 * Creates a {@link JoinFailed} instance.
 	 */
-	public static JoinFailed joinFailed() {
+	public static JoinFailed create() {
 		return new JoinFailed();
 	}
 
 	/**
 	 * Creates a {@link JoinFailed} instance.
 	 *
-	 * @see #joinFailed()
+	 * @see #create()
 	 */
 	protected JoinFailed() {
 		super();
@@ -128,6 +146,40 @@ public class JoinFailed extends JoinGameResponse {
 			case "reason": setReason(Reason.readReason(in)); break;
 			default: super.readField(in, field);
 		}
+	}
+
+	@Override
+	protected int typeId() {
+		return 8;
+	}
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		if (hasReason()) {
+			out.name(2);
+			getReason().writeTo(out);
+		}
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 2: setReason(Reason.readReason(in)); break;
+			default: super.readField(in, field);
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static JoinFailed readJoinFailed(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		JoinFailed result = new JoinFailed();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 	@Override

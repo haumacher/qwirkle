@@ -13,14 +13,14 @@ public class FindOpenGames extends Request {
 	/**
 	 * Creates a {@link FindOpenGames} instance.
 	 */
-	public static FindOpenGames findOpenGames() {
+	public static FindOpenGames create() {
 		return new FindOpenGames();
 	}
 
 	/**
 	 * Creates a {@link FindOpenGames} instance.
 	 *
-	 * @see #findOpenGames()
+	 * @see #create()
 	 */
 	protected FindOpenGames() {
 		super();
@@ -38,6 +38,23 @@ public class FindOpenGames extends Request {
 	@Override
 	protected String jsonType() {
 		return "FindOpenGames";
+	}
+
+	@Override
+	protected int typeId() {
+		return 3;
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static FindOpenGames readFindOpenGames(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		FindOpenGames result = new FindOpenGames();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 	@Override

@@ -15,14 +15,14 @@ public class GameUpdated extends ServerMessage {
 	/**
 	 * Creates a {@link GameUpdated} instance.
 	 */
-	public static GameUpdated gameUpdated() {
+	public static GameUpdated create() {
 		return new GameUpdated();
 	}
 
 	/**
 	 * Creates a {@link GameUpdated} instance.
 	 *
-	 * @see #gameUpdated()
+	 * @see #create()
 	 */
 	protected GameUpdated() {
 		super();
@@ -97,6 +97,40 @@ public class GameUpdated extends ServerMessage {
 			case "game": setGame(GameInfo.readGameInfo(in)); break;
 			default: super.readField(in, field);
 		}
+	}
+
+	@Override
+	protected int typeId() {
+		return 11;
+	}
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		if (hasGame()) {
+			out.name(1);
+			getGame().writeTo(out);
+		}
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setGame(GameInfo.readGameInfo(in)); break;
+			default: super.readField(in, field);
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static GameUpdated readGameUpdated(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		GameUpdated result = new GameUpdated();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 	@Override

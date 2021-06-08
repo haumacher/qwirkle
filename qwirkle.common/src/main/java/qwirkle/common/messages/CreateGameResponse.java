@@ -37,9 +37,24 @@ public abstract class CreateGameResponse extends Response {
 		return result;
 	}
 
-	@Override
-	protected String jsonType() {
-		return "CreateGameResponse";
+	/** Reads a new instance from the given reader. */
+	public static CreateGameResponse readCreateGameResponse(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		CreateGameResponse result;
+		int typeField = in.nextName();
+		assert typeField == 0;
+		int type = in.nextInt();
+		switch (type) {
+			case 1: result = GameCreated.create(); break;
+			case 2: result = CreateGameFailed.create(); break;
+			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
+		}
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 	/** Accepts the given visitor. */

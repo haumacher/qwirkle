@@ -5,14 +5,14 @@ public class NotifyTurn extends QwirkleServerMessage {
 	/**
 	 * Creates a {@link NotifyTurn} instance.
 	 */
-	public static NotifyTurn notifyTurn() {
+	public static NotifyTurn create() {
 		return new NotifyTurn();
 	}
 
 	/**
 	 * Creates a {@link NotifyTurn} instance.
 	 *
-	 * @see #notifyTurn()
+	 * @see #create()
 	 */
 	protected NotifyTurn() {
 		super();
@@ -133,6 +133,58 @@ public class NotifyTurn extends QwirkleServerMessage {
 			case "nextUserId": setNextUserId(in.nextString()); break;
 			default: super.readField(in, field);
 		}
+	}
+
+	@Override
+	protected int typeId() {
+		return 3;
+	}
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		out.name(1);
+		out.value(getLastUserId());
+		out.name(2);
+		{
+			java.util.List<Placement> values = getPlacements();
+			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
+			for (Placement x : values) {
+				x.writeTo(out);
+			}
+			out.endArray();
+		}
+		out.name(3);
+		out.value(getNextUserId());
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setLastUserId(in.nextString()); break;
+			case 2: {
+				in.beginArray();
+				while (in.hasNext()) {
+					addPlacement(Placement.readPlacement(in));
+				}
+				in.endArray();
+			}
+			break;
+			case 3: setNextUserId(in.nextString()); break;
+			default: super.readField(in, field);
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static NotifyTurn readNotifyTurn(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		NotifyTurn result = new NotifyTurn();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 	@Override

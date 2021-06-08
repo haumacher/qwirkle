@@ -8,14 +8,14 @@ public class CreateGameFailed extends CreateGameResponse {
 	/**
 	 * Creates a {@link CreateGameFailed} instance.
 	 */
-	public static CreateGameFailed createGameFailed() {
+	public static CreateGameFailed create() {
 		return new CreateGameFailed();
 	}
 
 	/**
 	 * Creates a {@link CreateGameFailed} instance.
 	 *
-	 * @see #createGameFailed()
+	 * @see #create()
 	 */
 	protected CreateGameFailed() {
 		super();
@@ -81,6 +81,38 @@ public class CreateGameFailed extends CreateGameResponse {
 			case "message": setMessage(in.nextString()); break;
 			default: super.readField(in, field);
 		}
+	}
+
+	@Override
+	protected int typeId() {
+		return 2;
+	}
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		out.name(2);
+		out.value(getMessage());
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 2: setMessage(in.nextString()); break;
+			default: super.readField(in, field);
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static CreateGameFailed readCreateGameFailed(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		CreateGameFailed result = new CreateGameFailed();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 	@Override

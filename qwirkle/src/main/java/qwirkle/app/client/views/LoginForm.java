@@ -74,7 +74,7 @@ public class LoginForm extends Card implements Consumer<LoginResponse>, LoginRes
 		    .start();
         
         String value = _userName.getValue();
-		_communication.send(Login.login().setName(value), this);
+		_communication.send(Login.create().setName(value), this);
 	}
 	
 	@Override

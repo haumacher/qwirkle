@@ -8,14 +8,14 @@ public class Login extends Request {
 	/**
 	 * Creates a {@link Login} instance.
 	 */
-	public static Login login() {
+	public static Login create() {
 		return new Login();
 	}
 
 	/**
 	 * Creates a {@link Login} instance.
 	 *
-	 * @see #login()
+	 * @see #create()
 	 */
 	protected Login() {
 		super();
@@ -81,6 +81,38 @@ public class Login extends Request {
 			case "name": setName(in.nextString()); break;
 			default: super.readField(in, field);
 		}
+	}
+
+	@Override
+	protected int typeId() {
+		return 2;
+	}
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		out.name(2);
+		out.value(getName());
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 2: setName(in.nextString()); break;
+			default: super.readField(in, field);
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static Login readLogin(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		Login result = new Login();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 	@Override

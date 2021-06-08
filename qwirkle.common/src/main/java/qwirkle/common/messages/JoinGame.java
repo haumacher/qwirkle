@@ -10,14 +10,14 @@ public class JoinGame extends Request {
 	/**
 	 * Creates a {@link JoinGame} instance.
 	 */
-	public static JoinGame joinGame() {
+	public static JoinGame create() {
 		return new JoinGame();
 	}
 
 	/**
 	 * Creates a {@link JoinGame} instance.
 	 *
-	 * @see #joinGame()
+	 * @see #create()
 	 */
 	protected JoinGame() {
 		super();
@@ -89,6 +89,38 @@ public class JoinGame extends Request {
 			case "gameId": setGameId(in.nextString()); break;
 			default: super.readField(in, field);
 		}
+	}
+
+	@Override
+	protected int typeId() {
+		return 4;
+	}
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		out.name(2);
+		out.value(getGameId());
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 2: setGameId(in.nextString()); break;
+			default: super.readField(in, field);
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static JoinGame readJoinGame(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		JoinGame result = new JoinGame();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 	@Override

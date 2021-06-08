@@ -13,9 +13,8 @@ import org.dominokit.domino.ui.utils.DominoElement;
 
 import elemental2.dom.DomGlobal;
 import elemental2.dom.Event;
+import elemental2.dom.EventListener;
 import elemental2.dom.HTMLDivElement;
-import elemental2.svg.SVGLength;
-import elemental2.svg.SVGSVGElement;
 import qwirkle.app.client.Communication;
 import qwirkle.app.client.SpielfeldDarstellung;
 import qwirkle.app.client.Vorrat;
@@ -46,6 +45,8 @@ public class GameScreen implements Consumer<QwirkleServerMessage>, QwirkleServer
 	private SpielfeldDarstellung _spielfeldDarstellung;
 	private Vorrat _vorrat;
 	private Layout _layout;
+	
+	private EventListener _onResize;
 
 	/** 
 	 * Creates a {@link GameScreen}.
@@ -65,6 +66,11 @@ public class GameScreen implements Consumer<QwirkleServerMessage>, QwirkleServer
 	public void show() {
 		DominoElement<HTMLDivElement> contentPanel = _layout.getContentPanel();
 		
+		DomGlobal.document.addEventListener("resize", _onResize = this::fenstergrößeVerändert);
+		
+		_spielfeld = new Spielfeld();
+		_spielfeld.set(0, 0, Qwirkle.stein(Farbe.red, Form.circle));
+		
 		HTMLDivElement root = DominoElement.div()
 			.styler(s -> s.setPosition("absolute")
 				.setTop("70px")
@@ -75,13 +81,15 @@ public class GameScreen implements Consumer<QwirkleServerMessage>, QwirkleServer
 			.element();
 		
 		HTMLDivElement top = DominoElement.div().styler(s -> s.setPosition("absolute").setTop("0px").setLeft("0px").setRight("0px").setBottom("120px")).element();
-		SVGSVGElement spielfeldAnzeige = createSVG();
-		top.appendChild(spielfeldAnzeige);
+		{
+			_spielfeldDarstellung = new SpielfeldDarstellung(top, _spielfeld);
+		}
 		root.appendChild(top);
 		
 		HTMLDivElement bottomLeft = DominoElement.div().styler(s -> s.setPosition("absolute").setBottom("0px").setLeft("0px").setWidth("calc(50% - 60px)").setHeight("120px")).element();
-		SVGSVGElement vorratsAnzeige = createSVG();
-		bottomLeft.appendChild(vorratsAnzeige);
+		{
+			_vorrat = new Vorrat(bottomLeft, _spielfeldDarstellung);
+		}
 		root.appendChild(bottomLeft);
 
 		HTMLDivElement bottomMiddle = DominoElement.div()
@@ -97,13 +105,11 @@ public class GameScreen implements Consumer<QwirkleServerMessage>, QwirkleServer
 		
 		contentPanel.appendChild(root);
 		
-		_spielfeld = new Spielfeld();
-		_spielfeld.set(0, 0, Qwirkle.stein(Farbe.red, Form.circle));
-		
-		_spielfeldDarstellung = new SpielfeldDarstellung(spielfeldAnzeige, _spielfeld);
 		_spielfeldDarstellung.zeigeAn();
+	}
+	
+	private void fenstergrößeVerändert(@SuppressWarnings("unused") Event evt) {
 		
-		_vorrat = new Vorrat(_spielfeldDarstellung, vorratsAnzeige);
 	}
 
 	private void starteZug(String nextUserId) {
@@ -116,21 +122,14 @@ public class GameScreen implements Consumer<QwirkleServerMessage>, QwirkleServer
 		}
 	}
 
-	private void beendeZug(Event evt) {
+	private void beendeZug(@SuppressWarnings("unused") Event evt) {
 		List<Placement> beschreibung = _vorrat.beendeZug();
 		
-		_communication.send(GameAction.gameAction()
+		_communication.send(GameAction.create()
 			.setGameId(_game.getGameId())
-			.setDetail(MakeTurn.makeTurn()
+			.setDetail(MakeTurn.create()
 				.setPlacements(beschreibung)
 				.setUserId(_userInfo.getUserId())));
-	}
-
-	private SVGSVGElement createSVG() {
-		SVGSVGElement result = (SVGSVGElement) DomGlobal.document.createElementNS("http://www.w3.org/2000/svg", "svg");
-		result.width.baseVal.newValueSpecifiedUnits((int) SVGLength.SVG_LENGTHTYPE_PERCENTAGE, 100);
-		result.height.baseVal.newValueSpecifiedUnits((int) SVGLength.SVG_LENGTHTYPE_PERCENTAGE, 100);
-		return result;
 	}
 
 	@Override

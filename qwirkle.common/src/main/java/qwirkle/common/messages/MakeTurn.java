@@ -5,14 +5,14 @@ public class MakeTurn extends QwirkleUserMessage {
 	/**
 	 * Creates a {@link MakeTurn} instance.
 	 */
-	public static MakeTurn makeTurn() {
+	public static MakeTurn create() {
 		return new MakeTurn();
 	}
 
 	/**
 	 * Creates a {@link MakeTurn} instance.
 	 *
-	 * @see #makeTurn()
+	 * @see #create()
 	 */
 	protected MakeTurn() {
 		super();
@@ -95,6 +95,52 @@ public class MakeTurn extends QwirkleUserMessage {
 			break;
 			default: super.readField(in, field);
 		}
+	}
+
+	@Override
+	protected int typeId() {
+		return 1;
+	}
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		out.name(2);
+		{
+			java.util.List<Placement> values = getPlacements();
+			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
+			for (Placement x : values) {
+				x.writeTo(out);
+			}
+			out.endArray();
+		}
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 2: {
+				in.beginArray();
+				while (in.hasNext()) {
+					addPlacement(Placement.readPlacement(in));
+				}
+				in.endArray();
+			}
+			break;
+			default: super.readField(in, field);
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static MakeTurn readMakeTurn(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		MakeTurn result = new MakeTurn();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 	@Override

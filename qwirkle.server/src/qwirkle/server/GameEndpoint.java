@@ -50,7 +50,7 @@ public class GameEndpoint implements QwirkleUserMessage.Visitor<Void, Void> {
 	 *
 	 */
 	public GameEndpoint(String name) {
-		_info = GameInfo.gameInfo().setGameId(IDSource.createId()).setName(name);
+		_info = GameInfo.create().setGameId(IDSource.createId()).setName(name);
 	}
 	
 	public boolean isStarted() {
@@ -122,7 +122,7 @@ public class GameEndpoint implements QwirkleUserMessage.Visitor<Void, Void> {
 		if (remainingUsers.isEmpty()) {
 			GameManager.internalGameClosed(this);
 			if (!isStarted()) {
-				UserManager.broadCastToIdleUsers(GameClosed.gameClosed().setGameId(gameId));
+				UserManager.broadCastToIdleUsers(GameClosed.create().setGameId(gameId));
 			}
 		} else {
 			sendGameUpdate(remainingUsers); 
@@ -130,7 +130,7 @@ public class GameEndpoint implements QwirkleUserMessage.Visitor<Void, Void> {
 	}
 	
 	private void sendGameUpdate(List<UserEndpoint> receivers) {
-		GameUpdated message = GameUpdated.gameUpdated().setGame(_info);
+		GameUpdated message = GameUpdated.create().setGame(_info);
 		UserEndpoint.broadCast(receivers, message);
 		
 		if (!isStarted()) {
@@ -166,12 +166,12 @@ public class GameEndpoint implements QwirkleUserMessage.Visitor<Void, Void> {
 		_players = new ArrayList<UserEndpoint>(_users.values());
 		_playerId = (int) (_players.size() * Math.random());
 		
-		UserEndpoint.broadCast(_players, GameStarted.gameStarted().setGame(_info));
+		UserEndpoint.broadCast(_players, GameStarted.create().setGame(_info));
 		
 		_nachzugStapel = new Nachzugstapel();
 		for (UserEndpoint user : _players) {
-			sendUpdate(user, FillInventory.fillInventory().setSteine(_nachzugStapel.nimmSteine(6)));
-			sendUpdate(user, StartTurn.startTurn().setUserId(currentPlayer().getUserId()));
+			sendUpdate(user, FillInventory.create().setSteine(_nachzugStapel.nimmSteine(6)));
+			sendUpdate(user, StartTurn.create().setUserId(currentPlayer().getUserId()));
 		}
 	}
 
@@ -188,7 +188,7 @@ public class GameEndpoint implements QwirkleUserMessage.Visitor<Void, Void> {
 	}
 
 	private GameUpdate update(QwirkleServerMessage message) {
-		return GameUpdate.gameUpdate().setGameId(getGameId()).setDetail(message);
+		return GameUpdate.create().setGameId(getGameId()).setDetail(message);
 	}
 
 	/** 
@@ -210,13 +210,13 @@ public class GameEndpoint implements QwirkleUserMessage.Visitor<Void, Void> {
 		_playerId = nextPlayer;
 		
 		UserEndpoint.broadCast(_players, update(
-			NotifyTurn.notifyTurn()
+			NotifyTurn.create()
 				.setLastUserId(userId(lastPlayer))
 				.setNextUserId(userId(nextPlayer))
 				.setPlacements(self.getPlacements())));
 
 		player(lastPlayer).send(update(
-			FillInventory.fillInventory()
+			FillInventory.create()
 				.setSteine(_nachzugStapel.nimmSteine(self.getPlacements().size()))));
 
 		return null;

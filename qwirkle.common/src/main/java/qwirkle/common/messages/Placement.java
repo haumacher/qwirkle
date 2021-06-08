@@ -1,18 +1,18 @@
 package qwirkle.common.messages;
 
-public class Placement extends de.haumacher.msgbuf.data.AbstractDataObject {
+public class Placement extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	/**
 	 * Creates a {@link Placement} instance.
 	 */
-	public static Placement placement() {
+	public static Placement create() {
 		return new Placement();
 	}
 
 	/**
 	 * Creates a {@link Placement} instance.
 	 *
-	 * @see #placement()
+	 * @see #create()
 	 */
 	protected Placement() {
 		super();
@@ -121,6 +121,47 @@ public class Placement extends de.haumacher.msgbuf.data.AbstractDataObject {
 			case "y": setY(in.nextInt()); break;
 			default: super.readField(in, field);
 		}
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.beginObject();
+		writeFields(out);
+		out.endObject();
+	}
+
+	/** Serializes all fields of this instance to the given binary output. */
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		if (hasStein()) {
+			out.name(1);
+			getStein().writeTo(out);
+		}
+		out.name(2);
+		out.value(getX());
+		out.name(3);
+		out.value(getY());
+	}
+
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setStein(Stein.readStein(in)); break;
+			case 2: setX(in.nextInt()); break;
+			case 3: setY(in.nextInt()); break;
+			default: in.skipValue(); 
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static Placement readPlacement(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		Placement result = new Placement();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 }

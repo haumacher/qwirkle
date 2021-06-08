@@ -1,5 +1,6 @@
 package qwirkle.app.client;
 
+import elemental2.dom.HTMLElement;
 import elemental2.svg.SVGGElement;
 import elemental2.svg.SVGMatrix;
 import elemental2.svg.SVGPoint;
@@ -26,15 +27,17 @@ public class SpielfeldDarstellung {
 	/**
 	 * Erzeugt eine {@link SpielfeldDarstellung}.
 	 *
-	 * @param svg Das SVG-Element, in dem das {@link Spielfeld} angezeigt werden soll.
+	 * @param container Das umschließende HTML-Element, in dem das {@link Spielfeld} angezeigt werden soll.
 	 * @param spielfeld Das anzuzeigende Spielfeld.
 	 */
-	public SpielfeldDarstellung(SVGSVGElement svg, Spielfeld spielfeld) {
-		_svg = svg;
+	public SpielfeldDarstellung(HTMLElement container, Spielfeld spielfeld) {
+		_svg = SVGUtil.createSVG();
 		_spielfeld = spielfeld;
 		
 		_hintergrund = SVGUtil.createG();
 		_svg.appendChild(_hintergrund);
+		
+		container.appendChild(_svg);
 	}
 
 	private void updateDimensions() {

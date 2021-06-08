@@ -1,18 +1,18 @@
 package qwirkle.common.messages;
 
-public class Stein extends de.haumacher.msgbuf.data.AbstractDataObject {
+public class Stein extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	/**
 	 * Creates a {@link Stein} instance.
 	 */
-	public static Stein stein() {
+	public static Stein create() {
 		return new Stein();
 	}
 
 	/**
 	 * Creates a {@link Stein} instance.
 	 *
-	 * @see #stein()
+	 * @see #create()
 	 */
 	protected Stein() {
 		super();
@@ -111,6 +111,46 @@ public class Stein extends de.haumacher.msgbuf.data.AbstractDataObject {
 			case "form": setForm(Form.readForm(in)); break;
 			default: super.readField(in, field);
 		}
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.beginObject();
+		writeFields(out);
+		out.endObject();
+	}
+
+	/** Serializes all fields of this instance to the given binary output. */
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		if (hasFarbe()) {
+			out.name(1);
+			getFarbe().writeTo(out);
+		}
+		if (hasForm()) {
+			out.name(2);
+			getForm().writeTo(out);
+		}
+	}
+
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setFarbe(Farbe.readFarbe(in)); break;
+			case 2: setForm(Form.readForm(in)); break;
+			default: in.skipValue(); 
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static Stein readStein(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		Stein result = new Stein();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 }

@@ -5,19 +5,19 @@ package qwirkle.common.messages;
  *
  * @see GameInfo#getPlayers()
  */
-public class UserInfo extends de.haumacher.msgbuf.data.AbstractDataObject {
+public class UserInfo extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	/**
 	 * Creates a {@link UserInfo} instance.
 	 */
-	public static UserInfo userInfo() {
+	public static UserInfo create() {
 		return new UserInfo();
 	}
 
 	/**
 	 * Creates a {@link UserInfo} instance.
 	 *
-	 * @see #userInfo()
+	 * @see #create()
 	 */
 	protected UserInfo() {
 		super();
@@ -108,6 +108,42 @@ public class UserInfo extends de.haumacher.msgbuf.data.AbstractDataObject {
 			case "name": setName(in.nextString()); break;
 			default: super.readField(in, field);
 		}
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.beginObject();
+		writeFields(out);
+		out.endObject();
+	}
+
+	/** Serializes all fields of this instance to the given binary output. */
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.name(1);
+		out.value(getUserId());
+		out.name(2);
+		out.value(getName());
+	}
+
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setUserId(in.nextString()); break;
+			case 2: setName(in.nextString()); break;
+			default: in.skipValue(); 
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static UserInfo readUserInfo(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		UserInfo result = new UserInfo();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 }

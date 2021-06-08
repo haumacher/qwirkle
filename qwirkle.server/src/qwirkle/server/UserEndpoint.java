@@ -96,7 +96,7 @@ public class UserEndpoint extends Endpoint implements MessageHandler.Whole<Reade
 	@Override
 	public Void visit(FindOpenGames self, Void arg) {
 		_state = UserState.WAITING_FOR_GAME;
-		sendResponse(self, OpenGames.openGames().setGames(GameManager.getOpenGames()));
+		sendResponse(self, OpenGames.create().setGames(GameManager.getOpenGames()));
 		return null;
 	}
 
@@ -111,44 +111,44 @@ public class UserEndpoint extends Endpoint implements MessageHandler.Whole<Reade
 		
 		log(Level.INFO, "Created game '" + _game.getGameId() + "'.");
 		
-		UserManager.broadCastToIdleUsers(GameOpened.gameOpened().setGame(_game.getInfo()));
+		UserManager.broadCastToIdleUsers(GameOpened.create().setGame(_game.getInfo()));
 		
-		send(GameCreated.gameCreated().setGame(_game.getInfo()).setMsgId(self.getMsgId()));
+		send(GameCreated.create().setGame(_game.getInfo()).setMsgId(self.getMsgId()));
 		return null;
 	}
 	
 	@Override
 	public Void visit(JoinGame self, Void arg) {
 		if (_game != null) {
-			sendResponse(self, JoinFailed.joinFailed().setReason(JoinFailed.Reason.ALREADY_PART_OF_A_GAME));
+			sendResponse(self, JoinFailed.create().setReason(JoinFailed.Reason.ALREADY_PART_OF_A_GAME));
 			return null;
 		}
 		
 		GameEndpoint game = GameManager.getGame(self.getGameId());
 		if (game == null) {
-			sendResponse(self, JoinFailed.joinFailed().setReason(JoinFailed.Reason.GAME_NOT_FOUND));
+			sendResponse(self, JoinFailed.create().setReason(JoinFailed.Reason.GAME_NOT_FOUND));
 			return null;
 		}
 		
 		if (!game.addUser(this)) {
-			sendResponse(self, JoinFailed.joinFailed().setReason(JoinFailed.Reason.GAME_ALREADY_STARTED));
+			sendResponse(self, JoinFailed.create().setReason(JoinFailed.Reason.GAME_ALREADY_STARTED));
 			return null;
 		}
 		
 		_game = game;
-		sendResponse(self, GameJoined.gameJoined().setGame(_game.getInfo()));
+		sendResponse(self, GameJoined.create().setGame(_game.getInfo()));
 		return null;
 	}
 	
 	@Override
 	public Void visit(StartGame self, Void arg) {
 		if (_game == null) {
-			send(ServerError.serverError().setMessage("Not part of a game, cannot start the game."));
+			send(ServerError.create().setMessage("Not part of a game, cannot start the game."));
 			return null;
 		}
 		
 		if (!_game.getGameId().equals(self.getGameId())) {
-			send(ServerError.serverError().setMessage("Not part of game '"  + self.getGameId() + "', cannot start this game."));
+			send(ServerError.create().setMessage("Not part of game '"  + self.getGameId() + "', cannot start this game."));
 			return null;
 		}
 		
@@ -164,14 +164,14 @@ public class UserEndpoint extends Endpoint implements MessageHandler.Whole<Reade
 	@Override
 	public Void visit(Login self, Void arg) {
 		if (_user == null) {
-			_user = UserInfo.userInfo().setName(self.getName()).setUserId(IDSource.createId());
+			_user = UserInfo.create().setName(self.getName()).setUserId(IDSource.createId());
 		}
 		
 		log(Level.INFO, "Logged in.");
 
 		UserManager.addUser(_user.getUserId(), this);
 		
-		sendResponse(self, LoginSuccess.loginSuccess().setUser(_user));
+		sendResponse(self, LoginSuccess.create().setUser(_user));
 		return null;
 	}
 

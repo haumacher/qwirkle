@@ -37,9 +37,24 @@ public abstract class JoinGameResponse extends Response {
 		return result;
 	}
 
-	@Override
-	protected String jsonType() {
-		return "JoinGameResponse";
+	/** Reads a new instance from the given reader. */
+	public static JoinGameResponse readJoinGameResponse(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		JoinGameResponse result;
+		int typeField = in.nextName();
+		assert typeField == 0;
+		int type = in.nextInt();
+		switch (type) {
+			case 7: result = GameJoined.create(); break;
+			case 8: result = JoinFailed.create(); break;
+			default: while (in.hasNext()) {in.skipValue(); } in.endObject(); return null;
+		}
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 	/** Accepts the given visitor. */

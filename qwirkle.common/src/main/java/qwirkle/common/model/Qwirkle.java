@@ -7,7 +7,7 @@ import qwirkle.common.messages.Stein;
 public class Qwirkle {
 
 	public static Stein stein(Farbe farbe, Form form) {
-		return Stein.stein().setFarbe(farbe).setForm(form);
+		return Stein.create().setFarbe(farbe).setForm(form);
 	}
 
 }

@@ -13,14 +13,14 @@ public class GameJoined extends JoinGameResponse {
 	/**
 	 * Creates a {@link GameJoined} instance.
 	 */
-	public static GameJoined gameJoined() {
+	public static GameJoined create() {
 		return new GameJoined();
 	}
 
 	/**
 	 * Creates a {@link GameJoined} instance.
 	 *
-	 * @see #gameJoined()
+	 * @see #create()
 	 */
 	protected GameJoined() {
 		super();
@@ -95,6 +95,40 @@ public class GameJoined extends JoinGameResponse {
 			case "game": setGame(GameInfo.readGameInfo(in)); break;
 			default: super.readField(in, field);
 		}
+	}
+
+	@Override
+	protected int typeId() {
+		return 7;
+	}
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		if (hasGame()) {
+			out.name(2);
+			getGame().writeTo(out);
+		}
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 2: setGame(GameInfo.readGameInfo(in)); break;
+			default: super.readField(in, field);
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static GameJoined readGameJoined(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		GameJoined result = new GameJoined();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 	@Override

@@ -8,14 +8,14 @@ public class OpenGames extends Response {
 	/**
 	 * Creates a {@link OpenGames} instance.
 	 */
-	public static OpenGames openGames() {
+	public static OpenGames create() {
 		return new OpenGames();
 	}
 
 	/**
 	 * Creates a {@link OpenGames} instance.
 	 *
-	 * @see #openGames()
+	 * @see #create()
 	 */
 	protected OpenGames() {
 		super();
@@ -101,6 +101,52 @@ public class OpenGames extends Response {
 			break;
 			default: super.readField(in, field);
 		}
+	}
+
+	@Override
+	protected int typeId() {
+		return 6;
+	}
+
+	@Override
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		super.writeFields(out);
+		out.name(2);
+		{
+			java.util.List<GameInfo> values = getGames();
+			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
+			for (GameInfo x : values) {
+				x.writeTo(out);
+			}
+			out.endArray();
+		}
+	}
+
+	@Override
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 2: {
+				in.beginArray();
+				while (in.hasNext()) {
+					addGame(GameInfo.readGameInfo(in));
+				}
+				in.endArray();
+			}
+			break;
+			default: super.readField(in, field);
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static OpenGames readOpenGames(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		OpenGames result = new OpenGames();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 	@Override

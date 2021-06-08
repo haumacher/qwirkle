@@ -3,19 +3,19 @@ package qwirkle.common.messages;
 /**
  * Information exchanged for describing a game.
  */
-public class GameInfo extends de.haumacher.msgbuf.data.AbstractDataObject {
+public class GameInfo extends de.haumacher.msgbuf.data.AbstractDataObject implements de.haumacher.msgbuf.binary.BinaryDataObject {
 
 	/**
 	 * Creates a {@link GameInfo} instance.
 	 */
-	public static GameInfo gameInfo() {
+	public static GameInfo create() {
 		return new GameInfo();
 	}
 
 	/**
 	 * Creates a {@link GameInfo} instance.
 	 *
-	 * @see #gameInfo()
+	 * @see #create()
 	 */
 	protected GameInfo() {
 		super();
@@ -146,6 +146,59 @@ public class GameInfo extends de.haumacher.msgbuf.data.AbstractDataObject {
 			break;
 			default: super.readField(in, field);
 		}
+	}
+
+	@Override
+	public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.beginObject();
+		writeFields(out);
+		out.endObject();
+	}
+
+	/** Serializes all fields of this instance to the given binary output. */
+	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
+		out.name(1);
+		out.value(getGameId());
+		out.name(2);
+		out.value(getName());
+		out.name(3);
+		{
+			java.util.List<UserInfo> values = getPlayers();
+			out.beginArray(de.haumacher.msgbuf.binary.DataType.OBJECT, values.size());
+			for (UserInfo x : values) {
+				x.writeTo(out);
+			}
+			out.endArray();
+		}
+	}
+
+	/** Consumes the value for the field with the given ID and assigns its value. */
+	protected void readField(de.haumacher.msgbuf.binary.DataReader in, int field) throws java.io.IOException {
+		switch (field) {
+			case 1: setGameId(in.nextString()); break;
+			case 2: setName(in.nextString()); break;
+			case 3: {
+				in.beginArray();
+				while (in.hasNext()) {
+					addPlayer(UserInfo.readUserInfo(in));
+				}
+				in.endArray();
+			}
+			break;
+			default: in.skipValue(); 
+		}
+	}
+
+	/** Reads a new instance from the given reader. */
+	public static GameInfo readGameInfo(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
+		in.beginObject();
+		GameInfo result = new GameInfo();
+		while (in.hasNext()) {
+			int field = in.nextName();
+			result.readField(in, field);
+		}
+		in.endObject();
+		return result;
 	}
 
 }

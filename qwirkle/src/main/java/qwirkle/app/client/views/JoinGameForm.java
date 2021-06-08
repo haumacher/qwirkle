@@ -81,7 +81,7 @@ public class JoinGameForm extends Card implements JoinGameResponse.Visitor<Void,
 				);
 			});
 		
-		_communication.<OpenGames>send(FindOpenGames.findOpenGames(), this::handle);
+		_communication.<OpenGames>send(FindOpenGames.create(), this::handle);
 		
 		_onGameOpened = _communication.addListener(GameOpened.class, this::handle);
 		_onGameClosed = _communication.addListener(GameClosed.class, this::handle);
@@ -93,7 +93,7 @@ public class JoinGameForm extends Card implements JoinGameResponse.Visitor<Void,
 		    .setLoadingText("Spielteilnahme wird überprüft...")
 		    .start();
 
-        _communication.<JoinGameResponse>send(JoinGame.joinGame().setGameId(game.getGameId()), this::handle);
+        _communication.<JoinGameResponse>send(JoinGame.create().setGameId(game.getGameId()), this::handle);
 	}
 	
 	private void handle(JoinGameResponse response) {
