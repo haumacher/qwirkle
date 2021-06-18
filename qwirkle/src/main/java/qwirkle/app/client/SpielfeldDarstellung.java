@@ -208,7 +208,7 @@ public class SpielfeldDarstellung implements Observer<Double> {
 		if (center >= 0) {
 			return (int) (center / rasterWidth);
 		} else {
-			return (int) ((center - halfRaster) / rasterWidth);
+			return (int) ((center - rasterWidth) / rasterWidth);
 		}
 	}
 
