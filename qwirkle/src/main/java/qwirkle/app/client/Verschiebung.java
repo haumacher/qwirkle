@@ -7,6 +7,7 @@ import elemental2.dom.EventListener;
 import elemental2.dom.HTMLElement;
 import elemental2.dom.MouseEvent;
 import elemental2.svg.SVGGElement;
+import elemental2.svg.SVGMatrix;
 import elemental2.svg.SVGSVGElement;
 
 /**
@@ -92,14 +93,22 @@ class Verschiebung {
 	private void erzeugeBeweglichesBild(MouseEvent mouseEvt) {
 		DOMRect boundingBox = _darstellung._bild.getBoundingClientRect();
 
-		SVGSVGElement svg = (SVGSVGElement) DomGlobal.document.createElementNS("http://www.w3.org/2000/svg", "svg");
+		SVGSVGElement svg = SVGUtil.createSVG();
 		svg.setAttributeNS(null, "viewbox", "0 0 " + boundingBox.width + " " + boundingBox.height);
 		svg.setAttributeNS(null, "width", boundingBox.width + "px");
 		svg.setAttributeNS(null, "height", boundingBox.height + "px");
+		
+		SVGGElement hintergrund = SVGUtil.createG();
+		
+		double scaleFactor = boundingBox.width / SteinDarstellung.SIZE;
+		SVGMatrix tx = svg.createSVGMatrix().scale(scaleFactor);
+		hintergrund.transform.baseVal.initialize(svg.createSVGTransformFromMatrix(tx));
+		
+		svg.appendChild(hintergrund);
 
 		SVGGElement bild = _darstellung.erzeugeBild();
 		SVGUtil.positioniereBild(svg, bild, 0, 0);
-		svg.appendChild(bild);
+		hintergrund.appendChild(bild);
 
 		double x = boundingBox.x;
 		double y = boundingBox.y;

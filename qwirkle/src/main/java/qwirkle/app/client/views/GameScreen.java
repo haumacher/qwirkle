@@ -17,7 +17,9 @@ import elemental2.dom.EventListener;
 import elemental2.dom.HTMLDivElement;
 import qwirkle.app.client.Communication;
 import qwirkle.app.client.SpielfeldDarstellung;
+import qwirkle.app.client.SteinDarstellung;
 import qwirkle.app.client.Vorrat;
+import qwirkle.app.client.values.Value;
 import qwirkle.common.messages.Farbe;
 import qwirkle.common.messages.FillInventory;
 import qwirkle.common.messages.Form;
@@ -80,15 +82,22 @@ public class GameScreen implements Consumer<QwirkleServerMessage>, QwirkleServer
 				.setOverFlow("hidden"))
 			.element();
 		
+		Value<Double> steinGrößeSpielfeld = Value.create();
+		Value<Double> steinGrößeVorrat = Value.create();
+		Value<Double> steinGröße = Value.min(
+			Value.constant((double)SteinDarstellung.SIZE), 
+			steinGrößeSpielfeld, 
+			steinGrößeVorrat);
+		
 		HTMLDivElement top = DominoElement.div().styler(s -> s.setPosition("absolute").setTop("0px").setLeft("0px").setRight("0px").setBottom("120px")).element();
 		{
-			_spielfeldDarstellung = new SpielfeldDarstellung(top, _spielfeld);
+			_spielfeldDarstellung = new SpielfeldDarstellung(top, _spielfeld, steinGröße, steinGrößeSpielfeld);
 		}
 		root.appendChild(top);
 		
 		HTMLDivElement bottomLeft = DominoElement.div().styler(s -> s.setPosition("absolute").setBottom("0px").setLeft("0px").setWidth("calc(50% - 60px)").setHeight("120px")).element();
 		{
-			_vorrat = new Vorrat(bottomLeft, _spielfeldDarstellung);
+			_vorrat = new Vorrat(bottomLeft, _spielfeldDarstellung, steinGröße, steinGrößeVorrat);
 		}
 		root.appendChild(bottomLeft);
 

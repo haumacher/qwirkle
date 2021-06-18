@@ -10,7 +10,7 @@ import qwirkle.common.messages.Stein;
 /**
  * Darstellung eines {@link Stein}s.
  */
-class SteinDarstellung {
+public class SteinDarstellung {
 
 	/**
 	 * Die maximale Beite und Höhe eine dargestellten Steins in SVG-Koordinaten.

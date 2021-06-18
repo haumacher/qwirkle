@@ -11,7 +11,10 @@ import java.util.stream.Collectors;
 
 import elemental2.dom.HTMLElement;
 import elemental2.svg.SVGGElement;
+import elemental2.svg.SVGMatrix;
 import elemental2.svg.SVGSVGElement;
+import qwirkle.app.client.values.Observer;
+import qwirkle.app.client.values.Value;
 import qwirkle.common.messages.Placement;
 import qwirkle.common.messages.Stein;
 import qwirkle.common.model.Position;
@@ -26,8 +29,10 @@ import qwirkle.common.model.Spielfeld;
  * ist.
  * </p>
  */
-public class Vorrat {
+public class Vorrat implements Observer<Double> {
 	
+	private static final int PADDING = 10;
+
 	private List<SteinDarstellung> _steine = new ArrayList<>();
 	
 	private SVGSVGElement _svg;
@@ -37,6 +42,12 @@ public class Vorrat {
 	private SpielfeldDarstellung _spielfeldDarstellung;
 
 	private Zug _zug;
+
+	private Value<Double> _steinGröße;
+
+	private Value<Double> _maxSteinGröße;
+
+	private SVGMatrix _tx;
 	
 	/** 
 	 * Creates a {@link Vorrat}.
@@ -44,16 +55,67 @@ public class Vorrat {
 	 * @param container Das Umschließende HTML-Element, in dem der {@link Vorrat} dargestellt wird.
 	 * @param spielfeldDarstellung Darstellung des Spielfeldes, in das bei einem Zug Steine abgelegt werden können. 
 	 */
-	public Vorrat(HTMLElement container, SpielfeldDarstellung spielfeldDarstellung) {
+	public Vorrat(HTMLElement container, SpielfeldDarstellung spielfeldDarstellung, Value<Double> steinGröße, Value<Double> maxSteinGröße) {
 		_spielfeldDarstellung = spielfeldDarstellung;
+		_steinGröße = steinGröße;
+		_maxSteinGröße = maxSteinGröße;
+		
 		_svg = SVGUtil.createSVG();
 		
 		_hintergrund = SVGUtil.createG();
 		_svg.appendChild(_hintergrund);
 		
 		container.appendChild(_svg);
+		
+		_steinGröße.addObserver(this);
+	}
+
+	private void updateDimensions() {
+		double clientWidth = clientWidth();
+		double clientHeight = clientHeight();
+		
+		double paddedWidth = clientWidth - 2 * PADDING;
+		double paddedHeight = clientHeight - 2 * PADDING;
+		
+		updateSteinGröße(paddedWidth, paddedHeight);
+		
+		double steinGröße = _steinGröße.get();
+		
+		double scaleFactor = steinGröße / SteinDarstellung.SIZE;
+		double xUrsprung = PADDING + paddedWidth / 2 - 3 * steinGröße;
+		double yUrsprung = PADDING + paddedHeight / 2 - steinGröße / 2;
+		SVGMatrix tx = _svg.createSVGMatrix().translate(xUrsprung, yUrsprung).scale(scaleFactor);
+		_hintergrund.transform.baseVal.initialize(_svg.createSVGTransformFromMatrix(tx));
+		
+		// _tx = _svg.getScreenCTM().inverse().scale(SteinDarstellung.SIZE / steinGröße).translate(-xUrsprung, -yUrsprung);
+	}
+
+	private void updateSteinGröße(double paddedWidth, double paddedHeight) {
+		double steinGröße = Math.min(Math.min(SteinDarstellung.SIZE, paddedWidth / 6.0), paddedHeight);
+		
+		boolean registered = _steinGröße.removeObserver(this);
+		try {
+			_maxSteinGröße.set(steinGröße);
+		} finally {
+			if (registered) {
+				_steinGröße.addObserver(this);
+			}
+		}
 	}
 	
+	@Override
+	public void valueChanged(Value<Double> sender, Double oldValue, Double newValue) {
+		updateDimensions();
+	}
+	
+	private int clientHeight() {
+		return _svg.clientHeight;
+	}
+
+	private int clientWidth() {
+		return _svg.clientWidth;
+	}
+
 	/** 
 	 * Die Anzahl {@link Stein}e im {@link Vorrat}.
 	 */
@@ -72,6 +134,8 @@ public class Vorrat {
 	 * Füllt den {@link Vorrat} mit den neuen Steinen auf. 
 	 */
 	public void fülleAuf(List<Stein> steine) {
+		updateDimensions();
+		
 		// Bringe Steine-Liste in die Reihenfolge, in der die Steine gerade auf dem Bildschirm angezeigt werden.
 		_steine.sort((s1, s2) -> Double.compare(s1.getX(), s2.getX()));
 		
