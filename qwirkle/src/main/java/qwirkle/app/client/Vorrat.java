@@ -51,7 +51,7 @@ public class Vorrat {
 		_hintergrund = SVGUtil.createG();
 		_svg.appendChild(_hintergrund);
 		
-		container.appendChild(container);
+		container.appendChild(_svg);
 	}
 	
 	/** 
