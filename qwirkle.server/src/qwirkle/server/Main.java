@@ -3,6 +3,8 @@
  */
 package qwirkle.server;
 
+import java.util.logging.Logger;
+
 import javax.servlet.ServletContext;
 import javax.websocket.DeploymentException;
 
@@ -19,6 +21,7 @@ import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainer
  */
 public class Main {
 	
+	private static final Logger LOG = Logger.getLogger(Main.class.getName());
 	private static int _port = 8080;
 	private static String _contextPath = "/qwirkle";
 
@@ -26,6 +29,21 @@ public class Main {
 	 * Main method for embedded server startup.
 	 */
 	public static void main(String[] args) throws Exception {
+		for (int n = 0, cnt = args.length; n < cnt; ) {
+			String arg = args[n++];
+			if (arg.equals("-p")) {
+				_port = Integer.parseInt(args[n++]);
+			}
+			else if (arg.equals("-c")) {
+				_contextPath = args[n++];
+			}
+			else {
+				System.err.println("Usage: java " + Main.class.getName() + " -p <port> -c <context-path>");
+				System.exit(1);
+			}
+		}
+		
+		LOG.info("Starting server: http://localhost:" + _port + _contextPath);
 		
 		final Server server = new Server();
 
@@ -59,7 +77,7 @@ public class Main {
 
 		server.start();
 
-		System.out.println("Qwirkle server started: http://localhost:" + _port + _contextPath + "/");
+		LOG.info("Server started: http://localhost:" + _port + _contextPath + "/");
 		server.join();
 	}
 
