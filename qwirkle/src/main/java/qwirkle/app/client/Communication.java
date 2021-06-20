@@ -13,6 +13,7 @@ import de.haumacher.msgbuf.io.StringW;
 import de.haumacher.msgbuf.json.JsonReader;
 import de.haumacher.msgbuf.json.JsonWriter;
 import elemental2.dom.DomGlobal;
+import elemental2.dom.Location;
 import elemental2.dom.WebSocket;
 import qwirkle.common.messages.ClientMessage;
 import qwirkle.common.messages.CreateGameFailed;
@@ -70,7 +71,19 @@ public class Communication implements ServerMessage.Visitor<Void, Void> {
 	}
 	
 	public Communication start() {
-		_socket = new WebSocket("ws://localhost:8080/qwirkle/talk");
+		Location location = DomGlobal.window.location;
+		DomGlobal.console.info("Loaded from: " + location.protocol + "//" + location.host + location.pathname);
+		String protocol = location.protocol.equals("http:") ? "ws:" : "wss:";
+		String contextPath = location.pathname;
+		int slashIdx = contextPath.lastIndexOf('/');
+		if (slashIdx >= 0) {
+			contextPath = contextPath.substring(0, slashIdx);
+		} else {
+			contextPath = "";
+		}
+		String url = protocol + "//" + location.host + contextPath + "/talk";
+		DomGlobal.console.info("Connecting to : " + url);
+		_socket = new WebSocket(url);
 		_socket.onopen = evt -> _onReady.run();
 		
 		_socket.onmessage = evt -> {
