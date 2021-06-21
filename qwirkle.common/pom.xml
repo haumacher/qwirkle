@@ -12,7 +12,7 @@
 			<artifactId>msgbuf-api</artifactId>
 			<version>0.2.0</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>de.haumacher.msgbuf</groupId>
 			<artifactId>msgbuf-api</artifactId>
@@ -37,6 +37,15 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<configuration>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
 				</configuration>
 			</plugin>
 		</plugins>
