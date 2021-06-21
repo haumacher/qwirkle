@@ -262,7 +262,6 @@ public class Vorrat implements Observer<Double> {
 				Bereich zugBereich = zugBereich(x, y);
 				
 				zugErlaubt = prüfeGesamtzug(spielfeld, zugBereich, x, y);
-				
 				if (!zugErlaubt) {
 					// Prüfe, ob duch Zurücknehmen von bereits getätigten Zügen, der Zug legalisiert werden kann.
 					
@@ -342,7 +341,6 @@ public class Vorrat implements Observer<Double> {
 				gesetzterStein.macheVerschiebbar(this);
 				
 				vorratsStein.fixiere();
-				entferneStein(vorratsStein);
 				
 				_teilZüge.put(gesetzterStein, new AnlegeOperation(vorratsStein, x, y, gesetzterStein));
 			} else {

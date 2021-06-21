@@ -11,7 +11,7 @@ import elemental2.svg.SVGMatrix;
 import elemental2.svg.SVGSVGElement;
 
 /**
- * Verschiebeoperation einer {@link SteinDarstellung} mit der Maus durch klicken und ziehen.
+ * Verschiebeoperation einer {@link SteinDarstellung} mit der Maus durch Klicken und Ziehen.
  * 
  * @see #start(MouseEvent)
  */
