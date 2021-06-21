@@ -375,10 +375,12 @@ public class Vorrat implements Observer<Double> {
 			}
 			
 			// Prüfe, ob die Reihe (noch) an einen Stein anstößt, der nicht
-			// aus dem aktuellen Zug stammt. Durch forgesetztes verschieben
+			// aus dem aktuellen Zug stammt. Durch forgesetztes Verschieben
 			// der Steine auf dem Spielfeld kann man sonst die ursprüngliche
-			// Gültigkeitsregel für einen Zug umgehen.
-			if (!zugBereich.nachbarBesetztIn(spielfeld)) {
+			// Gültigkeitsregel für einen Zug umgehen. Diese Regel gilt nicht
+			// für den ersten Zug, da vor diesem noch eine Steine auf dem
+			// Spielfeld liegen, an die angelegt werden könnte.
+			if (!zugBereich.nachbarBesetztIn(spielfeld) && !zugBereich.enthält(new Position(0, 0))) {
 				return false;
 			}
 			

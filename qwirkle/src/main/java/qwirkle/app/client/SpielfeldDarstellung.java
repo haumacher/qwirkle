@@ -163,6 +163,12 @@ public class SpielfeldDarstellung implements Observer<Double> {
 		int yMin = _spielfeld.getYMin();
 		int width = _spielfeld.getWidth();
 		int height = _spielfeld.getHeight();
+		
+		SVGGElement startFeld = SVGUtil.createG();
+		startFeld.innerHTML = "<rect class=\"tile start\" width=\"96\" height=\"96\" x=\"2\" y=\"2\" ry=\"3.6773801\" rx=\"3.6773801\" />\n";
+		SVGUtil.positioniereBild(_svg, startFeld, xMin + 0, yMin + 0);
+		_hintergrund.append(startFeld);
+		
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				Stein stein = _spielfeld.get(xMin + x, yMin + y);

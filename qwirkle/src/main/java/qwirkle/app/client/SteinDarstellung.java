@@ -1,6 +1,5 @@
 package qwirkle.app.client;
 
-import elemental2.dom.DomGlobal;
 import elemental2.dom.EventListener;
 import elemental2.dom.MouseEvent;
 import elemental2.svg.SVGGElement;
@@ -157,7 +156,7 @@ public class SteinDarstellung {
 	}
 
 	SVGGElement erzeugeBild() {
-		SVGGElement g = (SVGGElement) DomGlobal.document.createElementNS("http://www.w3.org/2000/svg", "g");
+		SVGGElement g = SVGUtil.createG();
 
 		switch (_stein.getForm()) {
 		case circle:

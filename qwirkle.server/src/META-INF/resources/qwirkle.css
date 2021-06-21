@@ -8,6 +8,10 @@
 	stroke-opacity:1
 }
 
+.start {
+	fill:#AAAAAA;
+}
+
 .vorschau .tile {
 	opacity: 0.75;
 }

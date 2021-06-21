@@ -20,9 +20,7 @@ import qwirkle.app.client.SpielfeldDarstellung;
 import qwirkle.app.client.SteinDarstellung;
 import qwirkle.app.client.Vorrat;
 import qwirkle.app.client.values.Value;
-import qwirkle.common.messages.Farbe;
 import qwirkle.common.messages.FillInventory;
-import qwirkle.common.messages.Form;
 import qwirkle.common.messages.GameAction;
 import qwirkle.common.messages.GameInfo;
 import qwirkle.common.messages.MakeTurn;
@@ -31,7 +29,6 @@ import qwirkle.common.messages.Placement;
 import qwirkle.common.messages.QwirkleServerMessage;
 import qwirkle.common.messages.StartTurn;
 import qwirkle.common.messages.UserInfo;
-import qwirkle.common.model.Qwirkle;
 import qwirkle.common.model.Spielfeld;
 
 /**
@@ -71,7 +68,6 @@ public class GameScreen implements Consumer<QwirkleServerMessage>, QwirkleServer
 		DomGlobal.document.addEventListener("resize", _onResize = this::fenstergrößeVerändert);
 		
 		_spielfeld = new Spielfeld();
-		_spielfeld.set(0, 0, Qwirkle.stein(Farbe.red, Form.circle));
 		
 		HTMLDivElement root = DominoElement.div()
 			.styler(s -> s.setPosition("absolute")
