@@ -13,7 +13,7 @@ import qwirkle.common.messages.Stein;
 import qwirkle.common.model.Nachzugstapel;
 
 /**
- * TODO
+ * {@link GameScreen} in einem Spiel gegen einen Computer-Gegner.
  */
 public class SingleplayerGameScreen extends GameScreen {
 	

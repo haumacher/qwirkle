@@ -63,7 +63,7 @@ public class QwirkleBot {
 	 * @see #set(int, int, Stein)
 	 */
 	public List<Placement> berechneZug() {
-		ZugErbauer zug = new ZugErbauer(_spielfeld);
+		ZugBewertung zug = new ZugBewertung(_spielfeld);
 		produziereZüge(zug);
 		
 		List<Placement> result = zug.besterZug();
@@ -73,16 +73,16 @@ public class QwirkleBot {
 		return result;
 	}
 
-	private void produziereZüge(ZugErbauer zug) {
+	private void produziereZüge(ZugBewertung zug) {
 		SteinAuswahl auswahl = new SteinAuswahl(_vorrat);
 		Durchgang durchgang = auswahl.steine();
 		
 		if (!_spielfeld.istBesetzt(0, 0)) {
-			// Der erste Zug ist besonder, weil an Position (0, 0) gesetzt werden darf, obwohl diese an keinen Stein angrenzt.
+			// Der erste Zug ist besonders, weil an Position (0, 0) gesetzt werden darf, obwohl diese an keinen Stein angrenzt.
+			Position position = new Position(0, 0);
 			while (durchgang.hatStein()) {
 				Stein stein = durchgang.nimmStein();
 				
-				Position position = new Position(0, 0);
 				zug.add(placement(stein, position));
 				wähleZweitenStein(zug, auswahl, position);
 				zug.pop();
@@ -95,9 +95,7 @@ public class QwirkleBot {
 				
 				for (Position position : zugmöglichkeiten(stein)) {
 					zug.add(placement(stein, position));
-					
 					wähleZweitenStein(zug, auswahl, position);
-					
 					zug.pop();
 				}
 				
@@ -120,7 +118,7 @@ public class QwirkleBot {
 		return result;
 	}
 	
-	private void wähleZweitenStein(ZugErbauer zug, SteinAuswahl auswahl, Position position) {
+	private void wähleZweitenStein(ZugBewertung zug, SteinAuswahl auswahl, Position position) {
 		// Der zweite Stein kann jetzt nur noch in dieselbe Reihe oder Spalte
 		// wie der erste Stein gelegt werden. Es gibt nur noch höchstens vier
 		// Möglichkeiten eine freie Position auf dem Spielfeld zu finden, die
@@ -135,9 +133,7 @@ public class QwirkleBot {
 				for (Position freierNachbar : freieNachbarn) {
 					if (_spielfeld.zugErlaubt(freierNachbar.x(), freierNachbar.y(), zweiterStein)) {
 						zug.add(placement(zweiterStein, freierNachbar));
-						
 						wähleFolgeSteine(zug, auswahl, position, freierNachbar);
-						
 						zug.pop();
 					}
 				}
@@ -147,7 +143,7 @@ public class QwirkleBot {
 		}
 	}
 
-	private void wähleFolgeSteine(ZugErbauer zug, SteinAuswahl auswahl, Position erste, Position zweite) {
+	private void wähleFolgeSteine(ZugBewertung zug, SteinAuswahl auswahl, Position erste, Position zweite) {
 		List<Position> freieNachbarn = _spielfeld.freieNachbarn(erste, zweite);
 		
 		Durchgang durchgang = auswahl.steine();
@@ -158,9 +154,7 @@ public class QwirkleBot {
 				for (Position freierNachbar : freieNachbarn) {
 					if (_spielfeld.zugErlaubt(freierNachbar.x(), freierNachbar.y(), stein)) {
 						zug.add(placement(stein, freierNachbar));
-						
 						wähleFolgeSteine(zug, auswahl, erste, zweite);
-						
 						zug.pop();
 					}
 				}

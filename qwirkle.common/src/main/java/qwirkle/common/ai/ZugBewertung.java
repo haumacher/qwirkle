@@ -14,9 +14,9 @@ import qwirkle.common.messages.Stein;
 import qwirkle.common.model.Spielfeld;
 
 /**
- * TODO
+ * Analyse für alle möglichen Züge bei einem gegebenen {@link Spielfeld}.
  */
-public class ZugErbauer {
+public class ZugBewertung {
 
 	private List<Placement> _besterZug = new ArrayList<>();
 	
@@ -29,16 +29,21 @@ public class ZugErbauer {
 	private Spielfeld _spielfeld;
 
 	/** 
-	 * Creates a {@link ZugErbauer}.
+	 * Creates a {@link ZugBewertung}.
 	 *
 	 * @param spielfeld
 	 */
-	public ZugErbauer(Spielfeld spielfeld) {
+	public ZugBewertung(Spielfeld spielfeld) {
 		_spielfeld = spielfeld;
 	}
 
-	/** 
+	/**
 	 * Fügt die gegebene Plazierung zu dem Zug hinzu.
+	 * 
+	 * <p>
+	 * Alle bisherigen Plazierungen müssen zusammen mit der neuen Plazierung
+	 * einen legalen Zug ergeben.
+	 * </p>
 	 */
 	public void add(Placement placement) {
 		_aktuellerZug.add(placement);
@@ -88,6 +93,10 @@ public class ZugErbauer {
 		_spielfeld.set(placement.getX(), placement.getY(), null);
 	}
 
+	/**
+	 * Liefert den besten Zug, aller gesehenen möglichen Züge die über die
+	 * Aufrufe {@link #add(Placement)} und {@link #pop()} generiert wurden.
+	 */
 	public List<Placement> besterZug() {
 		return _besterZug;
 	}
