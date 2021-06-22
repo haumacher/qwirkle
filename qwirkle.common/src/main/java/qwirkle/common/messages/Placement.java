@@ -150,7 +150,13 @@ public class Placement extends de.haumacher.msgbuf.data.AbstractDataObject imple
 		out.endObject();
 	}
 
-	/** Serializes all fields of this instance to the given binary output. */
+	/**
+	 * Serializes all fields of this instance to the given binary output.
+	 *
+	 * @param out
+	 *        The binary output to write to.
+	 * @throws java.io.IOException If writing fails.
+	 */
 	protected void writeFields(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 		if (hasStein()) {
 			out.name(1);
