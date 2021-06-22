@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021 Bernhard Haumacher et al. All Rights Reserved.
  */
-package qwirkle.server.model;
+package qwirkle.common.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,7 +10,6 @@ import java.util.List;
 import qwirkle.common.messages.Farbe;
 import qwirkle.common.messages.Form;
 import qwirkle.common.messages.Stein;
-import qwirkle.common.model.Qwirkle;
 
 /**
  * Ein gemischter Stapel mit allen {@link Stein}en.

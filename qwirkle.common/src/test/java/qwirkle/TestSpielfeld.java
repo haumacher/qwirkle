@@ -128,7 +128,7 @@ public class TestSpielfeld extends TestCase {
 		return spielfeld;
 	}
 
-	private Stein stein(Farbe farbe, Form form) {
+	public static Stein stein(Farbe farbe, Form form) {
 		return Stein.create().setFarbe(farbe).setForm(form);
 	}
 

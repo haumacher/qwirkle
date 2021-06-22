@@ -1,6 +1,9 @@
 package qwirkle.common.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.List;
 
 import qwirkle.common.messages.Farbe;
 import qwirkle.common.messages.Form;
@@ -51,6 +54,13 @@ public class Spielfeld {
 	 */
 	public int getHeight() {
 		return _height;
+	}
+	
+	/**
+	 * Dasselbe wie {@link #get(int, int)} nur mit einer {@link Position} als Argument.
+	 */
+	public Stein get(Position position) {
+		return get(position.x(), position.y());
 	}
 
 	/**
@@ -266,5 +276,50 @@ public class Spielfeld {
 	
 	private boolean hatNachbarn(int x, int y) {
 		return istBesetzt(x - 1, y) || istBesetzt(x + 1, y) || istBesetzt(x, y - 1) || istBesetzt(x, y + 1);
+	}
+
+	/**
+	 * Freie {@link Position}en, die in derselben Reihe oder Spalte wie die
+	 * gegebene Position liegen und zwischen denen und der gegebenen
+	 * {@link Position} nur besetzte Felder sind.
+	 */
+	public List<Position> freieNachbarn(Position position) {
+		ArrayList<Position> result = new ArrayList<Position>(4);
+		for (Position nachbar : position.nachbarn()) {
+			result.add(freiesFeldInRichtung(position, nachbar));
+		}
+		return result;
+	}
+
+	/**
+	 * Liefert die erste freie {@link Position} ausgehend von der gegebenen
+	 * {@link Position} in Richtung des gegebenen Nachbarn der {@link Position}.
+	 */
+	public Position freiesFeldInRichtung(Position position, Position nachbar) {
+		int abstand = 1;
+		while (true) {
+			Position kandidat = position.inRichtung(nachbar, abstand++);
+			if (!istBesetzt(kandidat)) {
+				return kandidat;
+			}
+		}
+	}
+
+	/** 
+	 * Freie {@link Position}en, die in derselben Reihe bzw. Spalte wie die
+	 * beiden gegebenen {@link Position}en liegen und zwischen denen und den gegebenen
+	 * {@link Position} nur besetzte Felder sind.
+	 */
+	public List<Position> freieNachbarn(Position erste, Position zweite) {
+		boolean horizontal = erste.y() == zweite.y();
+		if (horizontal) {
+			return Arrays.asList(
+				freiesFeldInRichtung(erste, erste.links()),
+				freiesFeldInRichtung(erste, erste.rechts()));
+		} else {
+			return Arrays.asList(
+				freiesFeldInRichtung(erste, erste.oben()),
+				freiesFeldInRichtung(erste, erste.unten()));
+		}
 	}
 }

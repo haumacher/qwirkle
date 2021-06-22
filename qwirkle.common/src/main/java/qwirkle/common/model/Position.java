@@ -75,29 +75,44 @@ public final class Position {
 	/** 
 	 * Die {@link Position} rechts von dieser {@link Position}.
 	 */
-	private Position rechts() {
+	public Position rechts() {
 		return new Position(_x + 1, _y);
 	}
 
 	/** 
 	 * Die {@link Position} links von dieser {@link Position}.
 	 */
-	private Position links() {
+	public Position links() {
 		return new Position(_x - 1, _y);
 	}
 
 	/** 
 	 * Die {@link Position} unterhalb von dieser {@link Position}.
 	 */
-	private Position unten() {
+	public Position unten() {
 		return new Position(_x, _y + 1);
 	}
 
 	/** 
 	 * Die {@link Position} oberhalb von dieser {@link Position}.
 	 */
-	private Position oben() {
+	public Position oben() {
 		return new Position(_x, _y - 1);
+	}
+
+	/**
+	 * Die Position, welche den gegebenen Abstand von dieser Position in
+	 * Richtung des gegebenen Nachbarn entfernt ist.
+	 */
+	public Position inRichtung(Position nachbar, int abstand) {
+		if (abstand == 1) {
+			return nachbar;
+		}
+		int x = x();
+		int y = y();
+		return new Position(
+			x + abstand * (nachbar.x() - x), 
+			y + abstand * (nachbar.y() - y));
 	}
 
 }

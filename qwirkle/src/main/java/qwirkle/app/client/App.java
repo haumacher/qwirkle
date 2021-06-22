@@ -14,9 +14,10 @@ import com.google.gwt.core.client.EntryPoint;
 
 import elemental2.dom.Event;
 import elemental2.dom.HTMLDivElement;
-import qwirkle.app.client.views.GameScreen;
 import qwirkle.app.client.views.JoinGameForm;
 import qwirkle.app.client.views.LoginForm;
+import qwirkle.app.client.views.MultiplayerGameScreen;
+import qwirkle.app.client.views.SingleplayerGameScreen;
 import qwirkle.app.client.views.StartGameForm;
 import qwirkle.app.client.views.WaitForGameStartForm;
 import qwirkle.common.messages.GameInfo;
@@ -58,7 +59,7 @@ public class App implements EntryPoint {
 	private void showGameScreen() {
 		clearContent();
 		
-		new GameScreen(_communication, _userInfo, _game, _layout).show();
+		new MultiplayerGameScreen(_communication, _userInfo, _game, _layout).show();
 	}
 
 	private void showHomeScreen() {
@@ -142,7 +143,9 @@ public class App implements EntryPoint {
 	}
 
 	private void playLocallyClicked(Event evt) {
-		showGameScreen();
+		clearContent();
+		
+		new SingleplayerGameScreen(_layout).show();
 	}
 	
 }

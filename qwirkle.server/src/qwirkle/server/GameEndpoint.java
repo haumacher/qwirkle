@@ -22,8 +22,8 @@ import qwirkle.common.messages.NotifyTurn;
 import qwirkle.common.messages.QwirkleServerMessage;
 import qwirkle.common.messages.QwirkleUserMessage;
 import qwirkle.common.messages.StartTurn;
+import qwirkle.common.model.Nachzugstapel;
 import qwirkle.common.util.Util;
-import qwirkle.server.model.Nachzugstapel;
 
 /**
  * Endpoint for all communication that is specific to a certain game instance.
