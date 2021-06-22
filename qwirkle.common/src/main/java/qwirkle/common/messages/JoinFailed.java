@@ -45,9 +45,9 @@ public class JoinFailed extends JoinGameResponse {
 		/** Writes this instance to the given binary output. */
 		public final void writeTo(de.haumacher.msgbuf.binary.DataWriter out) throws java.io.IOException {
 			switch (this) {
-				case GAME_NOT_FOUND: out.value(0); break;
-				case ALREADY_PART_OF_A_GAME: out.value(0); break;
-				case GAME_ALREADY_STARTED: out.value(0); break;
+				case GAME_NOT_FOUND: out.value(1); break;
+				case ALREADY_PART_OF_A_GAME: out.value(2); break;
+				case GAME_ALREADY_STARTED: out.value(3); break;
 				default: out.value(0);
 			}
 		}
@@ -55,7 +55,9 @@ public class JoinFailed extends JoinGameResponse {
 		/** Reads a new instance from the given binary reader. */
 		public static Reason readReason(de.haumacher.msgbuf.binary.DataReader in) throws java.io.IOException {
 			switch (in.nextInt()) {
-				case 0: return GAME_NOT_FOUND;
+				case 1: return GAME_NOT_FOUND;
+				case 2: return ALREADY_PART_OF_A_GAME;
+				case 3: return GAME_ALREADY_STARTED;
 				default: return GAME_NOT_FOUND;
 			}
 		}
