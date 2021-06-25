@@ -3,11 +3,15 @@ package qwirkle;
 import static qwirkle.common.messages.Farbe.*;
 import static qwirkle.common.messages.Form.*;
 
+import java.util.Arrays;
+
 import junit.framework.TestCase;
 import qwirkle.common.messages.Farbe;
 import qwirkle.common.messages.Form;
 import qwirkle.common.messages.Stein;
+import qwirkle.common.model.Position;
 import qwirkle.common.model.Spielfeld;
+import qwirkle.common.model.Zugbewertung;
 
 /**
  * Test-Klasse, welche die Implementierung von {@link Spielfeld} überprüft.
@@ -51,6 +55,23 @@ public class TestSpielfeld extends TestCase {
 		assertEquals(s3, spielfeld.get(-1, 0));
 		assertEquals(s4, spielfeld.get(-1, 1));
 		assertEquals(s5, spielfeld.get(1, -1));
+	}
+	
+	public void testzugbewertung() {
+		Spielfeld spielfeld= new Spielfeld();
+		spielfeld.set(-1, 0, null);
+		spielfeld.set(0, 0, Stein.create().setFarbe(red).setForm(circle));
+		spielfeld.set(1, 0, Stein.create().setFarbe(blue).setForm(circle));
+		spielfeld.set(2, 0, null);
+		int zb=Zugbewertung.zugbewertung(spielfeld, Arrays.asList(new Position(1,0)));
+		assertEquals(2, zb);
+	}
+	
+	public void testZugbewertungAnfang() {
+		Spielfeld spielfeld= new Spielfeld();
+		spielfeld.set(0, 0, Stein.create().setFarbe(red).setForm(circle));
+		int zb=Zugbewertung.zugbewertung(spielfeld, Arrays.asList(new Position(0,0)));
+		assertEquals(1, zb);
 	}
 	
 	public void testZugErlaubtReihe() {
