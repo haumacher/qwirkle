@@ -6,14 +6,18 @@ package qwirkle.app.client.views;
 import java.util.List;
 
 import org.dominokit.domino.ui.button.Button;
+import org.dominokit.domino.ui.icons.Icons;
 import org.dominokit.domino.ui.layout.Layout;
-import org.dominokit.domino.ui.notifications.Notification;
 import org.dominokit.domino.ui.utils.DominoElement;
+import org.jboss.elemento.Elements;
+import org.jboss.elemento.HtmlContentBuilder;
 
 import elemental2.dom.DomGlobal;
 import elemental2.dom.Event;
 import elemental2.dom.EventListener;
 import elemental2.dom.HTMLDivElement;
+import elemental2.dom.HTMLLIElement;
+import elemental2.dom.HTMLUListElement;
 import qwirkle.app.client.SpielfeldDarstellung;
 import qwirkle.app.client.SteinDarstellung;
 import qwirkle.app.client.Vorrat;
@@ -91,9 +95,34 @@ public abstract class GameScreen {
 		
 		contentPanel.appendChild(root);
 		
+		updatePlayerStats();
+		
 		_spielfeldDarstellung.zeigeAn();
 	}
-	
+
+	/**
+	 * Zeigt den Spielstand und den aktuell aktiven Spieler an.
+	 */
+	protected void updatePlayerStats() {
+		DominoElement<HTMLUListElement> topBar = _layout.getTopBar();
+		topBar.clearElement();
+		for (PlayerStat player : getPlayerStats()) {
+			HtmlContentBuilder<HTMLLIElement> li = Elements.li();
+			if (player.isActive()) {
+				li.add(Icons.ALL.play_circle_mdi().size18().css("no_line_height"));
+			}
+			li.add(Elements.span().add(player.getName() + ": " + player.getScore()).style("padding-left: 5px;"));
+			li.css("navbar-brand");
+			li.style("padding-left: 10px;");
+			topBar.appendChild(li);
+		}
+	}
+
+	/** 
+	 * Die aktiven Spieler, ihre Punkte und welcher Spieler aktiv ist.
+	 */
+	protected abstract Iterable<PlayerStat> getPlayerStats();
+
 	private void fenstergrößeVerändert(@SuppressWarnings("unused") Event evt) {
 		
 	}
@@ -110,7 +139,6 @@ public abstract class GameScreen {
 
 	protected void starteZug() {
 		_vorrat.starteZug();
-		Notification.createInfo("Du bist am Zug!").show();
 	}
 
 	private void beendeZug(@SuppressWarnings("unused") Event evt) {

@@ -3,11 +3,12 @@
  */
 package qwirkle.app.client.views;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import org.dominokit.domino.ui.layout.Layout;
-import org.dominokit.domino.ui.notifications.Notification;
 
 import qwirkle.app.client.Communication;
 import qwirkle.common.messages.FillInventory;
@@ -30,6 +31,10 @@ public class MultiplayerGameScreen extends GameScreen implements Consumer<Qwirkl
 	private final GameInfo _game;
 
 	private final UserInfo _userInfo;
+	
+	private String _activeUserId;
+	
+	private final Map<String, PlayerStat> _stats;
 
 	/** 
 	 * Creates a {@link MultiplayerGameScreen}.
@@ -40,8 +45,18 @@ public class MultiplayerGameScreen extends GameScreen implements Consumer<Qwirkl
 		_communication = communication;
 		_game = game;
 		_userInfo = userInfo;
+		
+		_stats = new LinkedHashMap<>();
+		for (UserInfo player: game.getPlayers()) {
+			_stats.put(player.getUserId(), new PlayerStat(player.getName()));
+		}
 
 		_communication.addGameListener(game.getGameId(), this);
+	}
+	
+	@Override
+	protected Iterable<PlayerStat> getPlayerStats() {
+		return _stats.values();
 	}
 	
 	@Override
@@ -67,17 +82,29 @@ public class MultiplayerGameScreen extends GameScreen implements Consumer<Qwirkl
 	@Override
 	public Void visit(NotifyTurn self, Void arg) {
 		zeigeZug(self.getPlacements());
+		_stats.get(_activeUserId).addScore(self.getScore());
+		
 		String nextUserId = self.getNextUserId();
 		starteZug(nextUserId);
 		return null;
 	}
 
 	protected void starteZug(String nextUserId) {
+		setActive(_activeUserId, false);
+		setActive(nextUserId, true);
 		if (nextUserId.equals(_userInfo.getUserId())) {
 			starteZug();
-		} else {
-			UserInfo nextUser = _game.getPlayers().stream().filter(p -> p.getUserId().equals(nextUserId)).findFirst().get();
-			Notification.createInfo("Jetzt ist " + nextUser.getName() + " am am Zug!").show();
+		}
+		updatePlayerStats();
+	}
+
+	private void setActive(String userId, boolean value) {
+		PlayerStat current = _stats.get(userId);
+		if (current != null) {
+			current.setActive(value);
+		}
+		if (value) {
+			_activeUserId = userId;
 		}
 	}
 

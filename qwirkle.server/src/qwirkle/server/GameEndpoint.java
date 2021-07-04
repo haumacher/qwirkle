@@ -19,10 +19,14 @@ import qwirkle.common.messages.GameUpdate;
 import qwirkle.common.messages.GameUpdated;
 import qwirkle.common.messages.MakeTurn;
 import qwirkle.common.messages.NotifyTurn;
+import qwirkle.common.messages.Placement;
 import qwirkle.common.messages.QwirkleServerMessage;
 import qwirkle.common.messages.QwirkleUserMessage;
 import qwirkle.common.messages.StartTurn;
 import qwirkle.common.model.Nachzugstapel;
+import qwirkle.common.model.Position;
+import qwirkle.common.model.Spielfeld;
+import qwirkle.common.model.Zugbewertung;
 import qwirkle.common.util.Util;
 
 /**
@@ -39,6 +43,8 @@ public class GameEndpoint implements QwirkleUserMessage.Visitor<Void, Void> {
 	private boolean _started;
 
 	private Nachzugstapel _nachzugStapel;
+	
+	private Spielfeld _spielfeld;
 	
 	private List<UserEndpoint> _players;
 	
@@ -169,6 +175,7 @@ public class GameEndpoint implements QwirkleUserMessage.Visitor<Void, Void> {
 		UserEndpoint.broadCast(_players, GameStarted.create().setGame(_info));
 		
 		_nachzugStapel = new Nachzugstapel();
+		_spielfeld = new Spielfeld();
 		for (UserEndpoint user : _players) {
 			sendUpdate(user, FillInventory.create().setSteine(_nachzugStapel.nimmSteine(6)));
 			sendUpdate(user, StartTurn.create().setUserId(currentPlayer().getUserId()));
@@ -209,11 +216,19 @@ public class GameEndpoint implements QwirkleUserMessage.Visitor<Void, Void> {
 		int nextPlayer = (_playerId + 1) % _players.size();
 		_playerId = nextPlayer;
 		
+		List<Position> positions = new ArrayList<>();
+		for (Placement placement : self.getPlacements()) {
+			positions.add(new Position(placement.getX(), placement.getY()));
+			_spielfeld.set(placement.getX(), placement.getY(), placement.getStein());
+		}
+		int score = Zugbewertung.zugbewertung(_spielfeld, positions);
+		
 		UserEndpoint.broadCast(_players, update(
 			NotifyTurn.create()
 				.setLastUserId(userId(lastPlayer))
 				.setNextUserId(userId(nextPlayer))
-				.setPlacements(self.getPlacements())));
+				.setPlacements(self.getPlacements())
+				.setScore(score)));
 
 		player(lastPlayer).send(update(
 			FillInventory.create()

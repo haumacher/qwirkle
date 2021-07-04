@@ -399,6 +399,9 @@ message NotifyTurn extends QwirkleServerMessage {
 	/** Encoding of the move */
 	repeated Placement placements;
 	
+	/** The number of points received by {@link #lastUserId} for this {@link #placements}. */
+	int score;
+	
 	/** The ID of the player who has to play the next turn. */
 	string nextUserId;
 }

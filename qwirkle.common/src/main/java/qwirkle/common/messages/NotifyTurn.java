@@ -29,6 +29,8 @@ public class NotifyTurn extends QwirkleServerMessage {
 
 	private final java.util.List<Placement> _placements = new java.util.ArrayList<>();
 
+	private int _score = 0;
+
 	private String _nextUserId = "";
 
 	/**
@@ -71,6 +73,21 @@ public class NotifyTurn extends QwirkleServerMessage {
 	}
 
 	/**
+	 * The number of points received by {@link #getLastUserId()} for this {@link #getPlacements()}.
+	 */
+	public final int getScore() {
+		return _score;
+	}
+
+	/**
+	 * @see #getScore()
+	 */
+	public final NotifyTurn setScore(int value) {
+		_score = value;
+		return this;
+	}
+
+	/**
 	 * The ID of the player who has to play the next turn.
 	 */
 	public final String getNextUserId() {
@@ -104,6 +121,7 @@ public class NotifyTurn extends QwirkleServerMessage {
 		switch (field) {
 			case "lastUserId": return getLastUserId();
 			case "placements": return getPlacements();
+			case "score": return getScore();
 			case "nextUserId": return getNextUserId();
 			default: return super.get(field);
 		}
@@ -114,6 +132,7 @@ public class NotifyTurn extends QwirkleServerMessage {
 		switch (field) {
 			case "lastUserId": setLastUserId((String) value); break;
 			case "placements": setPlacements((java.util.List<Placement>) value); break;
+			case "score": setScore((int) value); break;
 			case "nextUserId": setNextUserId((String) value); break;
 			default: super.set(field, value); break;
 		}
@@ -130,6 +149,8 @@ public class NotifyTurn extends QwirkleServerMessage {
 			x.writeTo(out);
 		}
 		out.endArray();
+		out.name("score");
+		out.value(getScore());
 		out.name("nextUserId");
 		out.value(getNextUserId());
 	}
@@ -146,6 +167,7 @@ public class NotifyTurn extends QwirkleServerMessage {
 				in.endArray();
 			}
 			break;
+			case "score": setScore(in.nextInt()); break;
 			case "nextUserId": setNextUserId(in.nextString()); break;
 			default: super.readField(in, field);
 		}
@@ -171,6 +193,8 @@ public class NotifyTurn extends QwirkleServerMessage {
 			out.endArray();
 		}
 		out.name(3);
+		out.value(getScore());
+		out.name(4);
 		out.value(getNextUserId());
 	}
 
@@ -186,7 +210,8 @@ public class NotifyTurn extends QwirkleServerMessage {
 				in.endArray();
 			}
 			break;
-			case 3: setNextUserId(in.nextString()); break;
+			case 3: setScore(in.nextInt()); break;
+			case 4: setNextUserId(in.nextString()); break;
 			default: super.readField(in, field);
 		}
 	}

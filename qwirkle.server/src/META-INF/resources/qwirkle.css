@@ -62,6 +62,10 @@
 	stroke:#edd400;
 }
 
+.no_line_height.mdi::before {
+	line-height: inherit;
+}
+
 #main {
 	width: 100%;
 	height: calc(100% - 250);

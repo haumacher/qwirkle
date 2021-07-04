@@ -81,6 +81,8 @@ public class App implements EntryPoint {
 	}
 
 	private DominoElement<HTMLDivElement> clearContent() {
+		_layout.getTopBar().clearElement();
+
 		DominoElement<HTMLDivElement> contentPanel = _layout.getContentPanel();
 		contentPanel.clearElement();
 		return contentPanel;
