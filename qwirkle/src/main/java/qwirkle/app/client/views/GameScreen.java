@@ -3,6 +3,7 @@
  */
 package qwirkle.app.client.views;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.dominokit.domino.ui.button.Button;
@@ -37,6 +38,8 @@ public abstract class GameScreen {
 	private Layout _layout;
 	
 	private EventListener _onResize;
+	private List<SteinDarstellung> _vorschau = new ArrayList<>();
+	private double _hideTimeout;
 
 	/** 
 	 * Creates a {@link GameScreen}.
@@ -132,9 +135,24 @@ public abstract class GameScreen {
 	}
 
 	protected void zeigeZug(List<Placement> placements) {
-		for (Placement placement : placements)  {
-			_spielfeldDarstellung.fügeEin(placement.getX(), placement.getY(), placement.getStein());
+		if (_hideTimeout != 0) {
+			DomGlobal.clearTimeout(_hideTimeout);
+			versteckeVorschau();
+			_hideTimeout = 0;
 		}
+		for (Placement placement : placements)  {
+			int x = placement.getX();
+			int y = placement.getY();
+			SteinDarstellung darstellung = _spielfeldDarstellung.fügeEin(x, y, placement.getStein());
+			darstellung.setzeVorschau(true);
+			_vorschau.add(darstellung);
+		}
+		_hideTimeout = DomGlobal.setTimeout(this::versteckeVorschau, 800);
+	}
+	
+	void versteckeVorschau(Object...args) {
+		_vorschau.stream().forEach(d -> d.setzeVorschau(false)); 
+		_vorschau.clear();
 	}
 
 	protected void starteZug() {

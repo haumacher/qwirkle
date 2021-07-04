@@ -13,11 +13,7 @@
 }
 
 .vorschau .tile {
-	opacity: 0.75;
-}
-
-.vorschau .icon {
-	opacity: 0.75;
+	fill: #BBBBBB;
 }
 
 .icon {
