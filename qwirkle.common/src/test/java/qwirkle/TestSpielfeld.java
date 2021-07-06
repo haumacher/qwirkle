@@ -57,7 +57,7 @@ public class TestSpielfeld extends TestCase {
 		assertEquals(s5, spielfeld.get(1, -1));
 	}
 	
-	public void testzugbewertung() {
+	public void testZugbewertung() {
 		Spielfeld spielfeld= new Spielfeld();
 		spielfeld.set(-1, 0, null);
 		spielfeld.set(0, 0, Stein.create().setFarbe(red).setForm(circle));
@@ -72,6 +72,31 @@ public class TestSpielfeld extends TestCase {
 		spielfeld.set(0, 0, Stein.create().setFarbe(red).setForm(circle));
 		int zb=Zugbewertung.zugbewertung(spielfeld, Arrays.asList(new Position(0,0)));
 		assertEquals(1, zb);
+	}
+	
+	public void testZugbewertungMehrereReihen() {
+		Spielfeld spielfeld= new Spielfeld();
+		spielfeld.set(0, 0, Stein.create().setFarbe(red).setForm(circle));
+		spielfeld.set(1, 0, Stein.create().setFarbe(blue).setForm(circle));
+		spielfeld.set(0, 1, Stein.create().setFarbe(blue).setForm(circle));
+		spielfeld.set(1, 1, Stein.create().setFarbe(red).setForm(circle));
+		spielfeld.set(2, 1, Stein.create().setFarbe(green).setForm(circle));
+		int zb=Zugbewertung.zugbewertung(spielfeld, Arrays.asList(new Position(0,1), new Position(1,1), new Position(2,1)));
+		assertEquals(7, zb);
+	}
+	
+	public void testZugbewertungQwirkle() {
+		Spielfeld spielfeld= new Spielfeld();
+		spielfeld.set(0, 0, Stein.create().setFarbe(red).setForm(circle));
+		spielfeld.set(1, 0, Stein.create().setFarbe(blue).setForm(circle));
+		spielfeld.set(0, 1, Stein.create().setFarbe(blue).setForm(circle));
+		spielfeld.set(1, 1, Stein.create().setFarbe(red).setForm(circle));
+		spielfeld.set(2, 1, Stein.create().setFarbe(green).setForm(circle));
+		spielfeld.set(3, 1, Stein.create().setFarbe(green).setForm(circle));
+		spielfeld.set(4, 1, Stein.create().setFarbe(green).setForm(circle));
+		spielfeld.set(5, 1, Stein.create().setFarbe(green).setForm(circle));
+		int zb=Zugbewertung.zugbewertung(spielfeld, Arrays.asList(new Position(0,1), new Position(5,1)));
+		assertEquals(14, zb);
 	}
 	
 	public void testZugErlaubtReihe() {

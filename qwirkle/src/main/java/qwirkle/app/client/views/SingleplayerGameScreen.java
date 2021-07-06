@@ -32,7 +32,7 @@ public class SingleplayerGameScreen extends GameScreen {
 	public SingleplayerGameScreen(Layout layout) {
 		super(layout);
 		
-		_bot = new QwirkleBot();
+		_bot = new QwirkleBot(Zugbewertung::zugbewertung);
 		_stapel = new Nachzugstapel();
 		_stats.add(new PlayerStat("Du"));
 		_stats.add(new PlayerStat("Computer"));

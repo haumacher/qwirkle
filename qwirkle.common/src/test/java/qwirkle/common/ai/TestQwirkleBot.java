@@ -12,7 +12,11 @@ import java.util.List;
 
 import junit.framework.TestCase;
 import qwirkle.common.messages.Placement;
+import qwirkle.common.messages.Stein;
 import qwirkle.common.model.Nachzugstapel;
+import qwirkle.common.model.Position;
+import qwirkle.common.model.Spielfeld;
+import qwirkle.common.model.Zugbewertung;
 
 /**
  * Testfall für {@link QwirkleBot}.
@@ -21,7 +25,7 @@ import qwirkle.common.model.Nachzugstapel;
 public class TestQwirkleBot extends TestCase {
 	
 	public void testZugauswahl() {
-		QwirkleBot bot = new QwirkleBot();
+		QwirkleBot bot = new QwirkleBot(Zugbewertung::zugbewertung);
 		
 		bot.set(0, 0, stein(red, circle));
 		bot.set(1, 0, stein(green, circle));
@@ -48,8 +52,8 @@ public class TestQwirkleBot extends TestCase {
 		Nachzugstapel stapel = new Nachzugstapel();
 		
 		List<QwirkleBot> bots = new ArrayList<>();
-		bots.add(new QwirkleBot());
-		bots.add(new QwirkleBot());
+		bots.add(new QwirkleBot(Zugbewertung::zugbewertung));
+		bots.add(new QwirkleBot(Zugbewertung::zugbewertung));
 		
 		for (int n = 0; n < 6; n++) {
 			for (QwirkleBot bot : bots) {
@@ -57,7 +61,11 @@ public class TestQwirkleBot extends TestCase {
 			}
 		}
 		
+		Spielfeld spielfeld = new Spielfeld();
+		
 		long start = System.nanoTime();
+		
+		int[] spielstand = new int[bots.size()];
 		
 		int current = 0;
 		while (true) {
@@ -66,11 +74,19 @@ public class TestQwirkleBot extends TestCase {
 			List<Placement> zug = currentBot.berechneZug();
 			System.out.println("Spieler " + current + ": " + zug);
 			
-			for (QwirkleBot bot : bots) {
-				for (Placement placement : zug) {
-					bot.set(placement.getX(), placement.getY(), placement.getStein());
+			for (Placement placement : zug) {
+				int x = placement.getX();
+				int y = placement.getY();
+				Stein stein = placement.getStein();
+				
+				spielfeld.set(x, y, stein);
+				for (QwirkleBot bot : bots) {
+					bot.set(x, y, stein);
 				}
 			}
+			
+			int bewertung = Zugbewertung.zugbewertung(spielfeld, positions(zug));
+			spielstand[current] += bewertung;
 			
 			while (stapel.hatNochSteine() && currentBot.steineImVorrat() < 6) {
 				currentBot.add(stapel.nimmStein());
@@ -85,8 +101,19 @@ public class TestQwirkleBot extends TestCase {
 		
 		long elapsed = System.nanoTime() - start;
 		
+		for (int n = 0, cnt = bots.size(); n < cnt; n++) {
+			System.out.println("Punkte Spieler " + n + ": " + spielstand[n]);
+		}
 		System.out.println("Game took " + elapsed / 1000000L + "ms.");
 		
+	}
+
+	private static List<Position> positions(List<Placement> zug) {
+		ArrayList<Position> result = new ArrayList<>(zug.size());
+		for (Placement placement : zug) {
+			result.add(new Position(placement.getX(), placement.getY()));
+		}
+		return result;
 	}
 
 }

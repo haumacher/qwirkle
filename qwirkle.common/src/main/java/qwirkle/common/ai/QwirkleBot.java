@@ -23,13 +23,21 @@ public class QwirkleBot {
 	private List<Stein> _vorrat = new ArrayList<>();
 	
 	private Spielfeld _spielfeld = new Spielfeld();
+
+	private Bewertungsfunktion _bewertung;
 	
 
-	/** 
+	/**
 	 * Creates a {@link QwirkleBot}.
+	 * 
+	 * @param bewertung
+	 *        Eine {@link Bewertungsfunktion} die Punkte für einen möglichen Zug
+	 *        vergibt. Der {@link QwirkleBot} wählt denjenigen Zug, der von der
+	 *        {@link Bewertungsfunktion} am besten bewertet wird.
 	 */
-	public QwirkleBot() {
+	public QwirkleBot(Bewertungsfunktion bewertung) {
 		super();
+		_bewertung = bewertung;
 	}
 		
 	/**
@@ -63,9 +71,8 @@ public class QwirkleBot {
 	 * @see #set(int, int, Stein)
 	 */
 	public List<Placement> berechneZug() {
-		ZugBewertung zug = new ZugBewertung(_spielfeld);
+		ZugAuswahl zug = erzeugeZugBewertung(_spielfeld);
 		produziereZüge(zug);
-		
 		List<Placement> result = zug.besterZug();
 		for (Placement placement : result) {
 			_vorrat.remove(placement.getStein());
@@ -73,7 +80,11 @@ public class QwirkleBot {
 		return result;
 	}
 
-	private void produziereZüge(ZugBewertung zug) {
+	protected ZugAuswahl erzeugeZugBewertung(Spielfeld spielfeld) {
+		return new ZugAuswahl(spielfeld, _bewertung);
+	}
+
+	private void produziereZüge(ZugAuswahl zug) {
 		SteinAuswahl auswahl = new SteinAuswahl(_vorrat);
 		Durchgang durchgang = auswahl.steine();
 		
@@ -118,7 +129,7 @@ public class QwirkleBot {
 		return result;
 	}
 	
-	private void wähleZweitenStein(ZugBewertung zug, SteinAuswahl auswahl, Position position) {
+	private void wähleZweitenStein(ZugAuswahl zug, SteinAuswahl auswahl, Position position) {
 		// Der zweite Stein kann jetzt nur noch in dieselbe Reihe oder Spalte
 		// wie der erste Stein gelegt werden. Es gibt nur noch höchstens vier
 		// Möglichkeiten eine freie Position auf dem Spielfeld zu finden, die
@@ -143,7 +154,7 @@ public class QwirkleBot {
 		}
 	}
 
-	private void wähleFolgeSteine(ZugBewertung zug, SteinAuswahl auswahl, Position erste, Position zweite) {
+	private void wähleFolgeSteine(ZugAuswahl zug, SteinAuswahl auswahl, Position erste, Position zweite) {
 		List<Position> freieNachbarn = _spielfeld.freieNachbarn(erste, zweite);
 		
 		Durchgang durchgang = auswahl.steine();

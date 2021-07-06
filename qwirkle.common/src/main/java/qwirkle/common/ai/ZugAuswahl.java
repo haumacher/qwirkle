@@ -11,16 +11,24 @@ import qwirkle.common.messages.Farbe;
 import qwirkle.common.messages.Form;
 import qwirkle.common.messages.Placement;
 import qwirkle.common.messages.Stein;
+import qwirkle.common.model.Position;
 import qwirkle.common.model.Spielfeld;
 
 /**
- * Analyse für alle möglichen Züge bei einem gegebenen {@link Spielfeld}.
+ * Analyse für alle möglichen Züge bei einem gegebenen {@link Spielfeld} und {@link Bewertungsfunktion}.
  */
-public class ZugBewertung {
+public class ZugAuswahl {
 
+	private int _besteBewertung = 0;
+	
 	private List<Placement> _besterZug = new ArrayList<>();
 	
 	private List<Placement> _aktuellerZug = new ArrayList<>();
+	
+	/**
+	 * Die Koordinaten von {@link #_aktuellerZug}.
+	 */
+	private List<Position> _zugKoordinaten = new ArrayList<>();
 	
 	private EnumSet<Farbe> _farben = EnumSet.noneOf(Farbe.class);
 	
@@ -28,13 +36,16 @@ public class ZugBewertung {
 
 	private Spielfeld _spielfeld;
 
+	private Bewertungsfunktion _bewertung;
+
 	/** 
-	 * Creates a {@link ZugBewertung}.
+	 * Creates a {@link ZugAuswahl}.
 	 *
 	 * @param spielfeld
 	 */
-	public ZugBewertung(Spielfeld spielfeld) {
+	public ZugAuswahl(Spielfeld spielfeld, Bewertungsfunktion bewertung) {
 		_spielfeld = spielfeld;
+		_bewertung = bewertung;
 	}
 
 	/**
@@ -47,6 +58,7 @@ public class ZugBewertung {
 	 */
 	public void add(Placement placement) {
 		_aktuellerZug.add(placement);
+		_zugKoordinaten.add(new Position(placement.getX(), placement.getY()));
 		
 		Stein stein = placement.getStein();
 		_farben.add(stein.getFarbe());
@@ -73,12 +85,16 @@ public class ZugBewertung {
 	 * Entfernt die letzte Plazierung wieder aus dem Zug.
 	 */
 	public void pop() {
-		if (_aktuellerZug.size() > _besterZug.size()) {
+		int bewertung = _bewertung.bewerte(_spielfeld, _zugKoordinaten);
+		if (bewertung > _besteBewertung) {
 			_besterZug.clear();
 			_besterZug.addAll(_aktuellerZug);
+			_besteBewertung = bewertung;
 		}
 		
-		Placement placement = _aktuellerZug.remove(_aktuellerZug.size() - 1);
+		int letztePosition = _aktuellerZug.size() - 1;
+		_zugKoordinaten.remove(letztePosition);
+		Placement placement = _aktuellerZug.remove(letztePosition);
 		Stein stein = placement.getStein();
 		if (_farben.size() > 1) {
 			_farben.remove(stein.getFarbe());

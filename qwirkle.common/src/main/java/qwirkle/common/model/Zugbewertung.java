@@ -2,31 +2,69 @@ package qwirkle.common.model;
 
 import java.util.List;
 
-import qwirkle.common.messages.Placement;
-
 public class Zugbewertung {
 	public static int zugbewertung (Spielfeld spielfeld, List<Position> zug) {
+		// Der X-Wert der Spalte die bereits gezählt wurde.
+		int xBewertet = Integer.MIN_VALUE;
+		
+		// Der Y-Wert der Zeile die bereits gezählt wurde.
+		int yBewertet = Integer.MIN_VALUE;
+		
 		int wert=0;
-		int wertx=0;
-		int werty=0;
 		for(int index = 0; index< zug.size(); index++) {
 			Position pos=zug.get(index);
-			for (int x=pos.x(); spielfeld.get(x,pos.y())!=null; x++) {
-				{wertx++;};
+			
+			int wertx=0;
+			int werty=0;
+			int posX = pos.x();
+			int posY = pos.y();
+			
+			if (posY != yBewertet) {
+				for (int x=posX; spielfeld.get(x,posY)!=null; x++) {
+					{wertx++;};
+				}
+				for (int x=posX-1; spielfeld.get(x,posY)!=null; x--) {
+					{wertx++;};
+				}
+				if (wertx > 1) {
+					yBewertet = posY;
+				}
 			}
-			for (int x=pos.x()-1; spielfeld.get(x,pos.y())!=null; x--) {
-				{wertx++;};
+			
+			if (posX != xBewertet) {
+				for (int y=posY; spielfeld.get(posX,y)!=null; y++) {
+					{werty++;};
+				}
+				for (int y=posY-1; spielfeld.get(posX,y)!=null; y--) {
+					{werty++;};
+				}
+				if (werty > 1) {
+					xBewertet = posX;
+				}
 			}
-			for (int y=pos.y(); spielfeld.get(pos.x(),y)!=null; y++) {
-				{werty++;};
+			
+			if (wertx>1) {
+				if (wertx == 6) {
+					// Qwirkle
+					wert += 12;
+				} else {
+					wert += wertx;
+				}
 			}
-			for (int y=pos.y()-1; spielfeld.get(pos.x(),y)!=null; y--) {
-				{werty++;};
+			if (werty>1) {
+				if (werty == 6) {
+					// Qwirkle
+					wert += 12;
+				} else {
+					wert += werty;
+				}
 			}
 		}
-		if(wertx>1) {wert=wert+wertx;}
-		if(werty>1) {wert=wert+werty;}
-		if(wertx==1 && werty==1) {wert=1;}
+		
+		if (wert == 0 && zug.size() == 1) {
+			wert = 1;
+		}
+			
 		return wert;
 	}
 }
